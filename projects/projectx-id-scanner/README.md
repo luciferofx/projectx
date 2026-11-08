@@ -2,7 +2,7 @@
 # Project X – I2C Bus Scanner & Display ID Terminal
 
 <p align="center">
-  <img src="assets/images/id-scanner-prototype.png" width="700" alt="Project X I2C Scanner Prototype">
+  <img src="assets/images/Project-X-ID-Scanner.png" width="700" alt="Project X I2C Scanner Prototype">
 </p>
 
 <h2 align="center">I2C Diagnostic & Device Identification System</h2>
