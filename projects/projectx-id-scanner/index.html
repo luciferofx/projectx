@@ -1,1 +1,119 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project X | I2C Diagnostic & ID Scanner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Orbitron:wght@600;800;900&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #060913;
+            --card-bg: rgba(14, 22, 41, 0.75);
+            --card-border: rgba(0, 242, 254, 0.2);
+            --accent-cyan: #00f2fe;
+            --accent-green: #00ff88;
+            --accent-amber: #ffb703;
+            --text-main: #f1f5f9;
+            --text-dim: #94a3b8;
+            --font-display: 'Orbitron', sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+            --font-sans: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 242, 254, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 255, 136, 0.06) 0%, transparent 40%),
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 35px 35px, 35px 35px;
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header Navigation */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent-cyan);
+            text-decoration: none;
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            transition: transform 0.2s;
+        }
+
+        .back-link:hover {
+            transform: translateX(-4px);
+        }
+
+        .badge {
+            font-family: var(--font-code);
+            font-size: 0.75rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: rgba(0, 242, 254, 0.1);
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            letter-spacing: 1px;
+        }
+
+        /* Hero */
+        .hero {
+            margin-bottom: 48px;
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            background: linear-gradient(90deg, #ffffff, var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: var(--text-dim);
+            font-size: 1.05rem;
+            max-width: 750px;
+            line-height: 1.6;
+        }
+
+        /* Interactive Simulator Layout */
+        .workspace-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.1fr;
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .panel {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border
