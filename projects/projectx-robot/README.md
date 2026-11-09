@@ -140,13 +140,17 @@ Recognized faces are recorded in the attendance spreadsheet.
 
 ---
 
+
 ## ◈ MODULE 03 — LCD DISPLAY TELEMETRY
 
-<div align="center">
+### 🎬 Display Prototype
 
-<img src="assets/images/display/display-prototype.mp4" width="600" alt="LCD Display Prototype"/>
+[▶ Watch Display Prototype](assets/images/display/display-prototype.mp4)
 
-</div>
+### 🎬 Display Result
+
+[▶ Watch Display Result](assets/images/display/display%20result.mp4)
+
 
 The project uses an I2C 16×2 LCD module to display animated project titles, team information, and system messages.
 
