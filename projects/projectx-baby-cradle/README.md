@@ -39,24 +39,37 @@ The project combines embedded hardware, PWM motor control and a responsive web i
 > Demonstrate IoT-based motor control automation through a standalone Wi-Fi network and an interactive browser-based dashboard.
 
 ---
-
-<div align="center">
+ <div align="center">
 
 ## ◈ LIVE HARDWARE DEMONSTRATION
 
-*Watch the actual prototype in operation.*
+*Experience the Project X Baby Cradle prototype in action.*
 
-### 01 / Motor Working — Hardware Demo
+<br/>
 
-<video src="https://savedly.net/api/stream/bw4sxyg8?t=0.y8RGzX371NvzWLAh2ga24FkZ2Wf4xHIXM25d0xfj8ks" width="100%" autoplay muted loop playsinline controls>
-</video>
+### 01 / MOTOR WORKING
 
-[Direct Video Stream](https://savedly.net/api/stream/bw4sxyg8?t=0.y8RGzX371NvzWLAh2ga24FkZ2Wf4xHIXM25d0xfj8ks)
+<sub>Hardware Demonstration · Motor Operation</sub>
 
-### 02 / Final Output — Dashboard + Cradle Swing
+<a href="https://savedly.net/api/stream/bw4sxyg8?t=0.y8RGzX371NvzWLAh2ga24FkZ2Wf4xHIXM25d0xfj8ks">
+<img src="https://img.shields.io/badge/▶%20CLICK%20HERE%20TO%20WATCH-8B5CF6?style=for-the-badge&logo=youtube&logoColor=white" alt="Click Here to Watch Motor Working"/>
+</a>
 
-<video src="https://raw.githubusercontent.com/luciferofx/projectxweb/main/projects/projectx-baby-cradle/assets/images/final-output-of-babycradle.mp4" width="100%" autoplay muted loop playsinline controls>
-</video>
+<br/><br/>
+
+---
+
+### 02 / FINAL OUTPUT
+
+<sub>Dashboard Interface · Complete Cradle Prototype</sub>
+
+<a href="https://savedly.net/api/stream/ayjpwqbd?t=0.ZNszYT7guEUTJSoVjjw1oebGcK6CwaWFI5miYeYeZHc">
+<img src="https://img.shields.io/badge/▶%20CLICK%20HERE%20TO%20WATCH-00C9A7?style=for-the-badge&logo=youtube&logoColor=white" alt="Click Here to Watch Final Output"/>
+</a>
+
+<br/><br/>
+
+*Project X · Built with Electronics & Innovation*
 
 </div>
 
