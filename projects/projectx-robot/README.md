@@ -145,11 +145,11 @@ Recognized faces are recorded in the attendance spreadsheet.
 
 ### 🎬 Display Prototype
 
-[▶ Watch Display Prototype](assets/images/display/display-prototype.mp4)
+[▶ Watch Display Prototype](https://cdn.jumpshare.com/preview/vn7tz8XqqXpJVTzyCfSNLbhEmgYYoOGmn-uQ0qqdTg_yie7uEiSh7BUJjJ_pc39cpxeFgI_Cs3GPnPfRFDIYoj6nnpwCaQby5JwVK-3meeU2rPUsWr7Wl0S8COesNKHHJQ6Q5U4gQq1KKLmz5wBP626yjbN-I2pg_cnoHs_AmgI-kPHS19H4h3unf.mp4)
 
 ### 🎬 Display Result
 
-[▶ Watch Display Result](assets/images/display/display%20result.mp4)
+[▶ Watch Display Result](https://cdn.jumpshare.com/preview/yTormFTnlr9ak6yUcCueWT2oqWrGjUiIMAsukelVVPy6MPbDUWyYi3LSd4SsyDg4vnu9QtjnGYBOt8CDt1_YJDwsVpssPMpUa5Kj19qokDWqCGun99AimClMl-tIh6O85ck79MgdqoshIjf0ku2h3W6yjbN-I2pg_cnoHs_AmgI-4h3unfsVFOq8J.mp4)
 
 
 The project uses an I2C 16×2 LCD module to display animated project titles, team information, and system messages.
