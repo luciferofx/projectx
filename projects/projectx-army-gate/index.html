@@ -5,7 +5,7 @@
   ============================================================
   PROJECT X · ARMY GATE (RFID DASHBOARD)
   File: index.html
-  Version: 1.0.0 · Build 2024.12
+  Version: 2.0.0 · Build 2024.12
   Author: Raja Sharma (github.com/luciferofx)
 
   Note: 100% Global CSS (styles.css). No local styles.
@@ -107,6 +107,117 @@
         </div>
       </section>
 
+      <!-- NEW: VISUAL WIRING DIAGRAM -->
+      <section class="card">
+        <h3>Hardware Wiring <small>Arduino Mega Connection Map</small></h3>
+        <div style="background: #03060c; border: 1px solid var(--line); border-radius: 12px; padding: 20px; margin-top: 16px; display: grid; place-items: center; overflow-x: auto;">
+          
+          <svg viewBox="0 0 800 400" style="width: 100%; min-width: 600px; height: auto;">
+            <defs>
+              <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="3" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+
+            <!-- Arduino Board -->
+            <rect x="50" y="100" width="180" height="240" rx="8" fill="#0d1522" stroke="#26344c" stroke-width="2"/>
+            <text x="140" y="130" text-anchor="middle" font-family="monospace" font-size="14" font-weight="bold" fill="#2fd4ff">ARDUINO MEGA</text>
+            <text x="140" y="150" text-anchor="middle" font-family="monospace" font-size="10" fill="#54647e">ATmega2560</text>
+            
+            <!-- Arduino Pins -->
+            <g font-family="monospace" font-size="11" fill="#6ff0c2">
+              <text x="70" y="180">Pin 53 (SS)</text>
+              <text x="70" y="210">Pin 5 (RST)</text>
+              <text x="70" y="240">Pin 9 (Servo)</text>
+              <text x="70" y="270">Pin 6 (Buzzer)</text>
+              <text x="70" y="300">Pin 7 (Red LED)</text>
+              <text x="70" y="330">Pin 8 (Green LED)</text>
+            </g>
+            <g fill="#2fd4ff">
+              <circle cx="200" cy="176" r="4" fill="#1a2537" stroke="#26344c"/>
+              <circle cx="200" cy="206" r="4" fill="#1a2537" stroke="#26344c"/>
+              <circle cx="200" cy="236" r="4" fill="#1a2537" stroke="#26344c"/>
+              <circle cx="200" cy="266" r="4" fill="#1a2537" stroke="#26344c"/>
+              <circle cx="200" cy="296" r="4" fill="#1a2537" stroke="#26344c"/>
+              <circle cx="200" cy="326" r="4" fill="#1a2537" stroke="#26344c"/>
+            </g>
+
+            <!-- MFRC522 Module (Top Right) -->
+            <rect x="500" y="50" width="140" height="100" rx="6" fill="#0a1a26" stroke="#2fd4ff" opacity="0.8"/>
+            <text x="570" y="80" text-anchor="middle" font-family="monospace" font-size="12" fill="#2fd4ff">MFRC522</text>
+            <text x="570" y="95" text-anchor="middle" font-family="monospace" font-size="9" fill="#54647e">RFID Reader</text>
+            <circle cx="570" cy="125" r="15" fill="none" stroke="#2fd4ff" stroke-dasharray="3 3" opacity="0.5"/>
+
+            <!-- Servo (Bottom Right) -->
+            <rect x="500" y="220" width="100" height="80" rx="4" fill="#0d1a28" stroke="#ffb347"/>
+            <circle cx="550" cy="240" r="15" fill="#1a2537" stroke="#ffb347"/>
+            <text x="550" y="290" text-anchor="middle" font-family="monospace" font-size="11" fill="#ffb347">SERVO</text>
+
+            <!-- LEDs & Buzzer (Bottom Right) -->
+            <g transform="translate(640, 220)">
+              <circle cx="20" cy="20" r="10" fill="#6ff0c2" filter="url(#glow)"/>
+              <text x="20" y="40" text-anchor="middle" font-family="monospace" font-size="9" fill="#6ff0c2">GREEN</text>
+              
+              <circle cx="70" cy="20" r="10" fill="#ff5d73" filter="url(#glow)"/>
+              <text x="70" y="40" text-anchor="middle" font-family="monospace" font-size="9" fill="#ff5d73">RED</text>
+              
+              <circle cx="110" cy="20" r="10" fill="#ffb347"/>
+              <text x="110" y="40" text-anchor="middle" font-family="monospace" font-size="9" fill="#ffb347">BUZZ</text>
+            </g>
+
+            <!-- Wires -->
+            <!-- SS (Pin 53) to MFRC522 -->
+            <path d="M 204 176 C 300 176, 350 100, 500 100" stroke="#2fd4ff" stroke-width="2" fill="none" filter="url(#glow)"/>
+            <!-- RST (Pin 5) to MFRC522 -->
+            <path d="M 204 206 C 300 206, 380 120, 500 120" stroke="#6ff0c2" stroke-width="2" fill="none"/>
+            
+            <!-- Servo (Pin 9) -->
+            <path d="M 204 236 C 300 236, 380 260, 500 260" stroke="#ffb347" stroke-width="2" fill="none" filter="url(#glow)"/>
+            
+            <!-- Buzzer (Pin 6) -->
+            <path d="M 204 266 C 400 266, 500 240, 740 240" stroke="#ffb347" stroke-width="2" fill="none"/>
+            
+            <!-- Red LED (Pin 7) -->
+            <path d="M 204 296 C 400 296, 550 250, 700 240" stroke="#ff5d73" stroke-width="2" fill="none"/>
+            
+            <!-- Green LED (Pin 8) -->
+            <path d="M 204 326 C 400 326, 600 260, 660 240" stroke="#6ff0c2" stroke-width="2" fill="none"/>
+
+            <!-- Labels -->
+            <text x="300" y="90" font-family="monospace" font-size="9" fill="#2fd4ff">SPI Data</text>
+            <text x="350" y="115" font-family="monospace" font-size="9" fill="#6ff0c2">Reset</text>
+            <text x="350" y="245" font-family="monospace" font-size="9" fill="#ffb347">PWM Signal</text>
+          </svg>
+        </div>
+        
+        <div style="margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div style="background: rgba(47,212,255,0.05); border: 1px solid var(--line-hi); border-radius: 8px; padding: 12px;">
+            <div style="font-family: var(--sans); font-weight: 700; font-size: 0.8rem; color: var(--cyan); margin-bottom: 4px;">MFRC522 Wiring</div>
+            <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--ink-dim); line-height: 1.5;">
+              VCC → 3.3V<br>
+              GND → GND<br>
+              SS → Pin 53<br>
+              RST → Pin 5<br>
+              MOSI → Pin 51<br>
+              MISO → Pin 50<br>
+              SCK → Pin 52
+            </div>
+          </div>
+          <div style="background: rgba(255,179,71,0.05); border: 1px solid var(--line-hi); border-radius: 8px; padding: 12px;">
+            <div style="font-family: var(--sans); font-weight: 700; font-size: 0.8rem; color: var(--amber); margin-bottom: 4px;">Servo & Output</div>
+            <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--ink-dim); line-height: 1.5;">
+              Servo Signal → Pin 9<br>
+              Servo VCC → 5V (External)<br>
+              Servo GND → GND<br>
+              Buzzer → Pin 6<br>
+              Red LED → Pin 7<br>
+              Green LED → Pin 8
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- SYSTEM LOGS -->
       <section class="card">
         <h3>Security Logs</h3>
@@ -117,63 +228,73 @@
         </div>
       </section>
 
-      <!-- COMPONENTS & WIRING -->
+      <!-- COMPONENTS LIST -->
       <section class="card">
-        <h3>Components & Wiring <small>Hardware Map</small></h3>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;">
-          
-          <!-- Components List -->
-          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 12px; padding: 16px;">
-            <h4 style="font-family: var(--mono); font-size: 0.7rem; color: var(--ink-dim); text-transform: uppercase; margin-bottom: 12px; border-bottom: 1px solid var(--line); padding-bottom: 8px;">Component List</h4>
-            <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px;">
-              <li style="display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 0.72rem; color: var(--ink);">
-                <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--cyan);"></span> Arduino Mega 2560
-              </li>
-              <li style="display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 0.72rem; color: var(--ink);">
-                <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--mint);"></span> MFRC522 RFID Module
-              </li>
-              <li style="display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 0.72rem; color: var(--ink);">
-                <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--amber);"></span> Servo Motor (SG90 / MG995)
-              </li>
-              <li style="display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 0.72rem; color: var(--ink);">
-                <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--rose);"></span> Buzzer & LEDs
-              </li>
-            </ul>
-          </div>
+        <h3>Components List <small>Bill of Materials</small></h3>
+        <div class="tscroll">
+          <table style="margin-top: 12px;">
+            <thead>
+              <tr><th>Component</th><th>Quantity</th><th>Purpose</th></tr>
+            </thead>
+            <tbody>
+              <tr><td style="color:var(--cyan)">Arduino Mega 2560</td><td>1</td><td>Main Controller</td></tr>
+              <tr><td style="color:var(--mint)">MFRC522 RFID Module</td><td>1</td><td>Reads Cards</td></tr>
+              <tr><td style="color:var(--amber)">Servo Motor (MG995)</td><td>1</td><td>Barrier Movement</td></tr>
+              <tr><td style="color:var(--rose)">Active Buzzer</td><td>1</td><td>Alarm on Denial</td></tr>
+              <tr><td style="color:var(--violet)">LEDs (Red & Green)</td><td>2</td><td>Visual Feedback</td></tr>
+              <tr><td style="color:var(--ink-dim)">Jumper Wires</td><td>~15</td><td>Connections</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
 
-          <!-- Wiring Map -->
-          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 12px; padding: 16px;">
-            <h4 style="font-family: var(--mono); font-size: 0.7rem; color: var(--ink-dim); text-transform: uppercase; margin-bottom: 12px; border-bottom: 1px solid var(--line); padding-bottom: 8px;">Wiring Map (Arduino → Modules)</h4>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <div style="display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.72rem;">
-                <span style="color: var(--cyan);">Pin 53 (SS)</span>
-                <span style="color: var(--ink-faint);">→</span>
-                <span style="color: var(--mint);">RFID SS</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.72rem;">
-                <span style="color: var(--cyan);">Pin 5 (RST)</span>
-                <span style="color: var(--ink-faint);">→</span>
-                <span style="color: var(--mint);">RFID RST</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.72rem;">
-                <span style="color: var(--cyan);">Pin 9 (PWM)</span>
-                <span style="color: var(--ink-faint);">→</span>
-                <span style="color: var(--mint);">Servo Signal</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.72rem;">
-                <span style="color: var(--cyan);">Pin 6</span>
-                <span style="color: var(--ink-faint);">→</span>
-                <span style="color: var(--mint);">Buzzer</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.72rem;">
-                <span style="color: var(--cyan);">Pin 7, 8</span>
-                <span style="color: var(--ink-faint);">→</span>
-                <span style="color: var(--mint);">Red / Green LEDs</span>
+      <!-- HOW IT WORKS -->
+      <section class="card">
+        <h3>How It Works <small>Step-by-Step Process</small></h3>
+        <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 12px; padding: 20px; margin-top: 16px;">
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            
+            <div style="display: flex; gap: 12px;">
+              <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--cyan); color: #000; display: grid; place-items: center; font-weight: bold; font-size: 0.7rem; flex-shrink: 0;">1</div>
+              <div>
+                <div style="font-family: var(--sans); font-weight: 700; font-size: 0.85rem; color: var(--ink);">User Scans RFID Tag</div>
+                <div style="font-family: var(--mono); font-size: 0.72rem; color: var(--ink-dim); margin-top: 4px;">MFRC522 emits 13.56MHz RF field and reads the card's UID.</div>
               </div>
             </div>
-          </div>
 
+            <div style="display: flex; gap: 12px;">
+              <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--mint); color: #000; display: grid; place-items: center; font-weight: bold; font-size: 0.7rem; flex-shrink: 0;">2</div>
+              <div>
+                <div style="font-family: var(--sans); font-weight: 700; font-size: 0.85rem; color: var(--ink);">UID Verification</div>
+                <div style="font-family: var(--mono); font-size: 0.72rem; color: var(--ink-dim); margin-top: 4px;">Arduino compares the scanned UID against the <b>authorizedUIDs</b> list.</div>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 12px;">
+              <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--amber); color: #000; display: grid; place-items: center; font-weight: bold; font-size: 0.7rem; flex-shrink: 0;">3</div>
+              <div>
+                <div style="font-family: var(--sans); font-weight: 700; font-size: 0.85rem; color: var(--ink);">Access Granted (Match)</div>
+                <div style="font-family: var(--mono); font-size: 0.72rem; color: var(--ink-dim); margin-top: 4px;">Green LED turns on, Servo rotates to <b>90°</b>, barrier opens for 5 seconds.</div>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 12px;">
+              <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--rose); color: #000; display: grid; place-items: center; font-weight: bold; font-size: 0.7rem; flex-shrink: 0;">4</div>
+              <div>
+                <div style="font-family: var(--sans); font-weight: 700; font-size: 0.85rem; color: var(--ink);">Access Denied (No Match)</div>
+                <div style="font-family: var(--mono); font-size: 0.72rem; color: var(--ink-dim); margin-top: 4px;">Red LED flashes, Buzzer beeps for 1 second, gate remains closed.</div>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 12px;">
+              <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--violet); color: #000; display: grid; place-items: center; font-weight: bold; font-size: 0.7rem; flex-shrink: 0;">5</div>
+              <div>
+                <div style="font-family: var(--sans); font-weight: 700; font-size: 0.85rem; color: var(--ink);">Auto-Reset</div>
+                <div style="font-family: var(--mono); font-size: 0.72rem; color: var(--ink-dim); margin-top: 4px;">Gate closes automatically and system waits for the next card scan.</div>
+              </div>
+            </div>
+
+          </div>
         </div>
       </section>
 
@@ -182,7 +303,7 @@
 
   <footer>
     <span>PROJECT X · ARMY GATE</span>
-    <span>BUILD 1.0.0 · GLOBAL CSS</span>
+    <span>BUILD 2.0.0 · GLOBAL CSS</span>
   </footer>
 </div>
 
