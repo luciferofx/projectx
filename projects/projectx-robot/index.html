@@ -1,1 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+  ============================================================
+  PROJECT X · AUTONOMOUS AI ROBOT
+  File: index.html
+  Version: 1.0.0 · Build 2024.12
+  Author: Raja Sharma (github.com/luciferofx)
+  ============================================================
+-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#05070d">
+<meta name="description" content="Project X · AI Robot Dashboard">
+<title>Project X — Autonomous AI Robot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Orbitron:wght@600;700;800&display=swap" rel="stylesheet">
+<!-- Global CSS -->
+<link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+<div class="shell">
 
+  <!-- ===== TOPBAR ===== -->
+  <div class="topbar">
+    <div class="brand">
+      <div class="mark"><b>PX</b></div>
+      <div>
+        <h1>PROJECT X · AI ROBOT</h1>
+        <p>Intelligent Autonomous Platform</p>
+      </div>
+    </div>
+    <div class="status-pill live" id="connPill"><span class="led"></span><span id="connText">SYSTEM ONLINE</span></div>
+  </div>
+
+  <div class="cols">
+    <!-- ===== SIDEBAR ===== -->
+    <div>
+      <section class="card">
+        <h3>System Telemetry</h3>
+        <div class="statuslist">
+          <div class="srow"><span class="k">Wi-Fi SSID</span><span class="v">NodeMCU Car</span></div>
+          <div class="srow"><span class="k">IP Address</span><span class="v">192.168.4.1</span></div>
+          <div class="srow"><span class="k">AI Status</span><span class="v pur" id="aiStatus">READY</span></div>
+          <div class="srow"><span class="k">Face Matches</span><span class="v" id="matchCount">0</span></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h3>Movement Controls</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 12px;">
+          <div></div>
+          <button class="primary" onclick="moveRobot('F')">▲</button>
+          <div></div>
+          
+          <button class="primary" onclick="moveRobot('L')">◀</button>
+          <button class="danger" onclick="moveRobot('S')">STOP</button>
+          <button class="primary" onclick="moveRobot('R')">▶</button>
+          
+          <div></div>
+          <button class="primary" onclick="moveRobot('B')">▼</button>
+          <div></div>
+        </div>
+        
+        <div style="margin-top: 16px;">
+          <label style="font-size:0.65rem; text-transform:uppercase; color:var(--ink-dim); font-weight:700; display:block; margin-bottom:6px;">Speed Level</label>
+          <input type="range" min="0" max="9" value="5" id="speedSlider" oninput="updateSpeed(this.value)" style="width:100%; accent-color:var(--violet);">
+        </div>
+      </section>
+
+      <section class="card">
+        <h3>Hardware Pins</h3>
+        <div class="statuslist">
+          <div class="srow"><span class="k">ENA (PWM)</span><span class="v">D5</span></div>
+          <div class="srow"><span class="k">ENB (PWM)</span><span class="v">D6</span></div>
+          <div class="srow"><span class="k">IN1 / IN2</span><span class="v">D8 / D7</span></div>
+          <div class="srow"><span class="k">IN3 / IN4</span><span class="v">D4 / D3</span></div>
+          <div class="srow"><span class="k">LCD SDA</span><span class="v">D2</span></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-col">
+      
+      <!-- SYSTEM ARCHITECTURE -->
+      <section class="card">
+        <h3>System Architecture <small>3 Core Modules</small></h3>
+        <div style="background: #03060c; border: 1px solid var(--line); border-radius: 12px; padding: 20px; margin-top: 16px;">
+          
+          <div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: center;">
+            <!-- Module 1 -->
+            <div style="flex: 1; min-width: 200px; background: rgba(176,106,255,0.05); border: 1px solid var(--violet); border-radius: 8px; padding: 16px; text-align: center;">
+              <div style="font-size: 1.5rem; margin-bottom: 8px;">📡</div>
+              <div style="font-family: var(--sans); font-weight: 800; color: var(--violet); font-size: 0.85rem; margin-bottom: 4px;">Wi-Fi Movement</div>
+              <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--ink-dim);">ESP8266 Web Server</div>
+            </div>
+            <!-- Module 2 -->
+            <div style="flex: 1; min-width: 200px; background: rgba(111,240,194,0.05); border: 1px solid var(--mint); border-radius: 8px; padding: 16px; text-align: center;">
+              <div style="font-size: 1.5rem; margin-bottom: 8px;">🧠</div>
+              <div style="font-family: var(--sans); font-weight: 800; color: var(--mint); font-size: 0.85rem; margin-bottom: 4px;">AI Vision</div>
+              <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--ink-dim);">Python + OpenCV Face ID</div>
+            </div>
+            <!-- Module 3 -->
+            <div style="flex: 1; min-width: 200px; background: rgba(255,183,0,0.05); border: 1px solid var(--amber); border-radius: 8px; padding: 16px; text-align: center;">
+              <div style="font-size: 1.5rem; margin-bottom: 8px;">📺</div>
+              <div style="font-family: var(--sans); font-weight: 800; color: var(--amber); font-size: 0.85rem; margin-bottom: 4px;">LCD Telemetry</div>
+              <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--ink-dim);">I2C Display Animations</div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- AI VISION DEMO (Simulation) -->
+      <section class="card">
+        <h3>AI Vision Simulator <small>Face Recognition</small></h3>
+        <div style="background: #03060c; border: 1px solid var(--line); border-radius: 12px; padding: 20px; margin-top: 16px;">
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <!-- Camera Feed -->
+            <div style="position: relative; background: #0a1018; border: 1px solid var(--line-hi); border-radius: 8px; aspect-ratio: 4/3; overflow: hidden; display: flex; justify-content: center; align-items: center;">
+              <div id="cameraFeed" style="width: 100%; height: 100%; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px); position: relative;">
+                <!-- Scanline -->
+                <div id="scanline" style="position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--mint); box-shadow: 0 0 10px var(--mint); animation: scan 2s linear infinite;"></div>
+                <!-- Face Box -->
+                <div id="faceBox" style="position: absolute; top: 30%; left: 30%; width: 40%; height: 50%; border: 2px solid var(--mint); opacity: 0; transition: opacity 0.3s; box-shadow: 0 0 15px var(--mint);">
+                  <div id="faceName" style="position: absolute; bottom: -24px; left: 0; width: 100%; background: var(--mint); color: #000; font-family: var(--mono); font-size: 0.7rem; text-align: center; padding: 2px;">RAHUL</div>
+                </div>
+              </div>
+              <div style="position: absolute; top: 8px; left: 8px; font-family: var(--mono); font-size: 0.65rem; color: var(--rose); display: flex; align-items: center; gap: 6px;">
+                <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--rose); animation: blink 1s infinite;"></span> LIVE
+              </div>
+            </div>
+
+            <!-- Detection Log -->
+            <div>
+              <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--ink-dim); margin-bottom: 8px; border-bottom: 1px solid var(--line); padding-bottom: 4px;">Detection Log</div>
+              <div id="aiLog" style="height: 180px; overflow-y: auto; font-family: var(--mono); font-size: 0.7rem; line-height: 1.6; color: var(--ink-faint);">
+                <div>[System] AI Model Loaded.</div>
+                <div>[System] Scanning for faces...</div>
+              </div>
+              <button class="primary" style="margin-top: 12px; width: 100%;" onclick="simulateAI()">▶ START RECOGNITION</button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- HARDWARE BLUEPRINTS (Gallery) -->
+      <section class="card">
+        <h3>Hardware Blueprints <small>Design Gallery</small></h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-top: 16px;">
+          <!-- Item 1 -->
+          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px; text-align: center;">
+            <img src="assets/images/blueprint/chassis-layout.png" alt="Chassis" style="width: 100%; border-radius: 4px; opacity: 0.8;">
+            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); margin-top: 6px;">Chassis Base</div>
+          </div>
+          <!-- Item 2 -->
+          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px; text-align: center;">
+            <img src="assets/images/blueprint/wiring-diagram.png" alt="Wiring" style="width: 100%; border-radius: 4px; opacity: 0.8;">
+            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); margin-top: 6px;">Wiring Map</div>
+          </div>
+          <!-- Item 3 -->
+          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px; text-align: center;">
+            <img src="assets/images/blueprint/lcd-mount.png" alt="LCD Mount" style="width: 100%; border-radius: 4px; opacity: 0.8;">
+            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); margin-top: 6px;">LCD Mount</div>
+          </div>
+          <!-- Item 4 -->
+          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px; text-align: center;">
+            <img src="assets/images/blueprint/robot-prototype.png" alt="Prototype" style="width: 100%; border-radius: 4px; opacity: 0.8;">
+            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); margin-top: 6px;">Full Prototype</div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <footer>
+    <span>PROJECT X · AI ROBOT</span>
+    <span>BUILD 1.0.0 · GLOBAL CSS</span>
+  </footer>
+</div>
+
+<style>
+  @keyframes scan {
+    0% { top: 0; }
+    100% { top: 100%; }
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+</style>
+
+<script>
+  // AI Simulation Logic
+  const faces = ['RAHUL', 'SNEHA', 'UNKNOWN', 'RAHUL'];
+  const faceNames = ['Rahul', 'Sneha', 'Unknown', 'Rahul'];
+  const aiNames = ['RAHUL', 'SNEHA', 'UNKNOWN', 'RAHUL'];
+  let aiRunning = false;
+  let matchCount = 0;
+
+  function simulateAI() {
+    if (aiRunning) return;
+    aiRunning = true;
+    const logBox = document.getElementById('aiLog');
+    const faceBox = document.getElementById('faceBox');
+    const nameBox = document.getElementById('faceName');
+    const aiStatus = document.getElementById('aiStatus');
+    
+    aiStatus.textContent = 'SCANNING...';
+    aiStatus.style.color = 'var(--amber)';
+    logBox.innerHTML = '<div>[System] AI Model Loaded.</div><div>[System] Scanning for faces...</div>';
+
+    let step = 0;
+    const interval = setInterval(() => {
+      if (step >= faces.length) {
+        clearInterval(interval);
+        aiRunning = false;
+        aiStatus.textContent = 'READY';
+        aiStatus.style.color = 'var(--violet)';
+        faceBox.style.opacity = '0';
+        logBox.innerHTML += '<div style="color:var(--mint)">[System] Scan Complete.</div>';
+        return;
+      }
+
+      const face = faces[step];
+      const name = faceNames[step];
+
+      faceBox.style.opacity = '1';
+      nameBox.textContent = name;
+      
+      if (face !== 'UNKNOWN') {
+        nameBox.style.background = 'var(--mint)';
+        faceBox.style.borderColor = 'var(--mint)';
+        logBox.innerHTML += `<div>[Match] Found: <b style="color:var(--mint)">${name}</b> (99.2%)</div>`;
+        logBox.innerHTML += `<div style="color:var(--mint)">[Excel] Attendance marked for ${name}.</div>`;
+        matchCount++;
+        document.getElementById('matchCount').textContent = matchCount;
+      } else {
+        nameBox.style.background = 'var(--rose)';
+        faceBox.style.borderColor = 'var(--rose)';
+        logBox.innerHTML += `<div>[Scan] Unknown face detected.</div>`;
+      }
+      
+      logBox.scrollTop = logBox.scrollHeight;
+      step++;
+    }, 2000);
+  }
+
+  // Movement Simulation Logic
+  function moveRobot(cmd) {
+    const labels = {
+      'F': 'Forward',
+      'B': 'Backward',
+      'L': 'Left',
+      'R': 'Right',
+      'S': 'Stop'
+    };
+    // Just flash the button to show action
+    console.log(`Sending command: ${cmd} (${labels[cmd]})`);
+  }
+
+  function updateSpeed(val) {
+    document.getElementById('speedSlider').value = val;
+  }
+</script>
+</body>
+</html>
