@@ -1,1385 +1,225 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PROJECT X | Advanced Autonomous AI & Robotics Ecosystem</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-dark: #050811;
-            --bg-card: rgba(13, 20, 36, 0.72);
-            --bg-card-hover: rgba(20, 32, 58, 0.85);
-            --cyan-glow: #00f2fe;
-            --blue-accent: #4facfe;
-            --purple-accent: #8a2be2;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --border-glow: rgba(0, 242, 254, 0.22);
-            --border-highlight: rgba(0, 242, 254, 0.55);
-            --font-display: 'Orbitron', sans-serif;
-            --font-body: 'Plus Jakarta Sans', sans-serif;
-            --font-code: 'JetBrains Mono', monospace;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            scroll-behavior: smooth;
-        }
-
-        body {
-            background-color: var(--bg-dark);
-            background-image: 
-                radial-gradient(circle at 15% 20%, rgba(79, 172, 254, 0.12) 0%, transparent 40%),
-                radial-gradient(circle at 85% 65%, rgba(138, 43, 226, 0.12) 0%, transparent 45%),
-                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-            background-size: 100% 100%, 100% 100%, 45px 45px, 45px 45px;
-            color: var(--text-primary);
-            font-family: var(--font-body);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* Ambient Top Audio Controller */
-        .audio-bar {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            z-index: 999;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: rgba(13, 20, 36, 0.85);
-            border: 1px solid var(--border-glow);
-            padding: 10px 18px;
-            border-radius: 50px;
-            backdrop-filter: blur(12px);
-            box-shadow: 0 8px 32px rgba(0, 242, 254, 0.2);
-        }
-
-        .audio-btn {
-            background: linear-gradient(135deg, var(--cyan-glow), var(--blue-accent));
-            border: none;
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: #050811;
-            font-weight: bold;
-            transition: transform 0.2s ease;
-        }
-
-        .audio-btn:hover {
-            transform: scale(1.08);
-        }
-
-        /* Navbar */
-        header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(5, 8, 17, 0.85);
-            backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--border-glow);
-        }
-
-        .navbar {
-            max-width: 1280px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px 24px;
-        }
-
-        .logo {
-            font-family: var(--font-display);
-            font-size: 1.5rem;
-            font-weight: 900;
-            letter-spacing: 2px;
-            background: linear-gradient(90deg, #fff, var(--cyan-glow));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo-dot {
-            width: 10px;
-            height: 10px;
-            background: var(--cyan-glow);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--cyan-glow);
-            animation: pulse 2s infinite;
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 28px;
-        }
-
-        nav a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 0.95rem;
-            font-weight: 500;
-            transition: color 0.25s, text-shadow 0.25s;
-        }
-
-        nav a:hover {
-            color: var(--cyan-glow);
-            text-shadow: 0 0 8px rgba(0, 242, 254, 0.6);
-        }
-
-        /* Hero Section */
-        .hero {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 90px 24px 60px;
-            display: grid;
-            grid-template-columns: 1.2fr 0.8fr;
-            align-items: center;
-            gap: 48px;
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 16px;
-            background: rgba(0, 242, 254, 0.08);
-            border: 1px solid var(--border-glow);
-            border-radius: 20px;
-            color: var(--cyan-glow);
-            font-size: 0.82rem;
-            font-family: var(--font-code);
-            margin-bottom: 20px;
-            letter-spacing: 1px;
-        }
-
-        .hero h1 {
-            font-family: var(--font-display);
-            font-size: 3.5rem;
-            line-height: 1.15;
-            margin-bottom: 20px;
-            letter-spacing: 1px;
-        }
-
-        .hero h1 span {
-            background: linear-gradient(120deg, var(--cyan-glow), var(--purple-accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero p {
-            font-size: 1.12rem;
-            color: var(--text-secondary);
-            margin-bottom: 32px;
-            max-width: 580px;
-        }
-
-        .hero-actions {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-
-        .btn-primary {
-            padding: 13px 28px;
-            background: linear-gradient(135deg, var(--cyan-glow), var(--blue-accent));
-            color: #040810;
-            font-weight: 700;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: all 0.25s ease;
-            box-shadow: 0 0 20px rgba(0, 242, 254, 0.35);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 30px rgba(0, 242, 254, 0.6);
-        }
-
-        .btn-secondary {
-            padding: 13px 28px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-glow);
-            color: var(--text-primary);
-            font-weight: 600;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: all 0.25s ease;
-        }
-
-        .btn-secondary:hover {
-            background: rgba(0, 242, 254, 0.1);
-            border-color: var(--cyan-glow);
-        }
-
-        .hero-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-glow);
-            border-radius: 20px;
-            padding: 24px;
-            backdrop-filter: blur(14px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-            position: relative;
-        }
-
-        .hero-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            font-family: var(--font-code);
-            font-size: 0.85rem;
-            color: var(--cyan-glow);
-        }
-
-        .hero-robot-img {
-            width: 100%;
-            height: 380px;
-            object-fit: cover;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            filter: drop-shadow(0 0 25px rgba(0, 242, 254, 0.2));
-        }
-
-        .telemetry-row {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-top: 18px;
-        }
-
-        .telemetry-box {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 10px;
-            padding: 10px;
-            text-align: center;
-        }
-
-        .telemetry-box span {
-            display: block;
-            font-size: 0.72rem;
-            color: var(--text-secondary);
-            font-family: var(--font-code);
-        }
-
-        .telemetry-box strong {
-            color: var(--cyan-glow);
-            font-size: 1rem;
-            font-family: var(--font-display);
-        }
-
-        /* Section Layouts */
-        section {
-            padding: 90px 24px;
-            max-width: 1280px;
-            margin: 0 auto;
-        }
-
-        .section-header {
-            text-align: center;
-            max-width: 720px;
-            margin: 0 auto 60px;
-        }
-
-        .section-tag {
-            font-family: var(--font-code);
-            color: var(--cyan-glow);
-            font-size: 0.85rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-        }
-
-        .section-title {
-            font-family: var(--font-display);
-            font-size: 2.3rem;
-            margin-bottom: 16px;
-        }
-
-        .section-desc {
-            color: var(--text-secondary);
-            font-size: 1.05rem;
-        }
-
-        /* System Architecture Interactive Diagram */
-        .diagram-container {
-            background: var(--bg-card);
-            border: 1px solid var(--border-glow);
-            border-radius: 24px;
-            padding: 40px;
-            backdrop-filter: blur(14px);
-            position: relative;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-        }
-
-        .arch-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 28px;
-            position: relative;
-        }
-
-        .arch-col-title {
-            font-family: var(--font-display);
-            font-size: 1rem;
-            color: var(--cyan-glow);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 20px;
-            text-align: center;
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--border-glow);
-        }
-
-        .arch-node {
-            background: rgba(9, 14, 28, 0.85);
-            border: 1px solid rgba(0, 242, 254, 0.2);
-            border-radius: 14px;
-            padding: 20px;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .arch-node:hover {
-            border-color: var(--cyan-glow);
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0, 242, 254, 0.25);
-        }
-
-        .arch-node-tag {
-            display: inline-block;
-            font-family: var(--font-code);
-            font-size: 0.7rem;
-            padding: 3px 8px;
-            border-radius: 4px;
-            background: rgba(0, 242, 254, 0.12);
-            color: var(--cyan-glow);
-            margin-bottom: 8px;
-        }
-
-        .arch-node h4 {
-            font-size: 1.1rem;
-            margin-bottom: 6px;
-            color: #fff;
-        }
-
-        .arch-node p {
-            font-size: 0.88rem;
-            color: var(--text-secondary);
-        }
-
-        .diagram-bus {
-            margin-top: 24px;
-            padding: 16px 20px;
-            background: rgba(0, 242, 254, 0.05);
-            border: 1px dashed var(--border-glow);
-            border-radius: 12px;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-            font-family: var(--font-code);
-            font-size: 0.82rem;
-            color: var(--cyan-glow);
-        }
-
-        /* Features & Ecosystem Grid */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 28px;
-        }
-
-        .feature-card {
-            background: var(--bg-card);
-            border: 1px solid rgba(255, 255, 255, 0.07);
-            border-radius: 18px;
-            padding: 28px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, var(--cyan-glow), transparent);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .feature-card:hover {
-            border-color: var(--border-highlight);
-            transform: translateY(-6px);
-            background: var(--bg-card-hover);
-            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
-        }
-
-        .feature-card:hover::before {
-            opacity: 1;
-        }
-
-        .feature-icon {
-            font-size: 2.2rem;
-            margin-bottom: 18px;
-            display: inline-block;
-        }
-
-        .feature-card h3 {
-            font-size: 1.25rem;
-            margin-bottom: 12px;
-            font-family: var(--font-display);
-        }
-
-        .feature-card p {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-        }
-
-        /* Hardware Components Showcase */
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 20px;
-        }
-
-        .product-card {
-            background: var(--bg-card);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 16px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: transform 0.25s, border-color 0.25s;
-        }
-
-        .product-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--border-glow);
-        }
-
-        .product-category {
-            font-family: var(--font-code);
-            font-size: 0.72rem;
-            color: var(--blue-accent);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 6px;
-        }
-
-        .product-card h4 {
-            font-size: 1.05rem;
-            margin-bottom: 8px;
-            color: #fff;
-        }
-
-        .product-card p {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            flex-grow: 1;
-        }
-
-        /* Firmware Code Tabs */
-        .code-container {
-            background: #080c16;
-            border: 1px solid var(--border-glow);
-            border-radius: 18px;
-            overflow: hidden;
-            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
-        }
-
-        .code-tabs {
-            display: flex;
-            background: #0b1120;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            overflow-x: auto;
-        }
-
-        .tab-btn {
-            padding: 14px 22px;
-            background: transparent;
-            border: none;
-            color: var(--text-secondary);
-            font-family: var(--font-code);
-            font-size: 0.86rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            border-bottom: 2px solid transparent;
-            white-space: nowrap;
-        }
-
-        .tab-btn.active {
-            color: var(--cyan-glow);
-            border-bottom-color: var(--cyan-glow);
-            background: rgba(0, 242, 254, 0.06);
-        }
-
-        .code-block {
-            display: none;
-            padding: 24px;
-            font-family: var(--font-code);
-            font-size: 0.88rem;
-            color: #cbd5e1;
-            overflow-x: auto;
-            max-height: 380px;
-        }
-
-        .code-block.active {
-            display: block;
-        }
-
-        /* Budget Section */
-        .budget-box {
-            background: linear-gradient(135deg, rgba(13, 20, 36, 0.9), rgba(20, 32, 58, 0.6));
-            border: 1px solid var(--border-glow);
-            border-radius: 24px;
-            padding: 50px 32px;
-            text-align: center;
-            box-shadow: 0 0 50px rgba(0, 242, 254, 0.15);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .budget-box::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(0, 242, 254, 0.06) 0%, transparent 70%);
-            pointer-events: none;
-        }
-
-        .budget-number {
-            font-family: var(--font-display);
-            font-size: 4.2rem;
-            font-weight: 900;
-            background: linear-gradient(90deg, #fff, var(--cyan-glow));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin: 16px 0;
-            display: block;
-        }
-
-        /* Contributors */
-        .team-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-
-        .team-card {
-            background: var(--bg-card);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 14px;
-            padding: 20px;
-            text-align: center;
-            transition: all 0.25s;
-        }
-
-        .team-card:hover {
-            border-color: var(--cyan-glow);
-            transform: translateY(-4px);
-        }
-
-        .team-avatar {
-            width: 50px;
-            height: 50px;
-            margin: 0 auto 12px;
-            background: linear-gradient(135deg, var(--cyan-glow), var(--purple-accent));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: #050811;
-            font-family: var(--font-display);
-        }
-
-        .team-card h4 {
-            font-size: 1.05rem;
-            margin-bottom: 4px;
-        }
-
-        .team-card span {
-            font-size: 0.8rem;
-            color: var(--cyan-glow);
-            font-family: var(--font-code);
-        }
-
-        /* Contact Form */
-        .contact-box {
-            max-width: 650px;
-            margin: 0 auto;
-            background: var(--bg-card);
-            border: 1px solid var(--border-glow);
-            border-radius: 20px;
-            padding: 40px;
-            backdrop-filter: blur(14px);
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 13px 18px;
-            background: rgba(5, 8, 17, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 10px;
-            color: #fff;
-            font-family: var(--font-body);
-            font-size: 0.95rem;
-            transition: border-color 0.2s;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--cyan-glow);
-            box-shadow: 0 0 10px rgba(0, 242, 254, 0.25);
-        }
-
-        textarea.form-control {
-            resize: vertical;
-            min-height: 120px;
-        }
-
-        .btn-submit {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, var(--cyan-glow), var(--blue-accent));
-            color: #040810;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .btn-submit:hover {
-            box-shadow: 0 0 25px rgba(0, 242, 254, 0.5);
-            transform: translateY(-2px);
-        }
-
-        .form-alert {
-            display: none;
-            margin-top: 18px;
-            padding: 14px;
-            border-radius: 8px;
-            background: rgba(0, 242, 254, 0.15);
-            border: 1px solid var(--cyan-glow);
-            color: var(--cyan-glow);
-            text-align: center;
-            font-size: 0.9rem;
-        }
-
-        /* Footer */
-        footer {
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 40px 24px;
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: 0.88rem;
-            background: #04070e;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(0.85); }
-        }
-
-        @media (max-width: 900px) {
-            .hero {
-                grid-template-columns: 1fr;
-                padding-top: 50px;
-            }
-            .arch-grid {
-                grid-template-columns: 1fr;
-            }
-            .hero h1 {
-                font-size: 2.6rem;
-            }
-            nav ul {
-                display: none;
-            }
-        }
-    </style>
+<!--
+  ============================================================
+  PROJECT X · MASTER LANDING PAGE
+  File: index.html
+  Version: 1.0.0 · Build 2024.12
+  Author: Raja Sharma (github.com/luciferofx)
+  ============================================================
+-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#05070d">
+<meta name="description" content="Project X · A Collaborative Hardware & AI Ecosystem">
+<title>Project X — Master Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Orbitron:wght@600;700;800&display=swap" rel="stylesheet">
+<!-- Global CSS -->
+<link rel="stylesheet" href="styles.css">
+
+<style>
+  /* --- CUSTOM LANDING PAGE ANIMATIONS --- */
+  body {
+    background:
+      radial-gradient(1000px 500px at 50% -10%, #1a102c 0%, transparent 70%),
+      #05070d;
+  }
+
+  .hero {
+    text-align: center;
+    padding: 60px 20px 40px;
+    position: relative;
+  }
+  .hero h1 {
+    font-family: var(--disp);
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 800;
+    letter-spacing: 4px;
+    background: linear-gradient(90deg, #fff, var(--violet), var(--cyan));
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 30px rgba(176,106,255,0.3);
+    margin-bottom: 16px;
+    animation: float 4s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  .hero p {
+    font-family: var(--mono);
+    font-size: clamp(0.8rem, 2vw, 1.1rem);
+    color: var(--ink-dim);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+  }
+
+  /* --- GRID LAYOUT --- */
+  .portal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 40px;
+    padding-bottom: 60px;
+  }
+
+  /* --- 3D PROJECT CARDS --- */
+  .project-card {
+    background: linear-gradient(165deg, var(--card), var(--card-hi));
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+
+  /* Default hover effect */
+  .project-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    z-index: 10;
+  }
+
+  /* Dynamic Theme Colors for each card */
+  .card-robot { border-color: rgba(176,106,255,0.2); }
+  .card-robot:hover { border-color: var(--violet); box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 30px rgba(176,106,255,0.4); }
+  .card-robot .icon-box { color: var(--violet); background: rgba(176,106,255,0.1); }
+  .card-robot .btn-enter { color: var(--violet); border-color: rgba(176,106,255,0.3); }
+  .card-robot:hover .btn-enter { background: var(--violet); color: #000; }
+
+  .card-remotecar { border-color: rgba(47,212,255,0.2); }
+  .card-remotecar:hover { border-color: var(--cyan); box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 30px rgba(47,212,255,0.4); }
+  .card-remotecar .icon-box { color: var(--cyan); background: rgba(47,212,255,0.1); }
+  .card-remotecar .btn-enter { color: var(--cyan); border-color: rgba(47,212,255,0.3); }
+  .card-remotecar:hover .btn-enter { background: var(--cyan); color: #000; }
+
+  .card-armygate { border-color: rgba(255,183,0,0.2); }
+  .card-armygate:hover { border-color: var(--amber); box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 30px rgba(255,183,0,0.4); }
+  .card-armygate .icon-box { color: var(--amber); background: rgba(255,183,0,0.1); }
+  .card-armygate .btn-enter { color: var(--amber); border-color: rgba(255,183,0,0.3); }
+  .card-armygate:hover .btn-enter { background: var(--amber); color: #000; }
+
+  .card-cradle { border-color: rgba(255,93,115,0.2); }
+  .card-cradle:hover { border-color: var(--rose); box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 30px rgba(255,93,115,0.4); }
+  .card-cradle .icon-box { color: var(--rose); background: rgba(255,93,115,0.1); }
+  .card-cradle .btn-enter { color: var(--rose); border-color: rgba(255,93,115,0.3); }
+  .card-cradle:hover .btn-enter { background: var(--rose); color: #000; }
+
+  .card-idscanner { border-color: rgba(111,240,194,0.2); }
+  .card-idscanner:hover { border-color: var(--mint); box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 30px rgba(111,240,194,0.4); }
+  .card-idscanner .icon-box { color: var(--mint); background: rgba(111,240,194,0.1); }
+  .card-idscanner .btn-enter { color: var(--mint); border-color: rgba(111,240,194,0.3); }
+  .card-idscanner:hover .btn-enter { background: var(--mint); color: #000; }
+
+  /* Card Content */
+  .icon-box {
+    width: 56px; height: 56px; border-radius: 14px;
+    display: grid; place-items: center; font-size: 1.8rem;
+    margin-bottom: 20px;
+  }
+  .project-title {
+    font-family: var(--disp); font-size: 1.2rem; font-weight: 700;
+    color: #fff; margin-bottom: 8px; letter-spacing: 1px;
+  }
+  .project-desc {
+    font-family: var(--sans); font-size: 0.85rem; color: var(--ink-dim);
+    line-height: 1.6; margin-bottom: 24px; flex-grow: 1;
+  }
+  .btn-enter {
+    display: flex; justify-content: center; align-items: center; gap: 8px;
+    padding: 12px; border: 1px solid; border-radius: 8px;
+    font-family: var(--mono); font-size: 0.75rem; font-weight: bold; letter-spacing: 1px;
+    transition: all 0.3s;
+  }
+  
+  /* Glowing background orb */
+  .orb {
+    position: absolute; width: 150px; height: 150px;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    border-radius: 50%; top: -50px; right: -50px; pointer-events: none;
+    transition: all 0.5s;
+  }
+  .project-card:hover .orb { transform: scale(1.5); opacity: 0.8; }
+
+</style>
 </head>
 <body>
+<div class="shell">
 
-    <!-- Background Welcome Audio -->
-    <audio id="welcomeMusic" loop>
-        <source src="welcome-music.mp3" type="audio/mpeg">
-    </audio>
-
-    <!-- Floating Audio Control Pill -->
-    <div class="audio-bar">
-        <button id="audioToggleBtn" class="audio-btn" title="Toggle Sound">▶</button>
-        <span style="font-size: 0.8rem; font-family: var(--font-code); color: var(--cyan-glow);" id="audioStatusText">AUDIO OFF</span>
+  <div class="hero">
+    <div style="display: inline-block; padding: 6px 16px; border: 1px solid var(--line-hi); border-radius: 99px; background: rgba(255,255,255,0.02); font-family: var(--mono); font-size: 0.7rem; color: var(--cyan); margin-bottom: 24px; letter-spacing: 2px;">
+      SYSTEM V.2024
     </div>
-
-    <!-- Navigation Header -->
-    <header>
-        <div class="navbar">
-            <div class="logo">
-                <span class="logo-dot"></span>
-                PROJECT X
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#architecture">Architecture</a></li>
-                    <li><a href="#features">Ecosystem</a></li>
-                    <li><a href="#code">Firmware</a></li>
-                    <li><a href="#components">Hardware</a></li>
-                    <li><a href="#budget">Budget</a></li>
-                    <li><a href="#team">Team</a></li>
-                    <li><a href="#contact">Feedback</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div>
-            <div class="badge">● SYSTEM OPERATIONAL & READY</div>
-            <h1>Intelligent Autonomous <span>Robotic Ecosystem</span></h1>
-            <p>
-                An enterprise-grade multi-controller robotics platform combining Raspberry Pi 4 AI computer vision, ESP8266 Wi-Fi telemetry, HC-05 Bluetooth command pipelines, animated OLED expressions, and obstacle avoidance logic.
-            </p>
-            <div class="hero-actions">
-                <a href="#architecture" class="btn-primary">Explore Diagram</a>
-                <a href="#code" class="btn-secondary">View Firmware Code</a>
-            </div>
-        </div>
-
-        <div class="hero-card">
-            <div class="hero-card-header">
-                <span>MODEL: PROT-X // REV 3.0</span>
-                <span>STATUS: ONLINE</span>
-            </div>
-            <!-- Robot Presentation Image -->
-            <img src="images/robot-image.jpg" onerror="this.src='https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=800&q=80'" alt="Project X Robot Chassis" class="hero-robot-img">
-            
-            <div class="telemetry-row">
-                <div class="telemetry-box">
-                    <span>BRAIN MCU</span>
-                    <strong>RPi 4 / UNO</strong>
-                </div>
-                <div class="telemetry-box">
-                    <span>TELEMETRY</span>
-                    <strong>Wi-Fi & BT</strong>
-                </div>
-                <div class="telemetry-box">
-                    <span>EXPRESSIONS</span>
-                    <strong>OLED + MG995</strong>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- System Architecture Diagram Section -->
-    <section id="architecture">
-        <div class="section-header">
-            <div class="section-tag">Detailed Hardware & Logic Map</div>
-            <h2 class="section-title">Robot System Architecture</h2>
-            <p class="section-desc">Pura end-to-end hardware communication flow: Central Processing Unit se lekar Sensors, Actuators aur Wireless telemetry tak.</p>
-        </div>
-
-        <div class="diagram-container">
-            <div class="arch-grid">
-                <!-- Column 1: Compute & Vision -->
-                <div>
-                    <div class="arch-col-title">1. High-Level AI & Compute</div>
-                    
-                    <div class="arch-node">
-                        <span class="arch-node-tag">PRIMARY BRAIN</span>
-                        <h4>Raspberry Pi 4 Model B</h4>
-                        <p>Runs Linux OS & Python OpenCV pipelines for real-time Face Recognition, video telemetry, aur computer vision encodings.</p>
-                    </div>
-
-                    <div class="arch-node">
-                        <span class="arch-node-tag">VISION FEED</span>
-                        <h4>Pi Camera Module</h4>
-                        <p>Real-time optical feed capture for live identification, security scanning, aur remote video streaming over IP.</p>
-                    </div>
-
-                    <div class="arch-node">
-                        <span class="arch-node-tag">LOCAL LOGIC</span>
-                        <h4>Arduino Uno R3 / Mega</h4>
-                        <p>Low-level PWM generation, pin multiplexing, interrupt handling, and direct motor driver triggering.</p>
-                    </div>
-                </div>
-
-                <!-- Column 2: Communication & Sensing -->
-                <div>
-                    <div class="arch-col-title">2. Wireless & Sensor Bus</div>
-                    
-                    <div class="arch-node">
-                        <span class="arch-node-tag">WI-FI TELEMETRY</span>
-                        <h4>NodeMCU ESP8266 V3</h4>
-                        <p>Hosts internal Web Server with direct IP access (192.168.x.x) for phone-controlled steering and automation toggles.</p>
-                    </div>
-
-                    <div class="arch-node">
-                        <span class="arch-node-tag">BLUETOOTH LINK</span>
-                        <h4>HC-05 RF Transceiver</h4>
-                        <p>Provides zero-latency wireless UART serial bridge for mobile app command execution and speech triggering.</p>
-                    </div>
-
-                    <div class="arch-node">
-                        <span class="arch-node-tag">AVOIDANCE</span>
-                        <h4>HC-SR04 Ultrasonic Sensor</h4>
-                        <p>Continuous ping-echo distance profiling (2cm - 400cm) for autonomous obstacle avoidance navigation.</p>
-                    </div>
-                </div>
-
-                <!-- Column 3: Actuators & Expressions -->
-                <div>
-                    <div class="arch-col-title">3. Actuation & Output UI</div>
-                    
-                    <div class="arch-node">
-                        <span class="arch-node-tag">MOTOR CONTROL</span>
-                        <h4>L298N Dual H-Bridge Driver</h4>
-                        <p>High-current drive for 4x BO 200 RPM gear motors enabling differential drive locomotion (Forward, Back, Spin).</p>
-                    </div>
-
-                    <div class="arch-node">
-                        <span class="arch-node-tag">FACIAL ANIMATRONICS</span>
-                        <h4>MG995 High-Torque Servos</h4>
-                        <p>Simulates physical facial expressions (eyebrow, mouth movements) corresponding to robot emotional states.</p>
-                    </div>
-
-                    <div class="arch-node">
-                        <span class="arch-node-tag">AUDIO & HUD</span>
-                        <h4>0.96" OLED & 10W Woofer</h4>
-                        <p>128x64 I2C animated eye graphics display paired with ISD1820 & PAM8403 amplified speech synthesizer.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Interconnect Data Bus -->
-            <div class="diagram-bus">
-                <span>[INPUT] Mobile App / IP GUI</span>
-                <span>⟶</span>
-                <span>[TRANSPORT] ESP8266 (Wi-Fi) / HC-05 (BT)</span>
-                <span>⟶</span>
-                <span>[LOGIC] Arduino Mega / RPi 4</span>
-                <span>⟶</span>
-                <span>[OUTPUT] L298N Motors / OLED / TTS Speaker</span>
-            </div>
-        </div>
-    </section>
-
-    <!-- Sub-Projects & Features Section -->
-    <section id="features">
-        <div class="section-header">
-            <div class="section-tag">GitHub Repository Modules</div>
-            <h2 class="section-title">Ecosystem & Sub-Projects</h2>
-            <p class="section-desc">Project X sirf ek robot nahi, balki multiple intelligent automation modules ka collective repo hai.</p>
-        </div>
-
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">🤖</div>
-                <h3>Autonomous IP Rover</h3>
-                <p>Equipped with <code>movementcontrol.ino</code> for omni-directional navigation via mobile browser IP or Bluetooth terminal commands with obstacle auto-braking.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">👁️</div>
-                <h3>Facial Expression OLED HUD</h3>
-                <p>Driven by <code>displaycoding.ino</code>. Renders dynamic pixel eye expressions (happy, alert, scan line, blink) and diagnostic HUD telemetry on 128x64 OLED.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">🛡️</div>
-                <h3>Smart Army Security Gate</h3>
-                <p>Implemented in <code>armygate.ino</code>. An automated military checkpoint barrier utilizing sensors and servo-actuated boom barriers for authorized entry control.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">👶</div>
-                <h3>Smart Baby Cradle</h3>
-                <p>Built with <code>babycradle.ino</code>. IoT-enabled automated rocking cradle with real-time web portal controls for speed modulation and remote parenting supervision.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">🪪</div>
-                <h3>Digital ID Scanner Terminal</h3>
-                <p>Powered by <code>displayidscanner.ino</code>. Authenticates system users and team badges with live display confirmation and access control logs.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">🧠</div>
-                <h3>RPi OpenCV Face Detection</h3>
-                <p>Custom Python pipeline on Raspberry Pi 4 utilizing camera encodings to detect and identify registered contributors automatically.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Firmware Code Viewer Tabs -->
-    <section id="code">
-        <div class="section-header">
-            <div class="section-tag">Firmware & Software Codebase</div>
-            <h2 class="section-title">Embedded Source Explorer</h2>
-            <p class="section-desc">Browse through the core firmware files directly from the repository.</p>
-        </div>
-
-        <div class="code-container">
-            <div class="code-tabs">
-                <button class="tab-btn active" onclick="switchTab(event, 'code-movement')">movementcontrol.ino</button>
-                <button class="tab-btn" onclick="switchTab(event, 'code-display')">displaycoding.ino</button>
-                <button class="tab-btn" onclick="switchTab(event, 'code-baby')">babycradle.ino</button>
-                <button class="tab-btn" onclick="switchTab(event, 'code-gate')">armygate.ino</button>
-                <button class="tab-btn" onclick="switchTab(event, 'code-face')">face_recognize.py</button>
-            </div>
-
-            <pre id="code-movement" class="code-block active"><code>// movementcontrol.ino - Project X Differential Drive Engine
-#include &lt;ESP8266WiFi.h&gt;
-
-const int ENA = D1;  // PWM Speed Control Left
-const int IN1 = D2;  // Left Motor Forward
-const int IN2 = D3;  // Left Motor Reverse
-const int IN3 = D4;  // Right Motor Forward
-const int IN4 = D5;  // Right Motor Reverse
-const int ENB = D6;  // PWM Speed Control Right
-
-void setup() {
-  pinMode(ENA, OUTPUT);
-  pinMode(ENB, OUTPUT);
-  pinMode(IN1, OUTPUT);
-  pinMode(IN2, OUTPUT);
-  pinMode(IN3, OUTPUT);
-  pinMode(IN4, OUTPUT);
-  Serial.begin(115200);
-}
-
-void moveForward(int speedVal) {
-  analogWrite(ENA, speedVal);
-  analogWrite(ENB, speedVal);
-  digitalWrite(IN1, HIGH); digitalWrite(IN2, LOW);
-  digitalWrite(IN3, HIGH); digitalWrite(IN4, LOW);
-}
-
-void stopMotors() {
-  digitalWrite(IN1, LOW); digitalWrite(IN2, LOW);
-  digitalWrite(IN3, LOW); digitalWrite(IN4, LOW);
-}</code></pre>
-
-            <pre id="code-display" class="code-block"><code>// displaycoding.ino - 128x64 OLED HUD & Eye Animation
-#include &lt;Wire.h&gt;
-#include &lt;Adafruit_GFX.h&gt;
-#include &lt;Adafruit_SSD1306.h&gt;
-
-#define SCREEN_WIDTH 128
-#define SCREEN_HEIGHT 64
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
-
-void setup() {
-  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
-  display.clearDisplay();
-  display.setTextSize(1);
-  display.setTextColor(SSD1306_WHITE);
-  display.setCursor(15, 25);
-  display.println("PROJECT X: ONLINE");
-  display.display();
-}
-
-void drawEyeExpressions(int mode) {
-  display.clearDisplay();
-  // Renders animated eye bars for robotic facial expression
-  display.fillRoundRect(24, 20, 32, 24, 6, SSD1306_WHITE);
-  display.fillRoundRect(72, 20, 32, 24, 6, SSD1306_WHITE);
-  display.display();
-}</code></pre>
-
-            <pre id="code-baby" class="code-block"><code>// babycradle.ino - IoT Motorized Automatic Cradle
-#include &lt;ESP8266WebServer.h&gt;
-
-ESP8266WebServer server(80);
-const int MOTOR_PWM = D1;
-bool isSwinging = false;
-
-void handleRoot() {
-  String html = "&lt;h1&gt;Baby Cradle Control&lt;/h1&gt;";
-  html += "&lt;a href='/start'&gt;&lt;button&gt;Start Swing&lt;/button&gt;&lt;/a&gt; ";
-  html += "&lt;a href='/stop'&gt;&lt;button&gt;Stop Swing&lt;/button&gt;&lt;/a&gt;";
-  server.send(200, "text/html", html);
-}
-
-void setup() {
-  pinMode(MOTOR_PWM, OUTPUT);
-  server.on("/", handleRoot);
-  server.on("/start", []() { isSwinging = true; server.send(200, "text/plain", "Started"); });
-  server.on("/stop", []() { isSwinging = false; server.send(200, "text/plain", "Stopped"); });
-  server.begin();
-}
-
-void loop() {
-  server.handleClient();
-  analogWrite(MOTOR_PWM, isSwinging ? 180 : 0);
-}</code></pre>
-
-            <pre id="code-gate" class="code-block"><code>// armygate.ino - Automated Security Barrier System
-#include &lt;Servo.h&gt;
-
-Servo gateServo;
-const int trigPin = 9;
-const int echoPin = 10;
-const int redLed = 6;
-const int greenLed = 7;
-
-void setup() {
-  gateServo.attach(11);
-  pinMode(trigPin, OUTPUT);
-  pinMode(echoPin, INPUT);
-  gateServo.write(0); // Gate Closed Default
-}
-
-void loop() {
-  long duration, distance;
-  digitalWrite(trigPin, LOW); delayMicroseconds(2);
-  digitalWrite(trigPin, HIGH); delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-  duration = pulseIn(echoPin, HIGH);
-  distance = (duration / 2) / 29.1;
-
-  if (distance &lt; 20) { // Authorized Vehicle Detected
-    gateServo.write(90); // Raise Barrier
-    delay(5000);
-    gateServo.write(0);  // Lower Barrier
-  }
-}</code></pre>
-
-            <pre id="code-face" class="code-block"><code># face_recognize.py - Raspberry Pi 4 Face Vision Classifier
-import cv2
-import pickle
-
-print("[INFO] loading encodings + face detector...")
-data = pickle.loads(open("encodings.pickle", "rb").read())
-detector = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
-
-cap = cv2.VideoCapture(0)
-while True:
-    ret, frame = cap.read()
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    faces = detector.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5)
-    for (x, y, w, h) in faces:
-        cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 2)
-        cv2.putText(frame, "AUTHORIZED USER", (x, y-10), 
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 255), 2)
-    cv2.imshow("Project X - Vision Stream", frame)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break</code></pre>
-        </div>
-    </section>
-
-    <!-- Hardware Bill of Materials -->
-    <section id="components">
-        <div class="section-header">
-            <div class="section-tag">Specifications & Modules</div>
-            <h2 class="section-title">Hardware Inventory</h2>
-            <p class="section-desc">Sabhi sensors, drivers, compute boards, aur electronic parts jo robot aur projects me integrate kiye gaye hain.</p>
-        </div>
-
-        <div class="products-grid">
-            <div class="product-card">
-                <span class="product-category">Compute Board</span>
-                <h4>Raspberry Pi 4 (4GB)</h4>
-                <p>Master AI brain for high-speed image processing, OpenCV facial recognition model, and web daemon hosting.</p>
-            </div>
-
-            <div class="product-card">
-                <span class="product-category">Microcontroller</span>
-                <h4>Arduino Uno R3 / Mega</h4>
-                <p>Primary logic controller managing servo kinematics, sensor readouts, and motor actuation timings.</p>
-            </div>
-
-            <div class="product-card">
-                <span class="product-category">Wireless IoT</span>
-                <h4>NodeMCU ESP8266 V3</h4>
-                <p>Integrated Wi-Fi module enabling custom mobile web server control and local network telemetry.</p>
-            </div>
-
-            <div class="product-card">
-                <span class="product-category">Communication</span>
-                <h4>HC-05 Bluetooth Module</h4>
-                <p>Serial RF bridge providing seamless Android terminal connectivity for speech synthesis and steering.</p>
-            </div>
-
-            <div class="product-card">
-                <span class="product-category">Motor Driver</span>
-                <h4>L298N Dual H-Bridge</h4>
-                <p>Dual DC motor driver with heat-sink capable of up to 2A per channel for high-torque wheel locomotion.</p>
-            </div>
-
-            <div class="product-card">
-                <span class="product-category">Animatronics</span>
-                <h4>MG995 Metal Servos</h4>
-                <p>High-torque metal gear servo motors providing precise mechanical movement for robot facial expressions.</p>
-            </div>
-
-            <div class="product-card">
-                <span class="product-category">Visual Display</span>
-                <h4>0.96" I2C OLED (128x64)</h4>
-                <p>High-contrast monochrome display showing eyes animation, battery status, and IP scanning telemetry.</p>
-            </div>
-
-            <div class="product-card">
-                <span class="product-category">Audio Synthesis</span>
-                <h4>PAM8403 Amp + 10W Woofer</h4>
-                <p>5V stereo amplifier module driving a 3-inch 4Ω woofer speaker for loud, clear Text-to-Speech audio feedback.</p>
-            </div>
-
-            <div class="product-card">
-                <span class="product-category">Proximity Sensor</span>
-                <h4>HC-SR04 Ultrasonic</h4>
-                <p>Non-contact sonar ranging module offering obstacle detection from 2cm up to 4 meters.</p>
-            </div>
-
-            <div class="product-card">
-                <span class="product-category">Power Delivery</span>
-                <h4>18650 Li-Ion Cell Pack</h4>
-                <p>High-discharge rechargeable 3.7V / 12V lithium-ion battery array powering independent logic and motor buses.</p>
-            </div>
-
-            <div class="product-card">
-                <span class="product-category">Propulsion</span>
-                <h4>BO 200 RPM Gear Motors</h4>
-                <p>Durable dual-shaft DC motors coupled with rubber grip wheels for stable forward/reverse navigation.</p>
-            </div>
-
-            <div class="product-card">
-                <span class="product-category">Sound & Record</span>
-                <h4>ISD1820 Voice Board</h4>
-                <p>Audio playback and voice recording module for pre-stored safety alerts and verbal robotic responses.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Budget Section -->
-    <section id="budget">
-        <div class="budget-box">
-            <div class="section-tag">Total Investment & Build Cost</div>
-            <h2 class="section-title">Project Development Budget</h2>
-            <span class="budget-number" id="budgetCounter" data-target="23400">₹0</span>
-            <p class="section-desc" style="max-width: 600px; margin: 0 auto;">
-                Complete funding utilized for custom iron chassis fabrication, Raspberry Pi 4 compute unit, motor driver bridges, high-torque servos, Li-ion batteries, and complete sensor array.
-            </p>
-        </div>
-    </section>
-
-    <!-- Contributors & Team Section -->
-    <section id="team">
-        <div class="section-header">
-            <div class="section-tag">Collaborative Effort</div>
-            <h2 class="section-title">Project Contributors</h2>
-            <p class="section-desc">Developed with dedication by talented Computer Science & IP students.</p>
-        </div>
-
-        <h3 style="font-family: var(--font-display); font-size: 1.1rem; color: var(--cyan-glow); margin-bottom: 20px; text-transform: uppercase;">Core Engineering Team</h3>
-        <div class="team-grid">
-            <div class="team-card">
-                <div class="team-avatar">RS</div>
-                <h4>Raja Sharma</h4>
-                <span>Core Robotics & Lead</span>
-            </div>
-            <div class="team-card">
-                <div class="team-avatar">PD</div>
-                <h4>Purushaan Dubey</h4>
-                <span>Hardware & Systems</span>
-            </div>
-            <div class="team-card">
-                <div class="team-avatar">SA</div>
-                <h4>Shriyansh Aggarwal</h4>
-                <span>Electronics & Design</span>
-            </div>
-            <div class="team-card">
-                <div class="team-avatar">MH</div>
-                <h4>Mohammad Hamdan</h4>
-                <span>Software & Firmware</span>
-            </div>
-        </div>
-
-        <h3 style="font-family: var(--font-display); font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 20px; text-transform: uppercase;">Technical Helpers & Support</h3>
-        <div class="team-grid">
-            <div class="team-card">
-                <div class="team-avatar" style="background: rgba(255,255,255,0.1); color: #fff;">VJ</div>
-                <h4>Varsha Jha</h4>
-                <span>Research & Documentation</span>
-            </div>
-            <div class="team-card">
-                <div class="team-avatar" style="background: rgba(255,255,255,0.1); color: #fff;">AS</div>
-                <h4>Abhay Sharma</h4>
-                <span>Assembly & Fabrication</span>
-            </div>
-            <div class="team-card">
-                <div class="team-avatar" style="background: rgba(255,255,255,0.1); color: #fff;">AY</div>
-                <h4>Anshul Yadav</h4>
-                <span>Component Testing</span>
-            </div>
-        </div>
-    </section>
-
-    <!-- Feedback & Suggestion Contact Form -->
-    <section id="contact">
-        <div class="section-header">
-            <div class="section-tag">Continuous Improvement</div>
-            <h2 class="section-title">Send Suggestions</h2>
-            <p class="section-desc">Have an optimization idea or upgrade suggestion for the robot? Drop a message directly to the engineering team.</p>
-        </div>
-
-        <div class="contact-box">
-            <form action="https://formspree.io/f/mjkgbnwy" method="POST" id="contactForm">
-                <div class="form-group">
-                    <label for="email">Your Email Address</label>
-                    <input type="email" id="email" name="email" class="form-control" placeholder="name@example.com" required>
-                </div>
-                <div class="form-group">
-                    <label for="message">Feedback / Suggestion</label>
-                    <textarea id="message" name="message" class="form-control" placeholder="Share your suggestions for hardware or AI modules..." required></textarea>
-                </div>
-                <button type="submit" class="btn-submit">Submit Recommendation</button>
-                <div id="formSuccess" class="form-alert">Thank you! Your suggestion has been dispatched to the team.</div>
-            </form>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2026 PROJECT X - Open Source Robotic & Automation Architecture.</p>
-        <p style="margin-top: 8px; font-size: 0.8rem; color: var(--text-secondary);">Crafted with passion by the IP & CS Engineering Team.</p>
-    </footer>
-
-    <!-- Interactive Scripts -->
-    <script>
-        // Tab Switcher for Firmware Code
-        function switchTab(event, tabId) {
-            const tabs = document.querySelectorAll('.tab-btn');
-            const blocks = document.querySelectorAll('.code-block');
-
-            tabs.forEach(tab => tab.classList.remove('active'));
-            blocks.forEach(block => block.classList.remove('active'));
-
-            event.currentTarget.classList.add('active');
-            document.getElementById(tabId).classList.add('active');
-        }
-
-        // Budget Counter Animation on Scroll
-        const budgetElem = document.getElementById('budgetCounter');
-        let budgetAnimated = false;
-
-        function animateCounter() {
-            const target = parseInt(budgetElem.getAttribute('data-target'));
-            let count = 0;
-            const duration = 2200; // ms
-            const stepTime = 25;
-            const stepIncrement = Math.ceil(target / (duration / stepTime));
-
-            const timer = setInterval(() => {
-                count += stepIncrement;
-                if (count >= target) {
-                    budgetElem.textContent = '₹' + target.toLocaleString('en-IN');
-                    clearInterval(timer);
-                } else {
-                    budgetElem.textContent = '₹' + count.toLocaleString('en-IN');
-                }
-            }, stepTime);
-        }
-
-        window.addEventListener('scroll', () => {
-            if (!budgetAnimated) {
-                const rect = budgetElem.getBoundingClientRect();
-                if (rect.top <= window.innerHeight - 100) {
-                    animateCounter();
-                    budgetAnimated = true;
-                }
-            }
-        });
-
-        // Ambient Audio Toggle Controller
-        const music = document.getElementById('welcomeMusic');
-        const audioBtn = document.getElementById('audioToggleBtn');
-        const audioText = document.getElementById('audioStatusText');
-        let isPlaying = false;
-
-        audioBtn.addEventListener('click', () => {
-            if (!isPlaying) {
-                music.play().then(() => {
-                    audioBtn.textContent = '❚❚';
-                    audioText.textContent = 'AUDIO LIVE';
-                    isPlaying = true;
-                }).catch(err => {
-                    console.log('Audio autoplay blocked, click allowed:', err);
-                });
-            } else {
-                music.pause();
-                audioBtn.textContent = '▶';
-                audioText.textContent = 'AUDIO OFF';
-                isPlaying = false;
-            }
-        });
-
-        // Formspree Submission Handler
-        const form = document.getElementById('contactForm');
-        const formAlert = document.getElementById('formSuccess');
-
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const data = new FormData(form);
-            try {
-                const response = await fetch(form.action, {
-                    method: 'POST',
-                    body: data,
-                    headers: { 'Accept': 'application/json' }
-                });
-                if (response.ok) {
-                    formAlert.style.display = 'block';
-                    form.reset();
-                } else {
-                    alert('Submission error. Please verify and try again.');
-                }
-            } catch (err) {
-                formAlert.style.display = 'block';
-                formAlert.textContent = 'Offline fallback: Suggestion logged!';
-                form.reset();
-            }
-        });
-    </script>
+    <h1>PROJECT X</h1>
+    <p>A Collaborative Hardware &amp; AI Ecosystem</p>
+  </div>
+
+  <!-- PORTAL GRID -->
+  <div class="portal-grid">
+
+    <!-- ROBOT -->
+    <a href="projects/projectx-robot/index.html" class="project-card card-robot">
+      <div class="orb" style="background: radial-gradient(circle, rgba(176,106,255,0.2) 0%, transparent 70%);"></div>
+      <div class="icon-box">🤖</div>
+      <div class="project-title">AI ROBOT</div>
+      <div class="project-desc">Flagship autonomous robot with OpenCV facial recognition, Wi-Fi movement control, and I2C LCD telemetry.</div>
+      <div class="btn-enter">ENTER PROJECT →</div>
+    </a>
+
+    <!-- REMOTE CAR -->
+    <a href="projects/projectx-remotecar/index.html" class="project-card card-remotecar">
+      <div class="orb" style="background: radial-gradient(circle, rgba(47,212,255,0.2) 0%, transparent 70%);"></div>
+      <div class="icon-box">🚗</div>
+      <div class="project-title">REMOTE CAR</div>
+      <div class="project-desc">4WD Bluetooth-controlled rover using dual L298N drivers, Arduino Nano, and the SriTu Hobby app.</div>
+      <div class="btn-enter">ENTER PROJECT →</div>
+    </a>
+
+    <!-- ARMY GATE -->
+    <a href="projects/projectx-army-gate/index.html" class="project-card card-armygate">
+      <div class="orb" style="background: radial-gradient(circle, rgba(255,183,0,0.2) 0%, transparent 70%);"></div>
+      <div class="icon-box">🚧</div>
+      <div class="project-title">ARMY GATE</div>
+      <div class="project-desc">Automated boom barrier security system using MFRC522 RFID authentication and servo mechanics.</div>
+      <div class="btn-enter">ENTER PROJECT →</div>
+    </a>
+
+    <!-- BABY CRADLE -->
+    <a href="projects/projectx-baby-cradle/index.html" class="project-card card-cradle">
+      <div class="orb" style="background: radial-gradient(circle, rgba(255,93,115,0.2) 0%, transparent 70%);"></div>
+      <div class="icon-box">🍼</div>
+      <div class="project-title">BABY CRADLE</div>
+      <div class="project-desc">IoT automatic swing system controlled via a local ESP8266 web server with animated PWM speed adjustments.</div>
+      <div class="btn-enter">ENTER PROJECT →</div>
+    </a>
+
+    <!-- ID SCANNER -->
+    <a href="projects/projectx-id-scanner/index.html" class="project-card card-idscanner">
+      <div class="orb" style="background: radial-gradient(circle, rgba(111,240,194,0.2) 0%, transparent 70%);"></div>
+      <div class="icon-box">🪪</div>
+      <div class="project-title">ID SCANNER</div>
+      <div class="project-desc">Browser-based I2C diagnostic terminal with a 128-cell address map, WebSerial, and AVR firmware flasher.</div>
+      <div class="btn-enter">ENTER PROJECT →</div>
+    </a>
+
+  </div>
+
+  <footer style="text-align: center; padding-top: 20px; border-top: 1px solid var(--line);">
+    <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--ink-faint); margin-bottom: 8px;">
+      © 2024 RAJA SHARMA · PROJECT X ECOSYSTEM
+    </div>
+    <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--line-hi);">
+      EXPERIMENT. ENGINEER. INNOVATE.
+    </div>
+  </footer>
+
+</div>
 </body>
 </html>
