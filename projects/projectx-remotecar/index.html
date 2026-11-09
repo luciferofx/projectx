@@ -1,1 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+  ============================================================
+  PROJECT X · REMOTE CAR DASHBOARD
+  File: index.html
+  Version: 1.0.0 · Build 2024.12
+  Author: Raja Sharma (github.com/luciferofx)
 
+  Note: 100% Global CSS (styles.css). No local styles.
+  ============================================================
+-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#05070d">
+<meta name="description" content="Project X · 4WD Bluetooth Controlled Remote Car">
+<title>Project X — Remote Car Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Orbitron:wght@600;700;800&display=swap" rel="stylesheet">
+<!-- Global CSS -->
+<link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+<div class="shell">
+
+  <!-- ===== TOPBAR ===== -->
+  <div class="topbar">
+    <div class="brand">
+      <div class="mark"><b>PX</b></div>
+      <div>
+        <h1>REMOTE CAR · BLE</h1>
+        <p>Project X · Dual-Driver Rover</p>
+      </div>
+    </div>
+    <div class="status-pill live" id="connPill"><span class="led"></span><span id="connText">SIMULATION ACTIVE</span></div>
+  </div>
+
+  <div class="cols">
+    <!-- ===== SIDEBAR ===== -->
+    <div>
+      <section class="card">
+        <h3>Connection Info</h3>
+        <div class="statuslist">
+          <div class="srow"><span class="k">Controller</span><span class="v">Arduino Nano</span></div>
+          <div class="srow"><span class="k">Wireless</span><span class="v">HC-05 (BLE)</span></div>
+          <div class="srow"><span class="k">Mode</span><span class="v pur">SIMULATOR</span></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h3>Movement Controls</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px;">
+          <div></div>
+          <button class="primary" onclick="sendCmd('U')">W (Forward)</button>
+          <div></div>
+          
+          <button class="primary" onclick="sendCmd('L')">A (Left)</button>
+          <button class="danger" onclick="sendCmd('S')">S (Stop)</button>
+          <button class="primary" onclick="sendCmd('R')">D (Right)</button>
+          
+          <div></div>
+          <button class="primary" onclick="sendCmd('D')">S (Backward)</button>
+          <div></div>
+        </div>
+        <div style="font-size:0.65rem; color:var(--ink-faint); text-align:center; margin-top:12px; font-family:var(--mono);">
+          Sends 'U', 'L', 'R', 'D', 'S' over Serial
+        </div>
+      </section>
+
+      <section class="card">
+        <h3>Hardware Pins</h3>
+        <div class="statuslist">
+          <div class="srow"><span class="k">IN1 (Left Fwd)</span><span class="v">D2</span></div>
+          <div class="srow"><span class="k">IN2 (Left Rev)</span><span class="v">D3</span></div>
+          <div class="srow"><span class="k">IN3 (Right Fwd)</span><span class="v">D4</span></div>
+          <div class="srow"><span class="k">IN4 (Right Rev)</span><span class="v">D5</span></div>
+          <div class="srow"><span class="k">RX / TX</span><span class="v">D0 / D1</span></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-col">
+      
+      <!-- LIVE SIMULATION MODEL -->
+      <section class="card">
+        <h3>Live Rover Simulation <small>Top-Down View</small></h3>
+        
+        <div style="height: 340px; display: flex; justify-content: center; align-items: center; background: #03060c; border: 1px solid var(--line); border-radius: 12px; margin-top: 16px; position: relative; overflow: hidden;">
+          
+          <div id="roverModel" style="position: relative; width: 300px; height: 300px;">
+            <!-- Chassis -->
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 200px; height: 200px; border-radius: 50%; background: #0d1522; border: 2px solid #26344c; box-shadow: inset 0 0 20px rgba(0,0,0,0.8);"></div>
+            
+            <!-- Wheels -->
+            <div id="wheelTL" style="position: absolute; top: 30px; left: 50px; width: 30px; height: 60px; border-radius: 4px; background: #1a2537; border: 1px solid #54647e; transition: all 0.2s;"></div>
+            <div id="wheelTR" style="position: absolute; top: 30px; right: 50px; width: 30px; height: 60px; border-radius: 4px; background: #1a2537; border: 1px solid #54647e; transition: all 0.2s;"></div>
+            <div id="wheelBL" style="position: absolute; bottom: 30px; left: 50px; width: 30px; height: 60px; border-radius: 4px; background: #1a2537; border: 1px solid #54647e; transition: all 0.2s;"></div>
+            <div id="wheelBR" style="position: absolute; bottom: 30px; right: 50px; width: 30px; height: 60px; border-radius: 4px; background: #1a2537; border: 1px solid #54647e; transition: all 0.2s;"></div>
+
+            <!-- Center Arduino -->
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 80px; background: #00979D; border: 1px solid #2fd4ff; border-radius: 4px; display: flex; justify-content: center; align-items: center; color: #fff; font-family: monospace; font-size: 10px;">NANO</div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SYSTEM LOGS -->
+      <section class="card">
+        <h3>Serial Logs</h3>
+        <div class="con" id="con" style="height: 200px; margin-top: 12px;">
+          <div class="ln sys"><span class="ts">--:--:--</span><span class="msg">[BOOT] Rover Controller Online.</span></div>
+          <div class="ln info"><span class="ts">--:--:--</span><span class="msg">[INFO] HC-05 paired. Waiting for commands...</span></div>
+          <div class="ln placeholder"><span class="ts">--:--:--</span><span class="msg">Waiting for user input...</span></div>
+        </div>
+      </section>
+
+      <!-- COMPONENTS & WIRING -->
+      <section class="card">
+        <h3>Components & Wiring <small>Hardware Map</small></h3>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;">
+          
+          <!-- Components List -->
+          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 12px; padding: 16px;">
+            <h4 style="font-family: var(--mono); font-size: 0.7rem; color: var(--ink-dim); text-transform: uppercase; margin-bottom: 12px; border-bottom: 1px solid var(--line); padding-bottom: 8px;">Component List</h4>
+            <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px;">
+              <li style="display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 0.72rem; color: var(--ink);">
+                <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--cyan);"></span> Arduino Nano
+              </li>
+              <li style="display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 0.72rem; color: var(--ink);">
+                <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--amber);"></span> Dual L298N Drivers
+              </li>
+              <li style="display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 0.72rem; color: var(--ink);">
+                <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--mint);"></span> HC-05 Bluetooth
+              </li>
+              <li style="display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 0.72rem; color: var(--ink);">
+                <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--rose);"></span> 4x DC Gear Motors
+              </li>
+            </ul>
+          </div>
+
+          <!-- Wiring Map -->
+          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 12px; padding: 16px;">
+            <h4 style="font-family: var(--mono); font-size: 0.7rem; color: var(--ink-dim); text-transform: uppercase; margin-bottom: 12px; border-bottom: 1px solid var(--line); padding-bottom: 8px;">Wiring Map (Nano → Modules)</h4>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.72rem;">
+                <span style="color: var(--cyan);">D2 (IN1)</span>
+                <span style="color: var(--ink-faint);">→</span>
+                <span style="color: var(--mint);">Left Fwd</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.72rem;">
+                <span style="color: var(--cyan);">D3 (IN2)</span>
+                <span style="color: var(--ink-faint);">→</span>
+                <span style="color: var(--mint);">Left Rev</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.72rem;">
+                <span style="color: var(--cyan);">D4 (IN3)</span>
+                <span style="color: var(--ink-faint);">→</span>
+                <span style="color: var(--mint);">Right Fwd</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.72rem;">
+                <span style="color: var(--cyan);">D5 (IN4)</span>
+                <span style="color: var(--ink-faint);">→</span>
+                <span style="color: var(--mint);">Right Rev</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.72rem;">
+                <span style="color: var(--cyan);">D0 / D1</span>
+                <span style="color: var(--ink-faint);">→</span>
+                <span style="color: var(--mint);">HC-05 UART</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- HOW IT WORKS -->
+      <section class="card">
+        <h3>How It Works <small>Control Flow</small></h3>
+        <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 12px; padding: 20px; margin-top: 16px;">
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            
+            <div style="display: flex; gap: 12px;">
+              <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--cyan); color: #000; display: grid; place-items: center; font-weight: bold; font-size: 0.7rem; flex-shrink: 0;">1</div>
+              <div>
+                <div style="font-family: var(--sans); font-weight: 700; font-size: 0.85rem; color: var(--ink);">Connect via Bluetooth</div>
+                <div style="font-family: var(--mono); font-size: 0.72rem; color: var(--ink-dim); margin-top: 4px;">Pair Android device with HC-05, open Serial terminal at 9600 baud.</div>
+              </div>
+            </div
