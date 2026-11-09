@@ -28,15 +28,17 @@
 
 </div>
 
-**Project X — Remote Car** is a compact, battery-powered robotic rover built around the Arduino Nano platform. It uses two L298N dual H-bridge motor driver modules to control four DC gear motors.
+**Project X · Remote Car** is a compact, battery-powered robotic ground vehicle designed for indoor traversal. It is built on the Arduino Nano platform and uses two L298N dual H-bridge motor drivers to control four DC gear motors.
 
-The rover receives wireless commands through an HC-05 Bluetooth module and can be operated using a compatible Android Bluetooth serial terminal application.
+The system is controlled wirelessly through an HC-05 Bluetooth module, paired with an Android smartphone running the **SriTu Hobby** application.
 
-Its differential-drive architecture allows forward movement, reverse movement, and skid steering without a dedicated steering servo.
-
-> **CORE OBJECTIVE**
+> **📱 REQUIRED ANDROID APP**
 >
-> Develop a wireless, remotely controlled 4WD robotic platform that demonstrates embedded programming, motor control, Bluetooth communication, and differential steering.
+> This project uses the SriTu Hobby application for Bluetooth-based rover control.
+>
+> <a href="https://play.google.com/store/apps/details?id=com.srituhobby">
+> <img src="https://img.shields.io/badge/DOWNLOAD-SriTu%20Hobby%20App-38BDF8?style=for-the-badge&logo=google-play&logoColor=white" alt="Download SriTu Hobby"/>
+> </a>
 
 ---
 
@@ -48,12 +50,12 @@ Its differential-drive architecture allows forward movement, reverse movement, a
 
 | FEATURE | DESCRIPTION |
 |:---|:---|
-| 📡 Wireless Control | HC-05 Bluetooth serial communication |
+| 📡 Wireless Control | HC-05 Bluetooth communication |
 | ⚙️ Dual Motor Drivers | Two L298N modules for four DC motors |
-| 🔄 Differential Steering | Forward, reverse, left, right and stop commands |
-| 🔋 Battery Powered | Designed for a rechargeable battery supply |
-| 📱 Android Compatible | Control through a Bluetooth serial terminal |
-| 🧠 Embedded Controller | Arduino Nano based control system |
+| 🔄 Zero-Radius Turns | Differential steering for tight navigation |
+| 🔋 Battery Powered | Rechargeable battery-powered platform |
+| 📱 Android Control | SriTu Hobby mobile application |
+| 🛞 4WD Platform | Four independently mounted drive wheels |
 
 ---
 
@@ -65,35 +67,35 @@ Its differential-drive architecture allows forward movement, reverse movement, a
 
 | COMPONENT | SPECIFICATION | QTY |
 |:---|:---|:---:|
-| Microcontroller | Arduino Nano — ATmega328P | 1 |
-| Motor Driver | L298N Dual H-Bridge Module | 2 |
-| Bluetooth Module | HC-05 Serial Bluetooth | 1 |
+| Arduino Nano | ATmega328P, 5V, 16MHz | 1 |
+| L298N Motor Driver | Dual H-Bridge Module | 2 |
+| HC-05 Bluetooth | Serial Bluetooth Module | 1 |
 | DC Gear Motor | BO-Type DC Gear Motor | 4 |
-| Wheels | Rubber Grip Wheels | 4 |
-| Chassis | 4WD Rover Chassis | 1 |
+| Wheels | 65mm Rubber Grip | 4 |
+| Chassis | 4WD Circular Base Plate | 1 |
 | Battery | Compatible rechargeable battery pack | 1 |
 
 ### GPIO Pin Mapping
 
 | ARDUINO NANO | COMPONENT | FUNCTION |
 |:---:|:---|:---|
-| D0 (RX) | HC-05 TXD | Bluetooth serial input |
-| D1 (TX) | HC-05 RXD | Bluetooth serial output |
-| D2 | Motor Driver Inputs | Left motor direction control |
-| D3 | Motor Driver Inputs | Left motor direction control |
-| D4 | Motor Driver Inputs | Right motor direction control |
-| D5 | Motor Driver Inputs | Right motor direction control |
+| D0 (RX) | HC-05 TXD | Receives serial commands |
+| D1 (TX) | HC-05 RXD | Serial communication |
+| D2 | L298N Inputs | Left motor direction |
+| D3 | L298N Inputs | Left motor direction |
+| D4 | L298N Inputs | Right motor direction |
+| D5 | L298N Inputs | Right motor direction |
 | 5V | HC-05 VCC | Bluetooth logic supply |
-| GND | Common Ground | Shared system ground |
+| GND | System Ground | Common ground |
 
 <details>
 <summary><b>⚡ Power & Wiring Notes</b></summary>
 
-- Check the voltage and current requirements of the motors and motor drivers before connecting the battery.
+- Verify the battery voltage against the motor and driver specifications.
 - Use a suitable regulated supply for the Arduino and Bluetooth module.
-- Ensure all system grounds share a common reference.
-- The HC-05 RX input uses 3.3V logic. Use an appropriate level shifter or voltage divider when connecting it to a 5V Arduino TX output.
-- Do not assume the L298N onboard regulator can safely power every component. Verify its voltage and current limits.
+- Connect all system grounds to a common ground.
+- HC-05 RX uses 3.3V logic. Use an appropriate level shifter or voltage divider when connecting to a 5V Arduino TX output.
+- Check the L298N regulator's ratings before using it to supply other components.
 
 </details>
 
@@ -105,7 +107,7 @@ Its differential-drive architecture allows forward movement, reverse movement, a
 
 </div>
 
-The rover uses single-character ASCII commands over Bluetooth serial communication.
+The rover uses single-character commands over Bluetooth serial communication. The firmware and application must use matching command characters.
 
 | KEY | ACTION |
 |:---:|:---|
@@ -115,7 +117,7 @@ The rover uses single-character ASCII commands over Bluetooth serial communicati
 | `R` | Turn Right |
 | `S` | Stop |
 
-<caption>Note: Actual motor direction depends on the firmware and motor wiring configuration.</caption>
+<caption>Actual command mapping depends on the uploaded Arduino firmware and SriTu Hobby app configuration.</caption>
 
 ---
 
@@ -137,9 +139,9 @@ git clone https://github.com/luciferofx/projectxweb.git
 cd projectxweb/projects/projectx-remotecar
 ```
 
-### 03 — Open Arduino Firmware
+### 03 — Flash Arduino Firmware
 
-Open the firmware file in Arduino IDE:
+Open the firmware in Arduino IDE:
 
 ```text
 firmware/
@@ -147,31 +149,46 @@ firmware/
     └── remotecar.ino
 ```
 
-Select the appropriate board and processor settings according to your Arduino Nano:
-
 | SETTING | VALUE |
 |:---|:---|
 | Board | Arduino Nano |
 | Processor | ATmega328P |
 | Port | Your connected COM / serial port |
-| Programmer | Default |
 
-Upload the firmware to the Arduino Nano.
+Upload the firmware to your Arduino Nano.
 
-### 04 — Bluetooth Pairing
+### 04 — Install SriTu Hobby App
 
-1. Power on the rover.
-2. Enable Bluetooth on your Android device.
-3. Find and pair with the HC-05 module.
-4. Enter the pairing PIN configured for your module, if requested.
+Download the Android application from Google Play Store.
 
-### 05 — Control the Rover
+<div align="center">
 
-1. Open a compatible Bluetooth Serial Terminal application.
-2. Connect to the paired HC-05 module.
-3. Send the supported commands: `U`, `D`, `L`, `R`, or `S`.
+<a href="https://play.google.com/store/apps/details?id=com.srituhobby">
+<img src="https://img.shields.io/badge/📱_DOWNLOAD-SriTu_Hobby_App-38BDF8?style=for-the-badge&logo=google-play&logoColor=white" alt="Download SriTu Hobby"/>
+</a>
 
-You can also open `index.html` in a browser to view the visual dashboard or simulation, if included in the repository.
+</div>
+
+**Application:** SriTu Hobby
+
+**Platform:** Android
+
+**Download:** [Google Play Store](https://play.google.com/store/apps/details?id=com.srituhobby)
+
+### 05 — Bluetooth Pairing
+
+1. Switch on the rover.
+2. Enable Bluetooth on your Android smartphone.
+3. Find the HC-05 module in Bluetooth settings.
+4. Pair with the module using its configured PIN, if requested.
+
+### 06 — Control the Rover
+
+1. Open the SriTu Hobby application.
+2. Navigate to its Bluetooth Car Remote feature.
+3. Connect to the HC-05 module.
+4. Use the available joystick or on-screen controls.
+5. Test the movement commands on a clear, flat surface.
 
 ---
 
@@ -182,28 +199,28 @@ You can also open `index.html` in a browser to view the visual dashboard or simu
 </div>
 
 ```text
-             ANDROID SMARTPHONE
-                     |
-              BLUETOOTH LINK
-                     |
-                HC-05 MODULE
-                     |
-                UART SERIAL
-                     |
-                ARDUINO NANO
-                     |
-              MOTOR CONTROL
-                     |
-              +------+------+
-              |             |
-          L298N #1       L298N #2
-              |             |
-          LEFT SIDE      RIGHT SIDE
-          MOTORS         MOTORS
-              |             |
-              +------+------+
-                     |
-                4WD CHASSIS
+       ANDROID SMARTPHONE
+       [ SriTu Hobby App ]
+                |
+         BLUETOOTH LINK
+                |
+          [ HC-05 MODULE ]
+                |
+           UART SERIAL
+                |
+         [ ARDUINO NANO ]
+                |
+          MOTOR CONTROL
+                |
+          +-----+-----+
+          |           |
+      [L298N #1]  [L298N #2]
+          |           |
+      LEFT MOTORS RIGHT MOTORS
+          |           |
+          +-----+-----+
+                |
+          [ 4WD CHASSIS ]
 ```
 
 ---
@@ -215,40 +232,40 @@ You can also open `index.html` in a browser to view the visual dashboard or simu
 </div>
 
 <details>
-<summary><b>🔌 Bluetooth module is not detected</b></summary>
+<summary><b>🔌 Bluetooth module not detected</b></summary>
 
-- Check the HC-05 power and ground connections.
-- Verify that the module is powered on.
-- Check whether it is in pairing mode.
-- Confirm that your phone supports Bluetooth serial connections.
-
-</details>
-
-<details>
-<summary><b>⚙️ Wheels are spinning in the wrong direction</b></summary>
-
-- Check the motor polarity and firmware direction mapping.
-- Verify that the left and right motor groups are connected as intended.
+- Check HC-05 power and ground connections.
+- Confirm that the module is in pairing mode.
+- Check Bluetooth permissions on Android.
+- Restart the application and reconnect.
 
 </details>
 
 <details>
-<summary><b>📡 Commands are not responding</b></summary>
+<summary><b>⚙️ Wheels spinning in the wrong direction</b></summary>
 
-- Verify the Bluetooth connection.
-- Check the serial communication configuration.
-- Confirm that the firmware recognizes the command characters.
-- Inspect the wiring and power connections.
+- Check motor polarity.
+- Verify the motor driver connections.
+- Confirm that the firmware direction mapping is correct.
 
 </details>
 
 <details>
-<summary><b>🔋 Arduino resets during motor operation</b></summary>
+<summary><b>📡 Commands not responding</b></summary>
+
+- Confirm the HC-05 connection.
+- Verify the serial baud rate.
+- Check whether the app sends the commands expected by the firmware.
+- Inspect the serial connections.
+
+</details>
+
+<details>
+<summary><b>🔋 Rover resets under load</b></summary>
 
 - Check battery condition and voltage stability.
-- Verify that the power supply can handle the motor load.
-- Use an appropriately rated regulated supply for the controller.
-- Keep motor power and logic power requirements in mind.
+- Verify the power supply can handle the motor load.
+- Use a properly rated regulated supply for the controller.
 
 </details>
 
@@ -260,13 +277,13 @@ You can also open `index.html` in a browser to view the visual dashboard or simu
 
 </div>
 
-| VERSION | PLANNED FEATURE |
+| VERSION | FEATURE |
 |:---:|:---|
-| v1.1 | PWM-based motor speed control |
-| v2.0 | Ultrasonic obstacle detection |
-| v2.1 | Battery status monitoring |
-| v3.0 | Dedicated Android remote-control application |
-| v3.1 | Live telemetry dashboard |
+| v1.1 | PWM speed control |
+| v2.0 | HC-SR04 ultrasonic obstacle detection |
+| v2.1 | Battery voltage monitoring |
+| v3.0 | Dedicated Android controller |
+| v3.1 | Live Bluetooth telemetry dashboard |
 
 ---
 
@@ -278,12 +295,12 @@ You can also open `index.html` in a browser to view the visual dashboard or simu
 
 | DETAIL | INFORMATION |
 |:---|:---|
-| Project | Project X — Remote Car |
+| Project | Project X · Remote Car |
 | Category | Robotics / Embedded Systems |
-| Controller | Arduino Nano |
-| Communication | Bluetooth — HC-05 |
+| Controller | Arduino Nano (ATmega328P) |
 | Motor Driver | Dual L298N |
-| Drive System | 4WD Differential Drive |
+| Communication | Bluetooth (HC-05) |
+| Android Application | SriTu Hobby |
 | Developer | Raja Sharma |
 | Year | 2024 |
 | License | MIT |
