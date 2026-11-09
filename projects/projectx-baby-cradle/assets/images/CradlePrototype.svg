@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="1200" height="700">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="75%">
+      <stop offset="0" stop-color="#1f1019"/>
+      <stop offset="1" stop-color="#0a0508"/>
+    </radialGradient>
+    <linearGradient id="espBoard" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1a1a1a"/>
+      <stop offset="1" stop-color="#0a0a0a"/>
+    </linearGradient>
+    <linearGradient id="driverBoard" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#102020"/>
+      <stop offset="1" stop-color="#081010"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000" flood-opacity="0.8"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="700" fill="url(#bg)"/>
+  <g opacity="0.05" stroke="#ff8fb1">
+    <path d="M0 100 H1200 M0 200 H1200 M0 300 H1200 M0 400 H1200 M0 500 H1200 M0 600 H1200"/>
+    <path d="M100 0 V700 M200 0 V700 M300 0 V700 M400 0 V700 M500 0 V700 M600 0 V700 M700 0 V700 M800 0 V700 M900 0 V700 M1000 0 V700 M1100 0 V700"/>
+  </g>
+
+  <!-- Title -->
+  <text x="600" y="60" text-anchor="middle" font-family="'Orbitron', sans-serif" font-size="28" font-weight="800" fill="#ff8fb1" letter-spacing="3" filter="url(#glow)">PROJECT X · BABY CRADLE</text>
+  <text x="600" y="90" text-anchor="middle" font-family="monospace" font-size="14" fill="#b08f9f" letter-spacing="4">ESP8266 IOT SWING CONTROLLER</text>
+
+  <!-- ================= ESP8266 ================= -->
+  <g filter="url(#shadow)" transform="translate(200, 200)">
+    <rect width="240" height="320" rx="12" fill="url(#espBoard)" stroke="#333"/>
+    <!-- ESP Module -->
+    <rect x="30" y="40" width="180" height="120" rx="4" fill="#202020" stroke="#444"/>
+    <g stroke="#888" stroke-width="2">
+      <path d="M 60 40 v 120 M 90 40 v 120 M 120 40 v 120 M 150 40 v 120 M 180 40 v 120"/>
+    </g>
+    <text x="120" y="100" text-anchor="middle" font-family="monospace" font-size="14" fill="#666">ESP8266</text>
+    
+    <!-- USB -->
+    <rect x="90" y="-20" width="60" height="20" rx="2" fill="#555"/>
+    
+    <!-- Pin Headers -->
+    <rect x="0" y="200" width="240" height="20" fill="#1a1a1a" stroke="#444"/>
+    <g fill="#ffcc00">
+      <circle cx="30" cy="210" r="4"/>
+      <circle cx="60" cy="210" r="4"/>
+      <circle cx="90" cy="210" r="4"/>
+      <circle cx="120" cy="210" r="4"/>
+      <circle cx="150" cy="210" r="4"/>
+      <circle cx="180" cy="210" r="4"/>
+      <circle cx="210" cy="210" r="4"/>
+    </g>
+    <text x="30" y="240" font-family="monospace" font-size="10" fill="#b08f9f">GND</text>
+    <text x="90" y="240" font-family="monospace" font-size="10" fill="#b08f9f">D2</text>
+    <text x="120" y="240" font-family="monospace" font-size="10" fill="#b08f9f">D5</text>
+    <text x="150" y="240" font-family="monospace" font-size="10" fill="#b08f9f">D6</text>
+    <text x="120" y="290" text-anchor="middle" font-family="monospace" font-size="12" fill="#ff8fb1" font-weight="bold">NodeMCU</text>
+  </g>
+
+  <!-- ================= L298N MOTOR DRIVER ================= -->
+  <g filter="url(#shadow)" transform="translate(760, 200)">
+    <rect width="240" height="320" rx="8" fill="url(#driverBoard)" stroke="#2a5a5a"/>
+    <!-- Heatsink -->
+    <rect x="40" y="40" width="160" height="60" rx="4" fill="#333" stroke="#555"/>
+    <g stroke="#222" stroke-width="2">
+      <path d="M 50 40 v 60 M 70 40 v 60 M 90 40 v 60 M 110 40 v 60 M 130 40 v 60 M 150 40 v 60 M 170 40 v 60 M 190 40 v 60"/>
+    </g>
+    <!-- Motor terminals -->
+    <rect x="30" y="130" width="60" height="30" fill="#0a0a0a" stroke="#444"/>
+    <text x="60" y="150" text-anchor="middle" font-family="monospace" font-size="10" fill="#fff">MOTOR A</text>
+    
+    <!-- Logic Pins -->
+    <rect x="0" y="240" width="240" height="20" fill="#0a0a0a" stroke="#444"/>
+    <g fill="#00ffcc">
+      <circle cx="30" cy="250" r="4"/>
+      <circle cx="60" cy="250" r="4"/>
+      <circle cx="90" cy="250" r="4"/>
+      <circle cx="120" cy="250" r="4"/>
+      <circle cx="150" cy="250" r="4"/>
+      <circle cx="180" cy="250" r="4"/>
+      <circle cx="210" cy="250" r="4"/>
+    </g>
+    <text x="30" y="280" font-family="monospace" font-size="10" fill="#b08f9f">GND</text>
+    <text x="90" y="280" font-family="monospace" font-size="10" fill="#b08f9f">IN1</text>
+    <text x="120" y="280" font-family="monospace" font-size="10" fill="#b08f9f">IN2</text>
+    <text x="150" y="280" font-family="monospace" font-size="10" fill="#b08f9f">ENA</text>
+    
+    <text x="120" y="310" text-anchor="middle" font-family="monospace" font-size="12" fill="#00ffcc" font-weight="bold">L298N DRIVER</text>
+  </g>
+
+  <!-- ================= WIRES ================= -->
+  <g stroke-width="3" fill="none">
+    <!-- GND -->
+    <path d="M 230 410 C 230 480, 790 480, 790 440" stroke="#ffffff" opacity="0.5"/>
+    <text x="500" y="475" text-anchor="middle" font-family="monospace" font-size="12" fill="#ffffff">GND</text>
+
+    <!-- D5 -> IN1 -->
+    <path d="M 290 410 C 350 480, 650 480, 850 440" stroke="#6ff0c2" filter="url(#glow)"/>
+    <text x="550" y="460" text-anchor="middle" font-family="monospace" font-size="12" fill="#6ff0c2">D5 → IN1 (Direction)</text>
+
+    <!-- D6 -> IN2 -->
+    <path d="M 320 410 C 400 500, 600 500, 880 440" stroke="#c7a7ff" filter="url(#glow)"/>
+    <text x="600" y="490" text-anchor="middle" font-family="monospace" font-size="12" fill="#c7a7ff">D6 → IN2 (Direction)</text>
+
+    <!-- D2 -> ENA -->
+    <path d="M 260 410 C 250 520, 750 520, 910 440" stroke="#ff8fb1" filter="url(#glow)"/>
+    <text x="580" y="525" text-anchor="middle" font-family="monospace" font-size="12" fill="#ff8fb1">D2 → ENA (PWM Speed)</text>
+  </g>
+
+  <!-- ================= CRADLE DRAWING ================= -->
+  <g transform="translate(450, 560)">
+    <!-- Swing arc -->
+    <path d="M -100 0 A 100 100 0 0 1 100 0" stroke="#2e1a26" stroke-width="2" fill="none" stroke-dasharray="4 4"/>
+    <!-- Cradle -->
+    <g transform="rotate(15, 0, -60)">
+      <line x1="0" y1="0" x2="0" y2="-40" stroke="#4a2a3e" stroke-width="3"/>
+      <path d="M -50 -40 Q 0 -90 50 -40 L 40 20 L -40 20 Z" fill="#2a1520" stroke="#ff8fb1" stroke-width="2"/>
+      <!-- Baby -->
+      <circle cx="0" cy="-30" r="12" fill="#ffb3c9"/>
+      <circle cx="-4" cy="-32" r="2" fill="#2a1520"/>
+      <circle cx="4" cy="-32" r="2" fill="#2a1520"/>
+    </g>
+  </g>
+
+</svg>
