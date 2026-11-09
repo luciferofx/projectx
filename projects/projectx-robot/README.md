@@ -98,7 +98,7 @@ The NodeMCU creates its own Wi-Fi network, allowing users to control the robot w
 
 <div align="center">
 
-<img src="assets/images/face-detection.png" width="600" alt="AI Face Recognition Preview"/>
+<img src="assets/images/facedetection.jpeg" width="600" alt="AI Face Recognition Preview"/>
 
 </div>
 
@@ -144,7 +144,7 @@ Recognized faces are recorded in the attendance spreadsheet.
 
 <div align="center">
 
-<img src="assets/images/display/display-prototype.png" width="600" alt="LCD Display Prototype"/>
+<img src="assets/images/display/display-prototype.mp4" width="600" alt="LCD Display Prototype"/>
 
 </div>
 
@@ -161,8 +161,8 @@ The project uses an I2C 16×2 LCD module to display animated project titles, tea
 
 | Role | Names |
 |---|---|
-| Core Team | Raja, Purushaan, Shiryan, Hamdan |
-| Helpers | Shabdika, Abhay, Varsha |
+| Core Team | Raja, Purushaan |
+| Helpers | Shabdika, Abhay, Varsha , Shriyansh , Hamdan |
 
 ### LCD Wiring Configuration
 
@@ -332,4 +332,3 @@ PROJECT-X/
 © 2024 Raja Sharma · All Rights Reserved under the MIT License.
 
 </div>
-
