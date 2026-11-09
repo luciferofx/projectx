@@ -1,1 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+  ============================================================
+  PROJECT X · ARMY GATE (RFID DASHBOARD)
+  File: index.html
+  Version: 1.0.0 · Build 2024.12
+  Author: Raja Sharma (github.com/luciferofx)
 
+  Note: 100% Global CSS (styles.css). No local styles.
+  ============================================================
+-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#05070d">
+<meta name="description" content="Project X · RFID Army Gate Controller">
+<title>Project X — Army Gate Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Orbitron:wght@600;700;800&display=swap" rel="stylesheet">
+<!-- Global CSS -->
+<link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+<div class="shell">
+
+  <!-- ===== TOPBAR ===== -->
+  <div class="topbar">
+    <div class="brand">
+      <div class="mark"><b>PX</b></div>
+      <div>
+        <h1>ARMY GATE · RFID</h1>
+        <p>Project X · Secure Access Control</p>
+      </div>
+    </div>
+    <div class="status-pill live" id="connPill"><span class="led"></span><span id="connText">SIMULATION ACTIVE</span></div>
+  </div>
+
+  <div class="cols">
+    <!-- ===== SIDEBAR ===== -->
+    <div>
+      <section class="card">
+        <h3>Connection Info</h3>
+        <div class="statuslist">
+          <div class="srow"><span class="k">Controller</span><span class="v">Arduino Mega</span></div>
+          <div class="srow"><span class="k">Module</span><span class="v">MFRC522</span></div>
+          <div class="srow"><span class="k">Mode</span><span class="v pur">SIMULATOR</span></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h3>Access Control</h3>
+        <div style="margin-bottom: 12px;">
+          <label style="font-size:0.65rem; text-transform:uppercase; color:var(--ink-dim); font-weight:700; display:block; margin-bottom:6px;">Select RFID Tag</label>
+          <select id="cardSelect" style="width:100%; padding:10px; background:#060a13; color:var(--ink); border:1px solid var(--line-hi); border-radius:8px; font-family:var(--mono); font-size:0.8rem; outline:none;">
+            <option value="a3 80 ef f6">Admin Card (a3 80 ef f6)</option>
+            <option value="8 d3 c4 3">Officer Card (8 d3 c4 3)</option>
+            <option value="73 90 f2 2f">Commander Card (73 90 f2 2f)</option>
+            <option value="ff ff ff ff">Unknown Card (ff ff ff ff)</option>
+          </select>
+        </div>
+        <button class="primary" id="scanBtn" onclick="simulateScan()">📡 SCAN CARD</button>
+      </section>
+
+      <section class="card">
+        <h3>Hardware Pins</h3>
+        <div class="statuslist">
+          <div class="srow"><span class="k">SS (RFID)</span><span class="v">Pin 53</span></div>
+          <div class="srow"><span class="k">RST (RFID)</span><span class="v">Pin 5</span></div>
+          <div class="srow"><span class="k">Servo</span><span class="v">Pin 9</span></div>
+          <div class="srow"><span class="k">Buzzer</span><span class="v">Pin 6</span></div>
+          <div class="srow"><span class="k">LEDs</span><span class="v">Pin 7, 8</span></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-col">
+      
+      <!-- LIVE SIMULATION MODEL -->
+      <section class="card">
+        <h3>Live Gate Simulation <small>Animated Prototype</small></h3>
+        
+        <div style="height: 320px; display: flex; justify-content: center; align-items: center; background: #03060c; border: 1px solid var(--line); border-radius: 12px; margin-top: 16px; position: relative; overflow: hidden;">
+          
+          <!-- 3D Gate Visualizer -->
+          <div style="position: relative; width: 400px; height: 200px;">
+            <!-- Gate Post (Left) -->
+            <div style="position: absolute; bottom: 0; left: 50px; width: 30px; height: 120px; background: #1a2537; border: 2px solid #26344c; border-radius: 4px 4px 0 0;"></div>
+            <!-- Gate Post (Right) -->
+            <div style="position: absolute; bottom: 0; right: 50px; width: 30px; height: 120px; background: #1a2537; border: 2px solid #26344c; border-radius: 4px 4px 0 0;"></div>
+            
+            <!-- The Boom Barrier -->
+            <div id="gateArm" style="position: absolute; bottom: 100px; left: 65px; width: 270px; height: 15px; background: repeating-linear-gradient(45deg, #ff5d73, #ff5d73 20px, #2a1520 20px, #2a1520 40px); border: 2px solid #ff5d73; border-radius: 4px; transform-origin: left center; transition: transform 0.8s ease-in-out; box-shadow: 0 0 15px rgba(255,93,115,0.3); z-index: 2;"></div>
+            
+            <!-- Status Indicators -->
+            <div style="position: absolute; top: 20px; left: 0; width: 100%; display: flex; justify-content: center; gap: 30px;">
+              <div id="ledGreen" style="width: 15px; height: 15px; border-radius: 50%; background: #1a2537; border: 1px solid #26344c; transition: all 0.3s;"></div>
+              <div id="ledRed" style="width: 15px; height: 15px; border-radius: 50%; background: #1a2537; border: 1px solid #26344c; transition: all 0.3s;"></div>
+            </div>
+            
+            <!-- Ground Line -->
+            <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; background: #26344c;"></div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SYSTEM LOGS -->
+      <section class="card">
+        <h3>Security Logs</h3>
+        <div class="con" id="con" style="height: 200px; margin-top: 12px;">
+          <div class="ln sys"><span class="ts">--:--:--</span><span class="msg">[BOOT] Army Gate Controller Online.</span></div>
+          <div class="ln info"><span class="ts">--:--:--</span><span class="msg">[INFO] MFRC522 initialized. Waiting for card scan...</span></div>
+          <div class="ln placeholder"><span class="ts">--:--:--</span><span class="msg">Waiting for user to scan a card...</span></div>
+        </div>
+      </section>
+
+      <!-- COMPONENTS & WIRING -->
+      <section class="card">
+        <h3>Components & Wiring <small>Hardware Map</small></h3>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;">
+          
+          <!-- Components List -->
+          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 12px; padding: 16px;">
+            <h4 style="font-family: var(--mono); font-size: 0.7rem; color: var(--ink-dim); text-transform: uppercase; margin-bottom: 12px; border-bottom: 1px solid var(--line); padding-bottom: 8px;">Component List</h4>
+            <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px;">
+              <li style="display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 0.72rem; color: var(--ink);">
+                <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--cyan);"></span> Arduino Mega 2560
+              </li>
+              <li style="display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 0.72rem; color: var(--ink);">
+                <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--mint);"></span> MFRC522 RFID Module
+              </li>
+              <li style="display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 0.72rem; color: var(--ink);">
+                <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--amber);"></span> Servo Motor (SG90 / MG995)
+              </li>
+              <li style="display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 0.72rem; color: var(--ink);">
+                <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--rose);"></span> Buzzer & LEDs
+              </li>
+            </ul>
+          </div>
+
+          <!-- Wiring Map -->
+          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 12px; padding: 16px;">
+            <h4 style="font-family: var(--mono); font-size: 0.7rem; color: var(--ink-dim); text-transform: uppercase; margin-bottom: 12px; border-bottom: 1px solid var(--line); padding-bottom: 8px;">Wiring Map (Arduino → Modules)</h4>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.72rem;">
+                <span style="color: var(--cyan);">Pin 53 (SS)</span>
+                <span style="color: var(--ink-faint);">→</span>
+                <span style="color: var(--mint);">RFID SS</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.72rem;">
+                <span style="color: var(--cyan);">Pin 5 (RST)</span>
+                <span style="color: var(--ink-faint);">→</span>
+                <span style="color: var(--mint);">RFID RST</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.72rem;">
+                <span style="color: var(--cyan);">Pin 9 (PWM)</span>
+                <span style="color: var(--ink-faint);">→</span>
+                <span style="color: var(--mint);">Servo Signal</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.72rem;">
+                <span style="color: var(--cyan);">Pin 6</span>
+                <span style="color: var(--ink-faint);">→</span>
+                <span style="color: var(--mint);">Buzzer</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.72rem;">
+                <span style="color: var(--cyan);">Pin 7, 8</span>
+                <span style="color: var(--ink-faint);">→</span>
+                <span style="color: var(--mint);">Red / Green LEDs</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <footer>
+    <span>PROJECT X · ARMY GATE</span>
+    <span>BUILD 1.0.0 · GLOBAL CSS</span>
+  </footer>
+</div>
+
+<script>
+  const gateArm = document.getElementById('gateArm');
+  const ledGreen = document.getElementById('ledGreen');
+  const ledRed = document.getElementById('ledRed');
+  const con = document.getElementById('con');
+  const scanBtn = document.getElementById('scanBtn');
+
+  const authorizedCards = ["a3 80 ef f6", "8 d3 c4 3", "73 90 f2 2f"];
+
+  function log(msg, type='info') {
+    const ph = con.querySelector('.ln.placeholder');
+    if(ph) ph.remove();
+    const ln = document.createElement('div');
+    ln.className = 'ln ' + type;
+    const d = new Date();
+    const time = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
+    const ts = document.createElement('span'); ts.className = 'ts'; ts.textContent = time;
+    const body = document.createElement('span'); body.className = 'msg'; body.innerHTML = msg;
+    ln.appendChild(ts); ln.appendChild(body); con.appendChild(ln);
+    con.scrollTop = con.scrollHeight;
+    if(con.querySelectorAll('.ln').length > 100) con.firstElementChild.remove();
+  }
+
+  function simulateScan() {
+    const selectedCard = document.getElementById('cardSelect').value;
+    scanBtn.disabled = true;
+    log(`TX: Scanning RFID tag [${selectedCard}]...`, 'sys');
+
+    setTimeout(() => {
+      log(`Card UID: ${selectedCard}`, 'info');
+
+      if (authorizedCards.includes(selectedCard)) {
+        // GRANTED
+        log(`✅ Access Granted!`, 'ok');
+        ledGreen.style.background = 'var(--mint)';
+        ledGreen.style.boxShadow = '0 0 15px var(--mint)';
+        ledRed.style.background = '#1a2537';
+        ledRed.style.boxShadow = 'none';
+        
+        gateArm.style.transform = 'rotate(-90deg)'; // Open gate
+        log(`Motor rotating to 90° (Gate Open)`, 'info');
+
+        setTimeout(() => {
+          gateArm.style
