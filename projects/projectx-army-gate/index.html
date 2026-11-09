@@ -229,4 +229,33 @@
         log(`Motor rotating to 90° (Gate Open)`, 'info');
 
         setTimeout(() => {
-          gateArm.style
+          gateArm.style.transform = 'rotate(0deg)'; // Close gate
+          ledGreen.style.background = '#1a2537';
+          ledGreen.style.boxShadow = 'none';
+          log(`Gate Closed.`, 'info');
+          log(`Waiting for next card...`, 'sys');
+          scanBtn.disabled = false;
+        }, 3000);
+
+      } else {
+        // DENIED
+        log(`❌ Access Denied!`, 'err');
+        ledRed.style.background = 'var(--rose)';
+        ledRed.style.boxShadow = '0 0 15px var(--rose)';
+        ledGreen.style.background = '#1a2537';
+        ledGreen.style.boxShadow = 'none';
+
+        log(`Buzzer sounding...`, 'warn');
+
+        setTimeout(() => {
+          ledRed.style.background = '#1a2537';
+          ledRed.style.boxShadow = 'none';
+          log(`Alarm silenced. Waiting for next card...`, 'sys');
+          scanBtn.disabled = false;
+        }, 1500);
+      }
+    }, 800);
+  }
+</script>
+</body>
+</html>
