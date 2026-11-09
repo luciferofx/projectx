@@ -189,4 +189,107 @@
                 <div style="font-family: var(--sans); font-weight: 700; font-size: 0.85rem; color: var(--ink);">Connect via Bluetooth</div>
                 <div style="font-family: var(--mono); font-size: 0.72rem; color: var(--ink-dim); margin-top: 4px;">Pair Android device with HC-05, open Serial terminal at 9600 baud.</div>
               </div>
-            </div
+            </div>
+
+            <div style="display: flex; gap: 12px;">
+              <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--mint); color: #000; display: grid; place-items: center; font-weight: bold; font-size: 0.7rem; flex-shrink: 0;">2</div>
+              <div>
+                <div style="font-family: var(--sans); font-weight: 700; font-size: 0.85rem; color: var(--ink);">Send ASCII Commands</div>
+                <div style="font-family: var(--mono); font-size: 0.72rem; color: var(--ink-dim); margin-top: 4px;">Send 'U' (Forward), 'D' (Backward), 'L' (Left), 'R' (Right), 'S' (Stop).</div>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 12px;">
+              <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--amber); color: #000; display: grid; place-items: center; font-weight: bold; font-size: 0.7rem; flex-shrink: 0;">3</div>
+              <div>
+                <div style="font-family: var(--sans); font-weight: 700; font-size: 0.85rem; color: var(--ink);">Differential Steering</div>
+                <div style="font-family: var(--mono); font-size: 0.72rem; color: var(--ink-dim); margin-top: 4px;">The Arduino toggles the L298N pins to drive left and right motors in opposite directions for zero-radius turns.</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <footer>
+    <span>PROJECT X · REMOTE CAR</span>
+    <span>BUILD 1.0.0 · GLOBAL CSS</span>
+  </footer>
+</div>
+
+<script>
+  const con = document.getElementById('con');
+  const wheelTL = document.getElementById('wheelTL');
+  const wheelTR = document.getElementById('wheelTR');
+  const wheelBL = document.getElementById('wheelBL');
+  const wheelBR = document.getElementById('wheelBR');
+  const roverModel = document.getElementById('roverModel');
+
+  let currentCommand = 'S';
+
+  function log(msg, type='info') {
+    const ph = con.querySelector('.ln.placeholder');
+    if(ph) ph.remove();
+    const ln = document.createElement('div');
+    ln.className = 'ln ' + type;
+    const d = new Date();
+    const time = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
+    const ts = document.createElement('span'); ts.className = 'ts'; ts.textContent = time;
+    const body = document.createElement('span'); body.className = 'msg'; body.innerHTML = msg;
+    ln.appendChild(ts); ln.appendChild(body); con.appendChild(ln);
+    con.scrollTop = con.scrollHeight;
+    if(con.querySelectorAll('.ln').length > 50) con.firstElementChild.remove();
+  }
+
+  function resetWheels() {
+    [wheelTL, wheelTR, wheelBL, wheelBR].forEach(w => {
+      w.style.background = '#1a2537';
+      w.style.boxShadow = 'none';
+      w.style.transform = 'scale(1)';
+    });
+  }
+
+  function sendCmd(cmd) {
+    currentCommand = cmd;
+    log(`TX: Sending command '${cmd}' over Bluetooth...`, 'sys');
+    
+    // Visual Feedback
+    resetWheels();
+    const highlight = '#ff5d73';
+    const glow = '0 0 10px #ff5d73';
+
+    if (cmd === 'U') {
+      log(`Moving Forward (IN1:H, IN2:L, IN3:H, IN4:L)`, 'ok');
+      [wheelTL, wheelTR, wheelBL, wheelBR].forEach(w => { w.style.background = highlight; w.style.boxShadow = glow; });
+      roverModel.style.transform = 'translateY(-10px)';
+    } else if (cmd === 'D') {
+      log(`Moving Backward (IN1:L, IN2:H, IN3:L, IN4:H)`, 'ok');
+      [wheelTL, wheelTR, wheelBL, wheelBR].forEach(w => { w.style.background = highlight; w.style.boxShadow = glow; });
+      roverModel.style.transform = 'translateY(10px)';
+    } else if (cmd === 'L') {
+      log(`Turning Left (IN1:H, IN2:L, IN3:L, IN4:H)`, 'ok');
+      [wheelTL, wheelBL].forEach(w => { w.style.background = highlight; w.style.boxShadow = glow; });
+      roverModel.style.transform = 'translateX(-10px)';
+    } else if (cmd === 'R') {
+      log(`Turning Right (IN1:L, IN2:H, IN3:H, IN4:L)`, 'ok');
+      [wheelTR, wheelBR].forEach(w => { w.style.background = highlight; w.style.boxShadow = glow; });
+      roverModel.style.transform = 'translateX(10px)';
+    } else if (cmd === 'S') {
+      log(`Stopping (All pins LOW)`, 'warn');
+      roverModel.style.transform = 'translate(0, 0)';
+    }
+
+    // Reset position after 800ms for non-stop commands
+    if (cmd !== 'S') {
+      setTimeout(() => {
+        roverModel.style.transform = 'translate(0, 0)';
+        resetWheels();
+      }, 800);
+    }
+  }
+</script>
+</body>
+</html>
