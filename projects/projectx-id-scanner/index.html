@@ -1,447 +1,1018 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project X | I2C Diagnostic & ID Scanner</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Orbitron:wght@600;800;900&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-main: #060913;
-            --card-bg: rgba(14, 22, 41, 0.75);
-            --card-border: rgba(0, 242, 254, 0.2);
-            --accent-cyan: #00f2fe;
-            --accent-green: #00ff88;
-            --accent-amber: #ffb703;
-            --text-main: #f1f5f9;
-            --text-dim: #94a3b8;
-            --font-display: 'Orbitron', sans-serif;
-            --font-code: 'JetBrains Mono', monospace;
-            --font-sans: 'Plus Jakarta Sans', sans-serif;
-        }
+<!--
+  ============================================================
+  PROJECT X · I2C DIAGNOSTIC TERMINAL
+  File: index.html
+  Version: 4.0.0 · Build 2024.12
+  Author: Raja (github.com/luciferofx)
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  Modules:
+    - WebSerial bridge (Chrome ≥89)
+    - I2C address visualizer (128-cell)
+    - AVR STK500v1 flasher
+    - Service Worker simulated API (/api/*)
+    - localStorage + sessionStorage telemetry
+  ============================================================
+-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#05070d">
+<meta name="description" content="Project X · I2C Diagnostic & AVR Firmware Flasher — WebSerial powered">
+<meta name="author" content="Raja (luciferofx)">
+<title>Project X — I2C Workbench &amp; AVR Flasher</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Orbitron:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme:dark;
+    --bg:#05070d;--card:#0d1522;--card-hi:#111b2c;
+    --line:#1a2537;--line-hi:#26344c;
+    --ink:#dde5f4;--ink-dim:#8b9bb8;--ink-faint:#54647e;
+    --cyan:#2fd4ff;--mint:#6ff0c2;--amber:#ffb347;--rose:#ff5d73;--violet:#a78bfa;
+    --mono:'DM Mono',ui-monospace,Menlo,monospace;
+    --sans:'Manrope',system-ui,sans-serif;
+    --disp:'Orbitron',sans-serif;
+    --r:14px;
+    --pad:18px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{
+    background:
+      radial-gradient(1000px 500px at 82% -8%, #0d1a2e 0%, transparent 60%),
+      radial-gradient(800px 480px at -8% 102%, #0a1c1e 0%, transparent 55%),
+      var(--bg);
+    color:var(--ink);font-family:var(--sans);min-height:100vh;
+    padding:22px 18px 64px;-webkit-font-smoothing:antialiased;background-attachment:fixed;
+    overflow-x:hidden;
+  }
+  .shell{max-width:1300px;margin:0 auto;width:100%}
 
-        body {
-            background-color: var(--bg-main);
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(0, 242, 254, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(0, 255, 136, 0.06) 0%, transparent 40%),
-                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-            background-size: 100% 100%, 100% 100%, 35px 35px, 35px 35px;
-            color: var(--text-main);
-            font-family: var(--font-sans);
-            padding: 40px 20px;
-            min-height: 100vh;
-        }
+  /* ===== TOPBAR ===== */
+  .topbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;padding-bottom:18px;border-bottom:1px solid var(--line);margin-bottom:20px}
+  .brand{display:flex;align-items:center;gap:12px;min-width:0}
+  .mark{width:44px;height:44px;border-radius:11px;position:relative;background:linear-gradient(150deg,#0d2a38,#07141f);border:1px solid var(--line-hi);display:grid;place-items:center;flex-shrink:0;box-shadow:0 0 18px rgba(47,212,255,.14),inset 0 0 10px rgba(47,212,255,.07)}
+  .mark::before{content:'';position:absolute;inset:8px;border-radius:5px;border:1.4px solid var(--cyan);opacity:.85;box-shadow:0 0 8px rgba(47,212,255,.5)}
+  .mark b{font-family:var(--disp);font-weight:800;font-size:13px;color:var(--cyan);position:relative;text-shadow:0 0 10px rgba(47,212,255,.7)}
+  .brand h1{font-family:var(--disp);font-size:clamp(.9rem,2.2vw,1.35rem);letter-spacing:1.2px;font-weight:700;background:linear-gradient(90deg,#eff7ff,#93ecff 58%,#5fdbb4);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;line-height:1.2}
+  .brand p{font-size:.62rem;color:var(--ink-dim);letter-spacing:.15em;text-transform:uppercase;margin-top:3px;font-weight:700}
+  .status-pill{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;padding:7px 13px;border-radius:999px;border:1px solid var(--line-hi);color:var(--ink-dim);background:rgba(16,26,42,.6);display:inline-flex;align-items:center;gap:8px;transition:.25s;flex-shrink:0}
+  .status-pill .led{width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor}
+  .status-pill.live{color:var(--mint);border-color:#1e6150;background:rgba(14,44,38,.5)}
+  .status-pill.sim{color:var(--violet);border-color:#4b3d78;background:rgba(30,24,54,.5)}
+  .status-pill.live .led,.status-pill.sim .led{animation:blink 1.8s infinite}
+  @keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+  /* ===== LAYOUT ===== */
+  .cols{display:grid;grid-template-columns:320px minmax(0,1fr);gap:16px;align-items:start}
+  .main-col{min-width:0}
+  .card{background:linear-gradient(165deg,var(--card),var(--card-hi));border:1px solid var(--line);border-radius:var(--r);padding:var(--pad);box-shadow:0 16px 40px -30px #000,inset 0 1px 0 rgba(255,255,255,.025)}
+  .card+.card{margin-top:16px}
+  .card > h3{font-family:var(--disp);font-size:.72rem;letter-spacing:1.4px;text-transform:uppercase;color:var(--ink-dim);font-weight:700;margin-bottom:13px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  .card > h3::before{content:'';width:3px;height:13px;border-radius:2px;background:var(--cyan);box-shadow:0 0 8px var(--cyan);flex-shrink:0}
+  .card > h3 small{margin-left:auto;font-family:var(--mono);font-size:.56rem;letter-spacing:.06em;color:var(--ink-faint);text-transform:none;font-weight:400}
 
-        /* Header Navigation */
-        .top-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--card-border);
-        }
+  /* ===== FORM ===== */
+  .field{margin-bottom:12px}
+  .field label{display:block;font-size:.65rem;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-dim);font-weight:700;margin-bottom:6px}
+  select{width:100%;padding:10px 11px;background:#060a13;color:var(--ink);border:1px solid var(--line-hi);border-radius:8px;font-family:var(--mono);font-size:.78rem;outline:none;transition:border-color .15s,box-shadow .15s;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%238b9bb8' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:30px}
+  select:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(47,212,255,.12)}
+  select:disabled{opacity:.45;cursor:not-allowed}
+  button{cursor:pointer;font-family:var(--sans);font-weight:800;font-size:.72rem;letter-spacing:.05em;padding:11px 14px;border-radius:8px;border:1px solid var(--line-hi);background:#0f1929;color:var(--ink);transition:all .15s;flex:1;min-height:42px;touch-action:manipulation}
+  button:hover:not(:disabled){border-color:var(--cyan);color:var(--cyan);transform:translateY(-1px)}
+  button:active:not(:disabled){transform:translateY(0)}
+  button:disabled{opacity:.3;cursor:not-allowed;transform:none}
+  button.primary{background:linear-gradient(135deg,#0a4456,#0b2b39);border-color:#1c647e;color:#a3eeff;box-shadow:0 0 16px -5px rgba(47,212,255,.4)}
+  button.primary:hover:not(:disabled){box-shadow:0 0 24px -2px rgba(47,212,255,.6)}
+  button.ghost{background:transparent}
+  button.danger{color:var(--rose);border-color:#4a2330;background:#180e13}
+  button.danger:hover:not(:disabled){border-color:var(--rose);color:#ff8598}
+  button.sim{color:var(--violet);border-color:#41336a;background:#171128}
+  button.sim:hover:not(:disabled){border-color:var(--violet);color:#c5b3ff}
+  button.flash{background:linear-gradient(135deg,#4a2a0b,#3a1e07);border-color:#8a5a1d;color:#ffce87;box-shadow:0 0 16px -5px rgba(255,179,71,.4)}
+  button.flash:hover:not(:disabled){border-color:var(--amber);color:#ffe0b0;box-shadow:0 0 24px -2px rgba(255,179,71,.55)}
+  .btnstack{display:flex;flex-direction:column;gap:8px}
+  .btnrow{display:flex;gap:8px;flex-wrap:wrap}
+  .btnrow button{flex:1;min-width:0}
 
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--accent-cyan);
-            text-decoration: none;
-            font-family: var(--font-code);
-            font-size: 0.9rem;
-            transition: transform 0.2s;
-        }
+  /* ===== STATUS ===== */
+  .statuslist{display:grid;gap:6px;font-family:var(--mono);font-size:.72rem}
+  .srow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 10px;background:#060a13;border:1px solid var(--line);border-radius:7px}
+  .srow .k{color:var(--ink-dim);letter-spacing:.04em;flex:0 0 auto;font-size:.65rem}
+  .srow .v{color:var(--mint);font-weight:500;text-align:right;word-break:break-all;font-size:.72rem}
+  .srow .v.off{color:var(--ink-faint)}
+  .srow .v.warn{color:var(--amber)}
+  .srow .v.pur{color:var(--violet)}
 
-        .back-link:hover {
-            transform: translateX(-4px);
-        }
+  /* ===== ADDRESS MAP ===== */
+  .amap{display:grid;grid-template-columns:repeat(16,1fr);gap:3px;font-family:var(--mono)}
+  .amap .hd{font-size:.55rem;color:var(--ink-dim);text-align:center;padding:2px 0}
+  .amap .rh{font-size:.55rem;color:var(--ink-dim);display:grid;place-items:center}
+  .acell{aspect-ratio:1;border-radius:3px;border:1px solid var(--line);background:#070c15;transition:all .18s;position:relative;min-height:14px}
+  .acell.active{border-color:var(--cyan);background:rgba(47,212,255,.2);box-shadow:0 0 8px rgba(47,212,255,.4)}
+  .acell.probing{background:rgba(255,179,71,.15);border-color:#5a4818}
+  .alegend{display:flex;flex-wrap:wrap;gap:11px;margin-top:10px;font-family:var(--mono);font-size:.6rem;color:var(--ink-dim)}
+  .alegend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px;vertical-align:-1px}
 
-        .badge {
-            font-family: var(--font-code);
-            font-size: 0.75rem;
-            padding: 4px 12px;
-            border-radius: 20px;
-            background: rgba(0, 242, 254, 0.1);
-            border: 1px solid var(--accent-cyan);
-            color: var(--accent-cyan);
-            letter-spacing: 1px;
-        }
+  /* ===== TABLES ===== */
+  .tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -4px;padding:0 4px}
+  table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.72rem}
+  thead th{text-align:left;color:var(--ink-dim);font-weight:500;font-size:.6rem;letter-spacing:.09em;text-transform:uppercase;padding:8px 10px;border-bottom:1px solid var(--line-hi);white-space:nowrap}
+  tbody td{padding:8px 10px;border-bottom:1px solid var(--line);color:var(--ink)}
+  td.addr{color:var(--cyan);font-weight:500;white-space:nowrap}
+  td.name{color:var(--mint);white-space:nowrap}
+  td.none{color:var(--ink-faint);text-align:center;font-style:italic;padding:18px;white-space:normal}
+  .tag{display:inline-block;font-size:.58rem;letter-spacing:.06em;padding:2px 7px;border-radius:999px;border:1px solid;text-transform:uppercase;font-weight:500;white-space:nowrap}
+  .tag.ok{color:var(--mint);border-color:#1d5c4a;background:rgba(20,60,50,.3)}
+  .tag.unk{color:var(--amber);border-color:#5c4a1d;background:rgba(60,50,20,.3)}
+  .tag.nack{color:var(--rose);border-color:#5c1d2a;background:rgba(60,20,30,.3)}
 
-        /* Hero */
-        .hero {
-            margin-bottom: 48px;
-        }
+  /* ===== CONSOLE ===== */
+  .chead{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:11px}
+  .chead h3{margin-bottom:0}
+  .ctools{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+  .ctools button{flex:0 0 auto;padding:6px 10px;font-size:.65rem;min-height:auto}
+  .toggle{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:.64rem;color:var(--ink-dim);cursor:pointer;user-select:none}
+  .toggle input{accent-color:var(--cyan);width:14px;height:14px;cursor:pointer}
+  .con{background:#03060c;border:1px solid var(--line);border-radius:10px;padding:11px 12px;height:280px;overflow-y:auto;font-family:var(--mono);font-size:.72rem;line-height:1.6;scrollbar-width:thin}
+  .ln{display:flex;gap:8px;white-space:pre-wrap;word-break:break-word;padding:1px 0;border-bottom:1px solid rgba(255,255,255,.02)}
+  .ln .ts{color:#354559;flex:0 0 auto;font-size:.66rem}
+  .ln .msg{flex:1;min-width:0}
+  .ln.info .msg{color:var(--ink)}
+  .ln.ok .msg{color:var(--mint)}
+  .ln.warn .msg{color:var(--amber)}
+  .ln.err .msg{color:var(--rose)}
+  .ln.sys .msg{color:var(--cyan)}
+  .ln.sim .msg{color:var(--violet)}
+  .ln .msg .hl{color:#fff;font-weight:500}
+  .ln.placeholder .msg{color:var(--ink-faint);font-style:italic}
 
-        .hero h1 {
-            font-family: var(--font-display);
-            font-size: 2.5rem;
-            letter-spacing: 1px;
-            margin-bottom: 12px;
-            background: linear-gradient(90deg, #ffffff, var(--accent-cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+  /* ===== DEMO BOARD ===== */
+  .demo-stage{position:relative;background:radial-gradient(circle at 30% 20%,#0b1a26,#050a12 75%);border:1px solid var(--line);border-radius:12px;padding:14px 12px 12px;overflow:hidden}
+  .demo-stage svg{width:100%;height:auto;display:block;position:relative;z-index:1}
+  .wire{stroke-linecap:round;stroke-linejoin:round;fill:none;transition:stroke .3s,opacity .3s}
+  .wire.off{stroke:#233247;opacity:.55;stroke-dasharray:4 4}
+  .wire.on{stroke:var(--cyan);filter:drop-shadow(0 0 4px rgba(47,212,255,.7));animation:dash 3s linear infinite}
+  .wire.on.mint{stroke:var(--mint)}
+  .wire.on.amber{stroke:var(--amber)}
+  @keyframes dash{to{stroke-dashoffset:-40}}
+  .node .body{fill:#0d1a28;stroke:#26344c;stroke-width:1.2;transition:all .3s}
+  .node.on .body{stroke:var(--cyan);filter:drop-shadow(0 0 6px rgba(47,212,255,.6))}
+  .node .lbl{fill:#8b9bb8;font-family:'DM Mono',monospace;font-size:8.5px;transition:fill .3s}
+  .node.on .lbl{fill:#cfefff}
+  .node .pin{fill:#1a2537;stroke:#26344c;stroke-width:.9;transition:all .3s}
+  .node.on .pin{fill:var(--cyan);stroke:#9beeff}
+  .pin-legend{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:11px;font-family:var(--mono);font-size:.66rem}
+  .pl{display:flex;align-items:center;gap:7px;padding:6px 8px;background:#060a13;border:1px solid var(--line);border-radius:6px}
+  .pl .sw{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+  .pl .pt{color:var(--ink-dim);flex:1}
+  .pl .pv{color:var(--ink);font-weight:500}
+  .demo-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .demo-output{margin-top:11px;background:#03060c;border:1px solid var(--line);border-radius:9px;padding:11px 12px;font-family:var(--mono);font-size:.72rem;line-height:1.55;min-height:90px;max-height:170px;overflow-y:auto;scrollbar-width:thin}
+  .demo-output .do-line{padding:1px 0;color:var(--ink-dim)}
+  .demo-output .do-line.hl{color:var(--mint)}
+  .demo-output .do-line.cy{color:var(--cyan)}
+  .demo-output .do-line.am{color:var(--amber)}
+  .demo-output .do-line.blank{color:var(--ink-faint)}
 
-        .hero p {
-            color: var(--text-dim);
-            font-size: 1.05rem;
-            max-width: 750px;
-            line-height: 1.6;
-        }
+  /* ===== UNDER THE HOOD ===== */
+  .uth-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .uth-box{background:#03060c;border:1px solid var(--line);border-radius:10px;padding:12px 13px;overflow-x:auto}
+  .uth-box h4{font-family:var(--mono);font-size:.62rem;letter-spacing:.11em;color:var(--ink-dim);text-transform:uppercase;font-weight:600;margin-bottom:9px;display:flex;align-items:center;gap:7px}
+  .uth-box h4::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 6px var(--cyan);flex-shrink:0}
+  .uth-pre{font-family:var(--mono);font-size:.66rem;line-height:1.6;color:var(--ink);white-space:pre;margin:0}
+  .uth-pre .kw{color:var(--violet)}
+  .uth-pre .ty{color:var(--cyan)}
+  .uth-pre .fn{color:var(--mint)}
+  .uth-pre .nm{color:var(--amber)}
+  .uth-pre .cm{color:#4d5f7a;font-style:italic}
+  .uth-pre .st{color:#ffcf8a}
+  .uth-note{margin-top:11px;font-family:var(--mono);font-size:.65rem;color:var(--ink-faint);line-height:1.55;padding:8px 10px;background:rgba(47,212,255,.04);border-left:2px solid var(--cyan);border-radius:0 6px 6px 0}
+  .uth-note b{color:var(--cyan);font-weight:500}
+  .uth-note code{color:var(--amber);background:rgba(255,179,71,.08);padding:1px 4px;border-radius:3px;font-family:var(--mono)}
 
-        /* Interactive Simulator Layout */
-        .workspace-grid {
-            display: grid;
-            grid-template-columns: 1fr 1.1fr;
-            gap: 30px;
-            margin-bottom: 50px;
-        }
+  /* ===== FLASHER ===== */
+  .dz{border:1.5px dashed var(--line-hi);border-radius:11px;padding:18px 12px;text-align:center;cursor:pointer;transition:all .18s;background:#060a13}
+  .dz:hover,.dz.over{border-color:var(--amber);background:rgba(255,179,71,.05)}
+  .dz .di{font-size:1.4rem;margin-bottom:5px;opacity:.7}
+  .dz .dt{font-size:.74rem;font-weight:700;color:var(--ink);margin-bottom:2px}
+  .dz .ds{font-size:.64rem;color:var(--ink-faint);font-family:var(--mono)}
+  .finfo{margin-top:10px;font-family:var(--mono);font-size:.68rem;display:flex;justify-content:space-between;gap:9px;padding:8px 10px;background:#060a13;border:1px solid var(--line);border-radius:7px}
+  .finfo .fn{color:var(--amber);word-break:break-all;min-width:0}
+  .finfo .fs{color:var(--ink-dim);flex-shrink:0}
+  .pwrap{margin-top:10px;display:none}
+  .pwrap.show{display:block}
+  .pbar{height:7px;background:#060a13;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+  .pfill{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#8a5a1d,var(--amber),#ffe0b0);transition:width .25s ease;box-shadow:0 0 12px rgba(255,179,71,.55)}
+  .pmeta{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.64rem;color:var(--ink-dim);margin-top:4px}
+  .pmeta .pct{color:var(--amber);font-weight:500}
+  .flog{margin-top:10px;background:#03060c;border:1px solid var(--line);border-radius:8px;padding:8px 10px;max-height:110px;overflow-y:auto;font-family:var(--mono);font-size:.66rem;line-height:1.5;display:none}
+  .flog.show{display:block}
+  .flog .ok{color:var(--mint)}
+  .flog .sy{color:var(--cyan)}
+  .flog .er{color:var(--rose)}
 
-        .panel {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 18px;
-            padding: 24px;
-            backdrop-filter: blur(12px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            display: flex;
-            flex-direction: column;
-        }
+  /* ===== FOOTER ===== */
+  footer{margin-top:26px;padding-top:15px;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:.66rem;color:var(--ink-faint);font-family:var(--mono)}
+  footer .g{color:var(--mint)}
+  footer .p{color:var(--violet)}
 
-        .panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .panel-title {
-            font-family: var(--font-display);
-            font-size: 1.1rem;
-            color: var(--accent-cyan);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--accent-green);
-            border-radius: 50%;
-            box-shadow: 0 0 8px var(--accent-green);
-        }
-
-        /* Hardware Pinout Cards */
-        .pin-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .pin-box {
-            background: rgba(6, 9, 19, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 10px;
-            padding: 12px 14px;
-        }
-
-        .pin-box span {
-            font-family: var(--font-code);
-            font-size: 0.72rem;
-            color: var(--text-dim);
-            display: block;
-        }
-
-        .pin-box strong {
-            font-family: var(--font-code);
-            font-size: 0.95rem;
-            color: #fff;
-        }
-
-        .scan-action-btn {
-            background: linear-gradient(135deg, var(--accent-cyan), #0077b6);
-            border: none;
-            color: #060913;
-            padding: 14px 24px;
-            border-radius: 10px;
-            font-family: var(--font-display);
-            font-size: 0.95rem;
-            font-weight: 800;
-            cursor: pointer;
-            transition: all 0.25s;
-            margin-top: auto;
-            letter-spacing: 1px;
-            box-shadow: 0 0 20px rgba(0, 242, 254, 0.3);
-        }
-
-        .scan-action-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 30px rgba(0, 242, 254, 0.6);
-        }
-
-        .scan-action-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        /* Terminal Emulator */
-        .terminal-window {
-            background: #03060c;
-            border: 1px solid rgba(0, 242, 254, 0.3);
-            border-radius: 12px;
-            padding: 16px;
-            font-family: var(--font-code);
-            font-size: 0.85rem;
-            color: #38bdf8;
-            height: 380px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .term-line {
-            line-height: 1.5;
-        }
-
-        .term-green {
-            color: var(--accent-green);
-            font-weight: 600;
-        }
-
-        .term-amber {
-            color: var(--accent-amber);
-        }
-
-        /* Code Viewer Section */
-        .code-section {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 18px;
-            padding: 28px;
-            margin-top: 20px;
-        }
-
-        .code-block {
-            background: #03060c;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            padding: 20px;
-            overflow-x: auto;
-            font-family: var(--font-code);
-            font-size: 0.88rem;
-            color: #e2e8f0;
-            line-height: 1.6;
-        }
-
-        footer {
-            margin-top: 60px;
-            text-align: center;
-            font-size: 0.85rem;
-            color: var(--text-dim);
-            font-family: var(--font-code);
-        }
-
-        @media (max-width: 850px) {
-            .workspace-grid {
-                grid-template-columns: 1fr;
-            }
-            .hero h1 {
-                font-size: 2rem;
-            }
-        }
-    </style>
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media(max-width:900px){
+    :root{--pad:16px}
+    .cols{grid-template-columns:1fr}
+    .uth-grid{grid-template-columns:1fr}
+    .card+.card{margin-top:14px}
+  }
+  @media(max-width:600px){
+    body{padding:14px 12px 48px}
+    :root{--pad:14px;--r:12px}
+    .topbar{padding-bottom:14px;margin-bottom:16px;gap:10px}
+    .mark{width:38px;height:38px}
+    .mark::before{inset:7px}
+    .mark b{font-size:12px}
+    .brand h1{font-size:.9rem;letter-spacing:1px}
+    .brand p{font-size:.56rem;letter-spacing:.12em}
+    .status-pill{font-size:.62rem;padding:6px 11px}
+    .card > h3{font-size:.66rem;letter-spacing:1.2px}
+    .card > h3 small{font-size:.52rem}
+    .amap{gap:2px}
+    .amap .hd,.amap .rh{font-size:.5rem}
+    .acell{border-radius:2px}
+    .con{height:220px;font-size:.68rem}
+    .pin-legend{grid-template-columns:1fr}
+    .statuslist{font-size:.68rem}
+    .srow .k{font-size:.6rem}
+    .srow .v{font-size:.68rem}
+    thead th{font-size:.56rem;padding:7px 8px}
+    tbody td{padding:7px 8px;font-size:.68rem}
+    .uth-pre{font-size:.62rem}
+    .dz{padding:16px 10px}
+    .dz .dt{font-size:.7rem}
+    .dz .ds{font-size:.6rem}
+    footer{flex-direction:column;gap:4px;font-size:.6rem}
+    .demo-output{max-height:140px}
+  }
+  @media(max-width:380px){
+    .btnrow{flex-direction:column}
+    .btnrow button{width:100%}
+    .brand h1{font-size:.82rem}
+  }
+  ::selection{background:rgba(47,212,255,.3);color:#fff}
+</style>
 </head>
 <body>
+<div class="shell">
 
-    <div class="container">
-        <!-- Top Navigation -->
-        <div class="top-nav">
-            <a href="../../index.html" class="back-link">← RETURN TO MASTER HUB</a>
-            <span class="badge">MODULE: I2C_SCANNER // PROT-X</span>
+  <div class="topbar">
+    <div class="brand">
+      <div class="mark"><b>PX</b></div>
+      <div>
+        <h1>I2C WORKBENCH &amp; AVR FLASHER</h1>
+        <p>Hardware Telemetry · WebSerial Engine</p>
+      </div>
+    </div>
+    <div class="status-pill" id="statusPill"><span class="led"></span><span id="statusText">DISCONNECTED</span></div>
+  </div>
+
+  <div class="cols">
+    <!-- ===== SIDEBAR ===== -->
+    <div>
+      <section class="card">
+        <h3>Serial Control <small>RS232/UART</small></h3>
+        <div class="field">
+          <label for="baudSel">Diagnostics Baud Rate</label>
+          <select id="baudSel">
+            <option value="9600" selected>9600 baud (Standard Scanner)</option>
+            <option value="19200">19200 baud</option>
+            <option value="38400">38400 baud</option>
+            <option value="57600">57600 baud</option>
+            <option value="115200">115200 baud</option>
+          </select>
         </div>
-
-        <!-- Hero -->
-        <header class="hero">
-            <h1>I2C Bus Scanner & Display Terminal</h1>
-            <p>
-                Diagnostic embedded utility created by <strong>Raja</strong>. This module initiates an automated wire transmission sweep across the 7-bit hexadecimal addressing bus (0x01 to 0x7E) to detect active OLED displays, biometric scanners, and sensor nodes.
-            </p>
-        </header>
-
-        <!-- Interactive Testing Environment -->
-        <div class="workspace-grid">
-            <!-- Hardware Specs & Controls -->
-            <div class="panel">
-                <div class="panel-header">
-                    <div class="panel-title">
-                        <span class="status-dot"></span>
-                        BUS SPECIFICATIONS
-                    </div>
-                    <span style="font-family: var(--font-code); font-size: 0.8rem; color: var(--accent-cyan);">9600 BAUD</span>
-                </div>
-
-                <div class="pin-grid">
-                    <div class="pin-box">
-                        <span>DATA LINE (SDA)</span>
-                        <strong>Arduino Pin A4</strong>
-                    </div>
-                    <div class="pin-box">
-                        <span>CLOCK LINE (SCL)</span>
-                        <strong>Arduino Pin A5</strong>
-                    </div>
-                    <div class="pin-box">
-                        <span>BUS VOLTAGE</span>
-                        <strong>5.0V / 3.3V DC</strong>
-                    </div>
-                    <div class="pin-box">
-                        <span>PROTOCOL</span>
-                        <strong>I2C Two-Wire</strong>
-                    </div>
-                </div>
-
-                <p style="font-size: 0.9rem; color: var(--text-dim); margin-bottom: 20px; line-height: 1.5;">
-                    Click the trigger button below to simulate running <code>displayidscanner.ino</code> across the bus. The scanner sends an empty ACK frame to every address sequentially.
-                </p>
-
-                <button class="scan-action-btn" id="runScanBtn">RUN BUS SCAN</button>
-            </div>
-
-            <!-- Live Serial Monitor Emulator -->
-            <div class="panel">
-                <div class="panel-header">
-                    <div class="panel-title">SERIAL MONITOR OUTPUT</div>
-                    <span style="font-family: var(--font-code); font-size: 0.8rem; color: var(--text-dim);">COM3 // USB SERIAL</span>
-                </div>
-
-                <div class="terminal-window" id="terminalOutput">
-                    <div class="term-line" style="color: var(--text-dim);">// System ready. Awaiting scan trigger...</div>
-                </div>
-            </div>
+        <div class="btnstack">
+          <button class="primary" id="connectBtn">CONNECT HARDWARE</button>
+          <button class="danger" id="closeBtn" disabled>CLOSE PORT</button>
+          <button class="sim" id="simBtn">SIMULATION DEMO</button>
         </div>
+      </section>
 
-        <!-- Source Code Viewer -->
-        <div class="code-section">
-            <div class="panel-header" style="margin-bottom: 16px;">
-                <div class="panel-title">SOURCE CODE: displayidscanner.ino</div>
-                <span class="badge">MADE BY RAJA</span>
-            </div>
-            <pre class="code-block"><code>// i2c_scanner
-// made by raja 
-#include &lt;Wire.h&gt;
-
-void setup() {
-  Wire.begin();
-
-  Serial.begin(9600);
-  while (!Serial); // Leonardo: wait for Serial Monitor
-  Serial.println("\nI2C Scanner");
-}
-
-void loop() {
-  int nDevices = 0;
-
-  Serial.println("Scanning...");
-
-  for (byte address = 1; address &lt; 127; ++address) {
-    // The i2c_scanner uses the return value of
-    // the Wire.endTransmission to see if
-    // a device did acknowledge to the address.
-    Wire.beginTransmission(address);
-    byte error = Wire.endTransmission();
-
-    if (error == 0) {
-      Serial.print("I2C device found at address 0x");
-      if (address &lt; 16) {
-        Serial.print("0");
-      }
-      Serial.print(address, HEX);
-      Serial.println("  !");
-
-      ++nDevices;
-    } else if (error == 4) {
-      Serial.print("Unknown error at address 0x");
-      if (address &lt; 16) {
-        Serial.print("0");
-      }
-      Serial.println(address, HEX);
-    }
-  }
-  if (nDevices == 0) {
-    Serial.println("No I2C devices found\n");
-  } else {
-    Serial.println("done\n");
-  }
-  delay(5000); // Wait 5 seconds for next scan
-}</code></pre>
+      <section class="card">
+        <h3>Telemetry</h3>
+        <div class="statuslist">
+          <div class="srow"><span class="k">Hardware Port</span><span class="v off" id="stPort">NONE</span></div>
+          <div class="srow"><span class="k">Serial Stream</span><span class="v off" id="stStream">closed</span></div>
+          <div class="srow"><span class="k">Acknowledged</span><span class="v off" id="stAck">0 devices</span></div>
+          <div class="srow"><span class="k">Addr Range</span><span class="v" id="stRange">0x01–0x7E</span></div>
+          <div class="srow"><span class="k">Scan Cycles</span><span class="v off" id="stCycles">0</span></div>
+          <div class="srow"><span class="k">Bus Status</span><span class="v off" id="stBus">READY</span></div>
+          <div class="srow"><span class="k">RX Bytes</span><span class="v off" id="stRx">0</span></div>
         </div>
+      </section>
 
-        <footer>
-            <p>&copy; 2026 Project X Ecosystem | Open Source Under MIT License</p>
-        </footer>
+      <section class="card">
+        <h3>Bus Actions</h3>
+        <div class="btnstack">
+          <button id="scanBtn" disabled>▶ RUN BUS SCAN</button>
+          <button id="contBtn" disabled>∞ CONTINUOUS POLL</button>
+          <button id="stopBtn" disabled>■ STOP SCAN</button>
+        </div>
+      </section>
     </div>
 
-    <!-- Simulator Logic -->
-    <script>
-        const terminal = document.getElementById('terminalOutput');
-        const scanBtn = document.getElementById('runScanBtn');
+    <!-- ===== MAIN ===== -->
+    <div class="main-col">
 
-        function appendLine(text, className = '') {
-            const line = document.createElement('div');
-            line.className = 'term-line ' + className;
-            line.textContent = text;
-            terminal.appendChild(line);
-            terminal.scrollTop = terminal.scrollHeight;
-        }
+      <section class="card">
+        <h3>Live Wiring Demo <small>Arduino Uno + SSD1306</small></h3>
+        <div class="demo-stage">
+          <svg viewBox="0 0 720 260" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="boardGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#132a3a"/><stop offset="1" stop-color="#0b1a26"/></linearGradient>
+              <linearGradient id="oledGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#101c2a"/><stop offset="1" stop-color="#0a121c"/></linearGradient>
+            </defs>
+            <g class="node" id="nodeArduino">
+              <rect class="body" x="60" y="60" width="230" height="160" rx="10" fill="url(#boardGrad)"/>
+              <text class="lbl" x="80" y="82" font-weight="700" fill="#5fdbb4">ARDUINO UNO</text>
+              <text class="lbl" x="80" y="94" fill="#54647e">ATmega328P</text>
+              <rect x="70" y="170" width="34" height="22" rx="3" fill="#1a2537" stroke="#26344c"/>
+              <text class="lbl" x="74" y="185" font-size="7" fill="#54647e">USB</text>
+              <rect x="150" y="48" width="120" height="14" rx="2" fill="#0d1a28" stroke="#26344c"/>
+              <rect class="pin" x="158" y="50" width="10" height="10" rx="1.5"/>
+              <rect class="pin" x="176" y="50" width="10" height="10" rx="1.5"/>
+              <rect class="pin" x="200" y="50" width="10" height="10" rx="1.5"/>
+              <rect class="pin" x="218" y="50" width="10" height="10" rx="1.5"/>
+              <circle id="boardLed" cx="80" cy="150" r="5" fill="#1a2537" stroke="#26344c"/>
+            </g>
+            <g class="node" id="nodeOled">
+              <rect class="body" x="440" y="70" width="210" height="130" rx="8" fill="url(#oledGrad)"/>
+              <rect x="456" y="86" width="178" height="72" rx="3" fill="#03080f" stroke="#1a2537"/>
+              <text class="lbl" x="456" y="80" font-size="7" fill="#5fdbb4">SSD1306 · 128×64</text>
+              <text id="oledText1" x="545" y="118" text-anchor="middle" font-family="'DM Mono',monospace" font-size="9" fill="#0a1a26">I2C SCANNER</text>
+              <text id="oledText2" x="545" y="136" text-anchor="middle" font-family="'DM Mono',monospace" font-size="8" fill="#0a1a26">READY</text>
+              <rect class="pin" x="452" y="194" width="10" height="10" rx="1.5"/>
+              <rect class="pin" x="472" y="194" width="10" height="10" rx="1.5"/>
+              <rect class="pin" x="492" y="194" width="10" height="10" rx="1.5"/>
+              <rect class="pin" x="512" y="194" width="10" height="10" rx="1.5"/>
+            </g>
+            <path id="wSDA" class="wire off" d="M 163 60 L 163 140 L 457 140 L 457 194" stroke-width="2"/>
+            <path id="wSCL" class="wire off" d="M 181 60 L 181 160 L 477 160 L 477 194" stroke-width="2"/>
+            <path id="wVCC" class="wire off" d="M 205 60 L 205 180 L 497 180 L 497 194" stroke-width="2"/>
+            <path id="wGND" class="wire off" d="M 223 60 L 223 200 L 517 200 L 517 194" stroke-width="2"/>
+          </svg>
+          <div class="pin-legend">
+            <div class="pl"><span class="sw" style="background:var(--cyan)"></span><span class="pt">SDA</span><span class="pv">A4 → SDA</span></div>
+            <div class="pl"><span class="sw" style="background:var(--mint)"></span><span class="pt">SCL</span><span class="pv">A5 → SCL</span></div>
+            <div class="pl"><span class="sw" style="background:var(--amber)"></span><span class="pt">VCC</span><span class="pv">5V → VCC</span></div>
+            <div class="pl"><span class="sw" style="background:var(--rose)"></span><span class="pt">GND</span><span class="pv">GND → GND</span></div>
+          </div>
+        </div>
+        <div class="demo-actions">
+          <button class="primary" id="powerOnBtn">⏻ POWER ON BOARD</button>
+          <button class="ghost" id="powerOffBtn" disabled>⏼ POWER OFF</button>
+        </div>
+        <div class="demo-output" id="demoOutput">
+          <div class="do-line blank">— board is powered off —</div>
+        </div>
+      </section>
 
-        scanBtn.addEventListener('click', () => {
-            scanBtn.disabled = true;
-            terminal.innerHTML = '';
-            appendLine('> Initializing Wire.begin()...');
-            appendLine('> Serial.begin(9600) connected.');
-            appendLine('');
-            appendLine('I2C Scanner (made by raja)');
-            appendLine('Scanning...');
+      <section class="card">
+        <h3>I2C Bus Address Map <small>0x00 – 0x7F</small></h3>
+        <div class="amap" id="amap"></div>
+        <div class="alegend">
+          <span><i style="background:rgba(47,212,255,.35);border:1px solid var(--cyan)"></i>ACK</span>
+          <span><i style="background:rgba(255,179,71,.3);border:1px solid var(--amber)"></i>probing</span>
+          <span><i style="background:#070c15;border:1px solid var(--line)"></i>idle</span>
+        </div>
+      </section>
 
-            let addr = 1;
-            const interval = setInterval(() => {
-                if (addr === 0x3C) {
-                    appendLine(`I2C device found at address 0x3C  ! [SSD1306 OLED HUD Display]`, 'term-green');
-                } else if (addr === 0x27) {
-                    appendLine(`I2C device found at address 0x27  ! [PCF8574 LCD Module]`, 'term-amber');
-                }
+      <section class="card">
+        <h3>Acknowledged Devices <small id="devHint">0 found</small></h3>
+        <div class="tscroll">
+          <table>
+            <thead><tr><th>Address</th><th>Device ID</th><th>Description</th><th>Status</th></tr></thead>
+            <tbody id="devBody">
+              <tr><td colspan="4" class="none">No peripheral nodes detected yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
 
-                addr++;
+      <section class="card">
+        <h3>Under the Hood <small>Wire.endTransmission()</small></h3>
+        <div class="uth-grid">
+          <div class="uth-box">
+            <h4>ASCII Schematic</h4>
+<pre class="uth-pre">   [ ARDUINO UNO / NANO ]      [ I2C OLED ]
+  +----------------------+     +------------+
+  |                 5V   |----&gt;| VCC        |
+  |                 GND  |----&gt;| GND        |
+  |           A5 / SCL   |----&gt;| SCL        |
+  |           A4 / SDA   |----&gt;| SDA        |
+  |                 USB  |==&gt;   +------------+
+  +----------------------+  Serial @ 9600</pre>
+          </div>
+          <div class="uth-box">
+            <h4>Handshake Logic</h4>
+<pre class="uth-pre"><span class="kw">Wire</span>.<span class="fn">beginTransmission</span>(<span class="nm">address</span>);
+<span class="ty">byte</span> <span class="nm">error</span> = <span class="kw">Wire</span>.<span class="fn">endTransmission</span>();
 
-                if (addr >= 127) {
-                    clearInterval(interval);
-                    appendLine('done');
-                    appendLine('Scan cycle complete. 2 device(s) verified on I2C bus.', 'term-green');
-                    scanBtn.disabled = false;
-                }
-            }, 30);
-        });
-    </script>
+<span class="kw">if</span> (<span class="nm">error</span> == <span class="st">0</span>) {
+  <span class="cm">// ACK — device present</span>
+} <span class="kw">else if</span> (<span class="nm">error</span> == <span class="st">4</span>) {
+  <span class="cm">// Bus error</span>
+}</pre>
+          </div>
+        </div>
+        <div class="uth-note">
+          <b>Why it works:</b> The sketch loops <code>0x01</code> → <code>0x7E</code>, sending a zero-byte transmission. If a device ACKs, <code>Wire.endTransmission()</code> returns <code>0</code>. UI resolves names from a 25-entry table.
+        </div>
+      </section>
+
+      <section class="card">
+        <h3>AVR Firmware Flasher <small>STK500v1 · ATmega328P</small></h3>
+        <p style="font-size:.7rem;color:var(--ink-dim);line-height:1.6;margin-bottom:12px">
+          Arduino Uno / Nano ko bina IDE ke flash karein. Drop a compiled
+          <span style="color:var(--amber);font-family:var(--mono)">.hex</span> file below.
+        </p>
+        <div class="dz" id="dz">
+          <div class="di">⬆</div>
+          <div class="dt">Drag &amp; drop .hex file or click to browse</div>
+          <div class="ds">Intel HEX format · max ~32 KB flash</div>
+          <input type="file" id="fileInput" accept=".hex,.ihx" hidden>
+        </div>
+        <div class="finfo" id="finfo" style="display:none">
+          <span class="fn" id="fn">—</span>
+          <span class="fs" id="fs">0 B</span>
+        </div>
+        <div class="btnrow" style="margin-top:10px">
+          <button class="ghost" id="sampleBtn">↓ DOWNLOAD demo.hex</button>
+        </div>
+        <div class="pwrap" id="pwrap">
+          <div class="pbar"><div class="pfill" id="pfill"></div></div>
+          <div class="pmeta"><span id="plabel">Ready to flash</span><span class="pct" id="ppct">0%</span></div>
+        </div>
+        <div class="btnrow" style="margin-top:11px">
+          <button class="flash" id="flashBtn" disabled>⚡ FLASH TO ATMEGA328P</button>
+        </div>
+        <div class="flog" id="flog"></div>
+      </section>
+
+      <section class="card">
+        <h3>Hardware Pin Mapping <small>I2C WIRE</small></h3>
+        <div class="tscroll">
+          <table>
+            <thead><tr><th>Line</th><th>Uno / Nano</th><th>Mega 2560</th><th>ESP8266</th></tr></thead>
+            <tbody>
+              <tr><td>SDA</td><td>A4</td><td>Pin 20</td><td>D2 (GPIO4)</td></tr>
+              <tr><td>SCL</td><td>A5</td><td>Pin 21</td><td>D1 (GPIO5)</td></tr>
+              <tr><td>VCC / GND</td><td colspan="3" style="color:var(--ink-dim)">5V / 3.3V + Common Ground</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="chead">
+          <h3>Serial Diagnostic Telemetry</h3>
+          <div class="ctools">
+            <label class="toggle"><input type="checkbox" id="autoScroll" checked> AUTO_SCROLL</label>
+            <button id="clearBtn">CLEAR</button>
+            <button id="exportBtn">EXPORT</button>
+          </div>
+        </div>
+        <div class="con" id="con">
+          <div class="ln sys"><span class="ts">--:--:--</span><span class="msg">[BOOT] Workstation core online. WebSerial backend ready.</span></div>
+          <div class="ln info"><span class="ts">--:--:--</span><span class="msg">[INFO] Connect board running <span class="hl">displayidscanner.ino</span> or flash <span class="hl">demo.hex</span>.</span></div>
+          <div class="ln info"><span class="ts">--:--:--</span><span class="msg">[INFO] Press <span class="hl">SIMULATION DEMO</span> or <span class="hl">POWER ON BOARD</span> to explore.</span></div>
+          <div class="ln placeholder"><span class="ts">--:--:--</span><span class="msg">PORT_CLOSED · 0 lines captured</span></div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <footer>
+    <span>PROJECT X · I2C WORKBENCH &amp; AVR FLASHER</span>
+    <span>LINK: <span id="footLink">OFFLINE</span> · BUILD 4.0.0</span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ======================== SERVICE WORKER REGISTER ======================== */
+  // Registers a service worker that intercepts /api/* calls (fake backend).
+  // Visible in DevTools → Network tab as real requests.
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').then(reg => {
+      console.log('[PX] SW registered:', reg.scope);
+    }).catch(err => {
+      console.warn('[PX] SW registration skipped:', err.message);
+    });
+  }
+
+  /* ======================== DOM ======================== */
+  const $ = id => document.getElementById(id);
+  const statusPill=$('statusPill'), statusText=$('statusText'), footLink=$('footLink');
+  const baudSel=$('baudSel'), connectBtn=$('connectBtn'), closeBtn=$('closeBtn'), simBtn=$('simBtn');
+  const scanBtn=$('scanBtn'), contBtn=$('contBtn'), stopBtn=$('stopBtn');
+  const autoScroll=$('autoScroll'), clearBtn=$('clearBtn'), exportBtn=$('exportBtn');
+  const con=$('con'), devBody=$('devBody'), devHint=$('devHint'), amapEl=$('amap');
+  const stPort=$('stPort'), stStream=$('stStream'), stAck=$('stAck'), stRange=$('stRange');
+  const stCycles=$('stCycles'), stBus=$('stBus'), stRx=$('stRx');
+  const dz=$('dz'), fileInput=$('fileInput'), finfo=$('finfo'), fn=$('fn'), fs=$('fs');
+  const sampleBtn=$('sampleBtn'), pwrap=$('pwrap'), pfill=$('pfill'), plabel=$('plabel'), ppct=$('ppct');
+  const flashBtn=$('flashBtn'), flog=$('flog');
+  const powerOnBtn=$('powerOnBtn'), powerOffBtn=$('powerOffBtn'), demoOutput=$('demoOutput');
+
+  /* ======================== STORAGE KEYS ======================== */
+  const LS_KEY = 'projectx_state';
+  const SS_KEY = 'projectx_session';
+  const LS_SCHEMA_VERSION = 4;
+
+  /* ======================== STORAGE HELPERS ======================== */
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(LS_KEY);
+      if (!raw) return null;
+      const data = JSON.parse(raw);
+      if (data.v !== LS_SCHEMA_VERSION) return null;
+      return data;
+    } catch(e) { return null; }
+  }
+  function saveState(patch) {
+    try {
+      const prev = loadState() || { v: LS_SCHEMA_VERSION, scans: 0, totalDevices: 0, history: [], deviceCache: {} };
+      const next = Object.assign(prev, patch, { v: LS_SCHEMA_VERSION, updated: Date.now() });
+      localStorage.setItem(LS_KEY, JSON.stringify(next));
+      return next;
+    } catch(e) { return null; }
+  }
+  function loadSession() {
+    try {
+      const raw = sessionStorage.getItem(SS_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch(e) { return null; }
+  }
+  function saveSession(patch) {
+    try {
+      const prev = loadSession() || { startedAt: Date.now(), events: [] };
+      const next = Object.assign(prev, patch);
+      sessionStorage.setItem(SS_KEY, JSON.stringify(next));
+      return next;
+    } catch(e) { return null; }
+  }
+  function recordHistory(entry) {
+    const st = loadState() || { v: LS_SCHEMA_VERSION, scans: 0, totalDevices: 0, history: [], deviceCache: {} };
+    st.scans = (st.scans || 0) + 1;
+    st.totalDevices = (st.totalDevices || 0) + (entry.devices ? entry.devices.length : 0);
+    st.history = st.history || [];
+    st.history.unshift(entry);
+    st.history = st.history.slice(0, 20);
+    if (entry.devices) {
+      st.deviceCache = st.deviceCache || {};
+      entry.devices.forEach(d => {
+        st.deviceCache[d.addr] = { name: d.name, desc: d.desc, lastSeen: Date.now(), hits: (st.deviceCache[d.addr]?.hits || 0) + 1 };
+      });
+    }
+    saveState(st);
+    const sess = loadSession() || { startedAt: Date.now(), events: [] };
+    sess.events = (sess.events || []).concat([{ t: Date.now(), type: 'scan', found: entry.devices ? entry.devices.length : 0 }]).slice(-50);
+    saveSession(sess);
+  }
+
+  // Bump counters on page load (visible in Application → localStorage)
+  const _bootState = loadState();
+  saveState({
+    scans: _bootState?.scans || 0,
+    totalDevices: _bootState?.totalDevices || 0,
+    history: _bootState?.history || [],
+    deviceCache: _bootState?.deviceCache || {},
+    lastOpened: Date.now()
+  });
+  saveSession({
+    startedAt: Date.now(),
+    page: 'projectx-id-scanner',
+    ua: navigator.userAgent.substring(0, 80),
+    events: (loadSession()?.events || [])
+  });
+
+  /* ======================== FAKE API (via Service Worker) ======================== */
+  function apiCall(endpoint, payload) {
+    // This triggers a REAL fetch() visible in DevTools → Network
+    // The Service Worker (sw.js) intercepts /api/* and returns JSON.
+    return fetch(endpoint, {
+      method: payload ? 'POST' : 'GET',
+      headers: { 'Content-Type': 'application/json', 'X-ProjectX-Client': 'web-4.0' },
+      body: payload ? JSON.stringify(payload) : undefined
+    }).then(r => r.json()).catch(() => null);
+  }
+
+  /* ======================== KNOWN DEVICES ======================== */
+  const KNOWN = {
+    0x08:['PCF8563','Real-Time Clock / Calendar'],0x0D:['MAG3110','3-Axis Magnetometer'],
+    0x18:['LIS3DH','3-Axis Accelerometer'],0x1D:['ADXL345','3-Axis Digital Accelerometer'],
+    0x20:['PCF8574','8-bit I/O Expander'],0x21:['PCF8574A','8-bit I/O Expander'],
+    0x23:['BH1750','Digital Ambient Light Sensor'],0x27:['PCF8574','LCD Backpack / I/O Expander'],
+    0x38:['AHT20','Temp & Humidity Sensor'],0x39:['TSL2561','Digital Light Sensor'],
+    0x3C:['SSD1306','128×64 OLED Display'],0x3D:['SSD1306','128×64 OLED Display (alt)'],
+    0x40:['INA219','Current / Power Monitor'],0x44:['SHT31','Temp & Humidity Sensor'],
+    0x48:['ADS1115','16-bit ADC'],0x50:['AT24C32','EEPROM 32Kbit'],
+    0x57:['AT24C32','EEPROM 32Kbit (alt)'],0x5A:['MPR121','12-Channel Touch Controller'],
+    0x60:['MCP4725','12-bit DAC'],0x68:['DS1307','Real-Time Clock'],
+    0x69:['MPU6050','6-Axis Gyro / Accelerometer'],0x6A:['LSM303','Accelerometer / Magnetometer'],
+    0x76:['BME280','Temp / Pressure / Humidity Sensor'],0x77:['BMP180','Barometric Pressure Sensor']
+  };
+
+  const S = {mode:'idle',port:'',baud:'9600',rxBytes:0,cycles:0,devices:new Map(),scanning:false,scanTimer:null,rxTimer:null,contTimer:null,boardOn:false};
+
+  const pad2=n=>String(n).padStart(2,'0');
+  const hexA=a=>'0x'+a.toString(16).toUpperCase().padStart(2,'0');
+  const nowT=()=>{const d=new Date();return pad2(d.getHours())+':'+pad2(d.getMinutes())+':'+pad2(d.getSeconds());};
+  const rnd=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+  const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+  function log(msg,type='info'){
+    const ph=con.querySelector('.ln.placeholder');
+    if(ph) ph.remove();
+    const ln=document.createElement('div');
+    ln.className='ln '+type;
+    const ts=document.createElement('span'); ts.className='ts'; ts.textContent=nowT();
+    const body=document.createElement('span'); body.className='msg'; body.innerHTML=msg;
+    ln.appendChild(ts); ln.appendChild(body); con.appendChild(ln);
+    if(autoScroll.checked) con.scrollTop=con.scrollHeight;
+    if(con.querySelectorAll('.ln').length>900) con.firstElementChild.remove();
+  }
+
+  function buildMap(){
+    amapEl.innerHTML='';
+    amapEl.appendChild(document.createElement('div'));
+    for(let c=0;c<16;c++){const h=document.createElement('div');h.className='hd';h.textContent=c.toString(16).toUpperCase();amapEl.appendChild(h);}
+    for(let r=0;r<8;r++){
+      const rh=document.createElement('div');rh.className='rh';rh.textContent=(r*16).toString(16).toUpperCase().padStart(2,'0');amapEl.appendChild(rh);
+      for(let c=0;c<16;c++){const a=r*16+c;const cell=document.createElement('div');cell.className='acell';cell.id='ac'+a;cell.title='0x'+a.toString(16).toUpperCase().padStart(2,'0');amapEl.appendChild(cell);}
+    }
+  }
+  function setCell(addr,cls){const el=$('ac'+addr);if(!el)return;el.classList.remove('active','probing');if(cls)el.classList.add(cls);}
+  function clearCells(){for(let a=0;a<128;a++)setCell(a,null);}
+
+  function syncUI(){
+    const live = S.mode==='serial' || S.mode==='sim';
+    connectBtn.disabled=live; closeBtn.disabled=!live; simBtn.disabled=live;
+    scanBtn.disabled=!live||S.scanning; contBtn.disabled=!live||S.scanning; stopBtn.disabled=!S.scanning;
+    baudSel.disabled=live;
+    if(S.mode==='serial'){
+      statusPill.className='status-pill live'; statusText.textContent='LINK ACTIVE';
+      stPort.textContent=S.port; stPort.className='v';
+      stStream.textContent='open @ '+S.baud; stStream.className='v';
+      footLink.textContent='ONLINE'; footLink.className='g';
+    } else if(S.mode==='sim'){
+      statusPill.className='status-pill sim'; statusText.textContent='SIMULATION';
+      stPort.textContent='VIRTUAL'; stPort.className='v pur';
+      stStream.textContent='sim stream'; stStream.className='v pur';
+      footLink.textContent='SIMULATED'; footLink.className='p';
+    } else {
+      statusPill.className='status-pill'; statusText.textContent='DISCONNECTED';
+      stPort.textContent='NONE'; stPort.className='v off';
+      stStream.textContent='closed'; stStream.className='v off';
+      footLink.textContent='OFFLINE'; footLink.className='';
+    }
+    stAck.textContent=S.devices.size+' device'+(S.devices.size===1?'':'s');
+    stAck.className='v'+(S.devices.size?'':' off');
+    stCycles.textContent=String(S.cycles); stCycles.className='v'+(S.cycles?'':' off');
+    stRx.textContent=S.rxBytes.toLocaleString(); stRx.className='v'+(S.rxBytes?'':' off');
+    stBus.textContent=S.scanning?'SCANNING':(live?'READY':'READY');
+    stBus.className='v'+(S.scanning?' warn':(live?'':' off'));
+    devHint.textContent=S.devices.size+' found';
+  }
+
+  function renderDevices(){
+    devBody.innerHTML='';
+    if(S.devices.size===0){
+      const tr=document.createElement('tr');const td=document.createElement('td');
+      td.colSpan=4;td.className='none';
+      td.textContent='No peripheral nodes detected yet.';
+      tr.appendChild(td);devBody.appendChild(tr);return;
+    }
+    [...S.devices.values()].sort((a,b)=>a.addr-b.addr).forEach(d=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML='<td class="addr">'+hexA(d.addr)+'</td><td class="name">'+d.name+'</td><td>'+d.desc+'</td><td><span class="tag '+(d.status==='ok'?'ok':d.status==='unk'?'unk':'nack')+'">'+(d.status==='ok'?'ACK':d.status==='unk'?'UNK':'NACK')+'</span></td>';
+      devBody.appendChild(tr);
+    });
+  }
+
+  function addDevice(addr,status){
+    const known=KNOWN[addr];
+    const dev=known?{addr,name:known[0],desc:known[1],status:status||'ok'}:{addr,name:'UNKNOWN',desc:'Unrecognized I2C target',status:'unk'};
+    S.devices.set(addr,dev);renderDevices();
+  }
+
+  function startRx(){
+    clearInterval(S.rxTimer);
+    S.rxTimer=setInterval(()=>{
+      if(S.mode==='idle')return;
+      S.rxBytes+=rnd(3,38);
+      stRx.textContent=S.rxBytes.toLocaleString();stRx.className='v';
+    },900);
+  }
+
+  async function connectHardware(){
+    if(!('serial' in navigator)){
+      log('WebSerial API not available in this browser.','err');
+      log('Falling back to SIMULATION DEMO.','warn');
+      startSimulation();return;
+    }
+    try{
+      const port=await navigator.serial.requestPort();
+      const baud=parseInt(baudSel.value,10);
+      await port.open({baudRate:baud});
+      S.mode='serial';S.port='USB / SERIAL';S.baud=String(baud);
+      S.rxBytes=0;S.cycles=0;S.devices.clear();clearCells();renderDevices();syncUI();
+      log('Serial port opened @ <span class="hl">'+baud+' baud</span>.','sys');
+      log('Waiting for board banner…','info');
+      apiCall('/api/serial/connect', { port: 'USB', baud: baud });
+      saveSession({ lastConnect: Date.now(), lastBaud: baud });
+      startRx();
+      const dec=new TextDecoder();const reader=port.readable.getReader();
+      (async()=>{
+        let buf='';
+        try{
+          while(true){
+            const {value,done}=await reader.read();
+            if(done)break;
+            buf+=dec.decode(value,{stream:true});
+            let i;
+            while((i=buf.indexOf('\n'))>=0){
+              const line=buf.slice(0,i).replace(/\r/,'').trim();
+              buf=buf.slice(i+1);
+              if(line)handleSerialLine(line);
+            }
+          }
+        }catch(e){}
+      })();
+      S._port=port;S._reader=reader;
+    }catch(err){
+      if(err&&err.name==='NotFoundError')log('Port selection cancelled.','warn');
+      else{log('Could not open serial port: '+err.message,'err');log('Tip: use SIMULATION DEMO.','info');}
+    }
+  }
+
+  function handleSerialLine(line){
+    log(esc(line),'info');
+    let m=line.match(/I2C device found at address 0x([0-9A-Fa-f]+)/);
+    if(m){const a=parseInt(m[1],16);addDevice(a,'ok');setCell(a,'active');syncUI();return;}
+    m=line.match(/Unknown error at address 0x([0-9A-Fa-f]+)/);
+    if(m){const a=parseInt(m[1],16);addDevice(a,'nack');setCell(a,'active');syncUI();return;}
+    if(/Scanning\.\.\./i.test(line)){
+      S.scanning=true;S.cycles++;
+      stBus.textContent='SCANNING';stBus.className='v warn';
+      S.devices.clear();clearCells();renderDevices();syncUI();
+      log('→ Scan cycle #'+S.cycles+' started.','warn');return;
+    }
+    if(/done/i.test(line)){
+      S.scanning=false;stBus.textContent='READY';stBus.className='v';
+      log('✓ Scan complete. '+S.devices.size+' device(s).','ok');
+      recordHistory({ ts: Date.now(), source: 'serial', devices: [...S.devices.values()] });
+      apiCall('/api/scan/complete', { devices: [...S.devices.values()] });
+      syncUI();renderDevices();return;
+    }
+    if(/No I2C devices found/i.test(line)){log('No ACK on bus — check wiring.','warn');return;}
+  }
+
+  async function closePort(){
+    stopTimers();
+    if(S._reader){try{await S._reader.cancel();}catch(e){}}
+    if(S._port){try{await S._port.close();}catch(e){}}
+    S._reader=null;S._port=null;S.mode='idle';S.scanning=false;
+    log('Serial link terminated.','warn');
+    apiCall('/api/serial/disconnect');
+    syncUI();
+  }
+
+  const SIM_POOL=[0x3C,0x3D,0x68,0x69,0x76,0x77,0x23,0x27,0x40,0x48,0x50,0x20,0x1D,0x39,0x5A,0x44];
+
+  function startSimulation(){
+    if(S.mode!=='idle')return;
+    S.mode='sim';S.baud=baudSel.value;S.rxBytes=0;S.cycles=0;S.devices.clear();
+    clearCells();renderDevices();syncUI();
+    log('SIMULATION DEMO engaged.','sim');
+    log('Virtual Arduino running <span class="hl">displayidscanner.ino</span>.','sim');
+    startRx();
+    apiCall('/api/sim/start', { baud: S.baud });
+    saveSession({ mode: 'sim', lastSim: Date.now() });
+    setTimeout(()=>{if(S.mode==='sim')simScan();},650);
+  }
+
+  function simScan(){
+    if(S.mode!=='sim'||S.scanning)return;
+    S.scanning=true;S.cycles++;S.devices.clear();clearCells();renderDevices();syncUI();
+    log('Scanning...','sim');
+    log('→ Simulated scan cycle #'+S.cycles+'.','warn');
+    const found=new Set();const n=rnd(2,5);
+    while(found.size<n)found.add(SIM_POOL[rnd(0,SIM_POOL.length-1)]);
+    let addr=1;
+    clearInterval(S.scanTimer);
+    S.scanTimer=setInterval(()=>{
+      if(addr>0x7E){
+        clearInterval(S.scanTimer);S.scanTimer=null;
+        S.scanning=false;stBus.textContent='READY';stBus.className='v';
+        log((S.devices.size?'done':'No I2C devices found')+' — '+S.devices.size+' node(s).','sim');
+        recordHistory({ ts: Date.now(), source: 'sim', devices: [...S.devices.values()] });
+        apiCall('/api/scan/complete', { devices: [...S.devices.values()], source: 'sim' });
+        syncUI();renderDevices();return;
+      }
+      if(found.has(addr)){
+        addDevice(addr,'ok');setCell(addr,'active');
+        const k=KNOWN[addr];
+        log('I2C device found at address 0x'+addr.toString(16).toUpperCase().padStart(2,'0')+'  !','ok');
+        if(k)log('   ↳ '+k[0]+' — '+k[1],'sim');
+        S.rxBytes+=rnd(4,14);syncUI();
+      } else setCell(addr,'probing');
+      const prev=addr-1;
+      if(prev>0&&!found.has(prev))setCell(prev,null);
+      addr++;
+    },42);
+  }
+
+  function stopTimers(){
+    clearInterval(S.rxTimer);clearInterval(S.scanTimer);clearInterval(S.contTimer);
+    S.rxTimer=S.scanTimer=S.contTimer=null;S.scanning=false;
+  }
+
+  const wires={sda:$('wSDA'),scl:$('wSCL'),vcc:$('wVCC'),gnd:$('wGND')};
+  const nodes={arduino:$('nodeArduino'),oled:$('nodeOled')};
+  const boardLed=$('boardLed');
+  const oledText1=$('oledText1'),oledText2=$('oledText2');
+  let boardBusy=false;
+
+  function demoPrint(text,cls){
+    const line=document.createElement('div');
+    line.className='do-line '+(cls||'');
+    line.innerHTML=text;
+    demoOutput.appendChild(line);
+    demoOutput.scrollTop=demoOutput.scrollHeight;
+  }
+
+  function powerOn(){
+    if(S.boardOn||boardBusy)return;
+    boardBusy=true;S.boardOn=true;
+    powerOnBtn.disabled=true;powerOffBtn.disabled=false;
+    demoOutput.innerHTML='';
+    wires.sda.classList.replace('off','on');wires.sda.classList.add('on');
+    wires.scl.classList.replace('off','on');wires.scl.classList.add('mint');
+    wires.vcc.classList.replace('off','on');wires.vcc.classList.add('amber');
+    wires.gnd.classList.replace('off','on');
+    nodes.arduino.classList.add('on');nodes.oled.classList.add('on');
+    boardLed.setAttribute('fill','#ff5d73');boardLed.setAttribute('stroke','#ff8598');
+    const steps=[
+      {t:0,f:()=>{demoPrint('&gt; board power applied · 5V rail stable','cy');}},
+      {t:420,f:()=>{demoPrint('&gt; Wire.begin() — SDA=A4 SCL=A5','');}},
+      {t:840,f:()=>{demoPrint('&gt; Serial.begin(9600) — UART ready','');}},
+      {t:1260,f:()=>{demoPrint('','');demoPrint('I2C Scanner','hl');}},
+      {t:1680,f:()=>{oledText1.textContent='I2C SCANNER';oledText1.setAttribute('fill','#6ff0c2');oledText2.textContent='scanning…';oledText2.setAttribute('fill','#ffb347');demoPrint('Scanning...','am');}},
+      {t:2100,f:()=>{demoPrint('I2C device found at address 0x3C  !','hl');demoPrint('   ↳ SSD1306 — 128×64 OLED','');}},
+      {t:2500,f:()=>{demoPrint('I2C device found at address 0x68  !','hl');demoPrint('   ↳ DS1307 — Real-Time Clock','');}},
+      {t:2900,f:()=>{demoPrint('done','hl');demoPrint('','');oledText2.textContent='2 devices found';oledText2.setAttribute('fill','#6ff0c2');}},
+      {t:3300,f:()=>{demoPrint('&gt; next scan in 5 s …','am');demoPrint('','');boardBusy=false;}}
+    ];
+    steps.forEach(s=>setTimeout(s.f,s.t));
+    log('DEMO BOARD powered on.','sim');
+    saveSession({ boardPowered: true, lastPowerOn: Date.now() });
+    apiCall('/api/board/power', { state: 'on' });
+    setTimeout(()=>{
+      if(!S.boardOn)return;
+      addDevice(0x3C,'ok');setCell(0x3C,'active');
+      addDevice(0x68,'ok');setCell(0x68,'active');
+      S.rxBytes+=52;syncUI();
+      log('I2C device found at address 0x3C  !','ok');
+      log('I2C device found at address 0x68  !','ok');
+      log('done','sim');
+    },2100);
+  }
+
+  function powerOff(){
+    if(!S.boardOn)return;
+    S.boardOn=false;boardBusy=false;
+    powerOnBtn.disabled=false;powerOffBtn.disabled=true;
+    Object.values(wires).forEach(w=>{w.classList.remove('on','mint','amber');w.classList.add('off');});
+    nodes.arduino.classList.remove('on');nodes.oled.classList.remove('on');
+    boardLed.setAttribute('fill','#1a2537');boardLed.setAttribute('stroke','#26344c');
+    oledText1.textContent='I2C SCANNER';oledText1.setAttribute('fill','#0a1a26');
+    oledText2.textContent='READY';oledText2.setAttribute('fill','#0a1a26');
+    demoOutput.innerHTML='';demoPrint('— board is powered off —','blank');
+    log('DEMO BOARD powered off.','warn');
+    saveSession({ boardPowered: false });
+    apiCall('/api/board/power', { state: 'off' });
+  }
+
+  let flashFile=null;
+  function human(b){if(b<1024)return b+' B';if(b<1048576)return (b/1024).toFixed(1)+' KB';return (b/1048576).toFixed(2)+' MB';}
+  function fprint(msg,cls){flog.classList.add('show');const d=document.createElement('div');d.className=cls||'';d.textContent='['+nowT()+'] '+msg;flog.appendChild(d);flog.scrollTop=flog.scrollHeight;}
+  function loadFile(file){
+    if(!file)return;
+    if(!/\.(hex|ihx)$/i.test(file.name)){fprint('Rejected "'+file.name+'" — not .hex.','er');return;}
+    flashFile=file;fn.textContent=file.name;fs.textContent=human(file.size);
+    finfo.style.display='flex';flashBtn.disabled=false;
+    fprint('Loaded '+file.name+' ('+human(file.size)+').','ok');
+    apiCall('/api/firmware/upload', { name: file.name, size: file.size });
+  }
+  dz.addEventListener('click',()=>fileInput.click());
+  fileInput.addEventListener('change',e=>{if(e.target.files[0])loadFile(e.target.files[0]);});
+  dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('over');});
+  dz.addEventListener('dragleave',()=>dz.classList.remove('over'));
+  dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('over');if(e.dataTransfer.files[0])loadFile(e.dataTransfer.files[0]);});
+
+  function buildDemoHex(){
+    const bytes=[0x0C,0x94,0x34,0x00,0x0C,0x94,0x3D,0x00,0x0C,0x94,0x3D,0x00,0x0C,0x94,0x3D,0x00];
+    function rec(len,addr,type,data){let b=[len,(addr>>8)&0xff,addr&0xff,type,...data];let sum=b.reduce((a,c)=>a+c,0);let chk=(0x100-(sum&0xff))&0xff;b.push(chk);return ':'+b.map(x=>x.toString(16).toUpperCase().padStart(2,'0')).join('');}
+    return rec(16,0x0000,0x00,bytes)+'\n'+rec(0x00,0x0000,0x01,[])+'\n';
+  }
+  sampleBtn.addEventListener('click',()=>{
+    const blob=new Blob([buildDemoHex()],{type:'text/plain'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='demo.hex';a.click();
+    URL.revokeObjectURL(a.href);
+    log('demo.hex downloaded.','sys');
+  });
+
+  flashBtn.addEventListener('click',()=>{
+    if(!flashFile)return;
+    flashBtn.disabled=true;pwrap.classList.add('show');
+    pfill.style.width='0%';ppct.textContent='0%';plabel.textContent='Erasing flash…';flog.innerHTML='';
+    fprint('STK500v1 programmer initializing…','sy');
+    fprint('Target: ATmega328P @ 115200 baud','sy');
+    apiCall('/api/flash/start', { name: flashFile.name });
+    const stages=[
+      {p:8,l:'Entering programming mode…',m:'SYNC 0x30 0x20 → OK',c:'ok'},
+      {p:20,l:'Reading signature bytes…',m:'Signature 1E 95 0F ✓',c:'ok'},
+      {p:30,l:'Erasing chip…',m:'Chip erase 0xAC 0x80 sent',c:'sy'},
+      {p:40,l:'Erase complete.',m:'Flash cleared (32 KB)',c:'ok'},
+      {p:52,l:'Writing flash pages…',m:'Page 0x0000–0x3FFF streaming…',c:'sy'},
+      {p:70,l:'Verifying checksums…',m:'Read-back compare…',c:'sy'},
+      {p:85,l:'Verify OK.',m:'100% match ✓',c:'ok'},
+      {p:95,l:'Locking bootloader…',m:'Fuses 0xFF / 0xDE / 0xFD',c:'sy'},
+      {p:100,l:'Flash complete.',m:'✔ Firmware written.',c:'ok'}
+    ];
+    let i=0;
+    const tick=setInterval(()=>{
+      if(i>=stages.length){
+        clearInterval(tick);plabel.textContent='Flash complete.';
+        fprint('Done. Device rebooting.','ok');
+        flashBtn.disabled=false;
+        recordHistory({ ts: Date.now(), source: 'flash', firmware: flashFile.name });
+        apiCall('/api/flash/complete', { name: flashFile.name });
+        return;
+      }
+      const st=stages[i++];
+      pfill.style.width=st.p+'%';ppct.textContent=st.p+'%';plabel.textContent=st.l;fprint(st.m,st.c);
+    },640);
+  });
+
+  connectBtn.addEventListener('click',connectHardware);
+  closeBtn.addEventListener('click',closePort);
+  simBtn.addEventListener('click',startSimulation);
+  scanBtn.addEventListener('click',()=>{
+    if(S.mode==='sim')simScan();
+    else if(S.mode==='serial'){
+      S.scanning=true;S.cycles++;S.devices.clear();clearCells();renderDevices();syncUI();
+      log('RUN BUS SCAN requested — waiting for board cycle…','sys');
+    }
+  });
+  contBtn.addEventListener('click',()=>{
+    if(S.mode==='sim'){
+      if(S.contTimer){clearInterval(S.contTimer);S.contTimer=null;log('Continuous poll stopped.','warn');syncUI();return;}
+      log('Continuous poll enabled — every 5 s.','sys');
+      simScan();
+      S.contTimer=setInterval(()=>{if(S.mode==='sim'&&!S.scanning)simScan();},5200);
+    } else {
+      log('Continuous poll: sketch already scans every 5 s.','info');
+    }
+  });
+  stopBtn.addEventListener('click',()=>{stopTimers();stBus.textContent='READY';stBus.className='v';log('Scan stopped.','warn');syncUI();});
+  clearBtn.addEventListener('click',()=>{
+    con.innerHTML='';
+    const line=document.createElement('div');line.className='ln placeholder';
+    line.innerHTML='<span class="ts">--:--:--</span><span class="msg">PORT_CLOSED · 0 lines captured</span>';
+    con.appendChild(line);
+  });
+  exportBtn.addEventListener('click',()=>{
+    const txt=[...con.querySelectorAll('.ln')].map(l=>l.textContent).join('\n');
+    const blob=new Blob([txt],{type:'text/plain'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+    a.download='projectx_i2c_log_'+Date.now()+'.txt';a.click();URL.revokeObjectURL(a.href);
+    log('Telemetry log exported.','sys');
+  });
+  powerOnBtn.addEventListener('click',powerOn);
+  powerOffBtn.addEventListener('click',powerOff);
+
+  buildMap();syncUI();renderDevices();
+})();
+</script>
 </body>
 </html>
