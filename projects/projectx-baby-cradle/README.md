@@ -34,28 +34,35 @@ The project focuses on motor control automation, PWM-based speed adjustment, and
 > **Project Goal:** Demonstrate an IoT-based automated cradle control prototype using ESP8266, motor drivers, and a responsive web interface.
 
 ---
-
-## 🎥 Live Prototype Videos
+## 🎥 Final Output — Dashboard + Cradle Swing
 
 <div align="center">
+  <video
+    src="https://raw.githubusercontent.com/luciferofx/projectxweb/main/projects/projectx-baby-cradle/assets/images/final-output-of-babycradle.mp4"
+    width="700"
+    autoplay
+    muted
+    loop
+    playsinline
+    controls>
+  </video>
+</div>
 
-### 1. Final Output — Dashboard + Cradle Swing
+## 🎥 Motor Working — Hardware Demo
 
-<video src="https://raw.githubusercontent.com/luciferofx/projectxweb/main/projects/projectx-baby-cradle/assets/images/final-output-of-babycradle.mp4" controls width="700" poster="assets/images/CradlePrototype.png"></video>
-
-### 2. Motor Working — Hardware Demonstration
-
-<video src="https://raw.githubusercontent.com/luciferofx/projectxweb/main/projects/projectx-baby-cradle/assets/images/baby%20cradle%20motor%20work.mp4" controls width="700"></video>
-
-**Direct Video Links:**
-
-- [Watch Final Output](https://raw.githubusercontent.com/luciferofx/projectxweb/main/projects/projectx-baby-cradle/assets/images/final-output-of-babycradle.mp4)
-- [Watch Motor Working](https://raw.githubusercontent.com/luciferofx/projectxweb/main/projects/projectx-baby-cradle/assets/images/baby%20cradle%20motor%20work.mp4)
-
+<div align="center">
+  <video
+    src="https://raw.githubusercontent.com/luciferofx/projectxweb/main/projects/projectx-baby-cradle/assets/images/baby%20cradle%20motor%20work.mp4"
+    width="700"
+    autoplay
+    muted
+    loop
+    playsinline
+    controls>
+  </video>
 </div>
 
 ---
-
 ## ✨ Features
 
 | Feature | Description |
@@ -196,7 +203,7 @@ The ESP8266 firmware serves the embedded HTML dashboard directly.
 
 <div align="center">
 
-<img src="assets/images/CradlePrototype.png" width="600" alt="ESP8266 Baby Cradle Hardware Prototype">
+<img src="assets/images/CradlePrototype.svg" width="600" alt="ESP8266 Baby Cradle Hardware Prototype">
 
 **Project X — Baby Cradle Hardware Prototype**
 
