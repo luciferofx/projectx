@@ -5,7 +5,7 @@
   ============================================================
   PROJECT X · MASTER LANDING PAGE (CYBERPUNK HUD)
   File: index.html
-  Version: 2.0.0 · Build 2024.12
+  Version: 3.0.0 · Build 2024.12
   Author: Raja Sharma (github.com/luciferofx)
   ============================================================
 -->
@@ -53,7 +53,7 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    min-height: 45vh;
+    min-height: 50vh;
     position: relative;
   }
 
@@ -106,6 +106,30 @@
     animation: blink 1s step-end infinite;
   }
   @keyframes blink { 50% { opacity: 0; } }
+
+  /* GitHub Global Button */
+  .gh-btn-global {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 24px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 99px;
+    color: #fff;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-decoration: none;
+    transition: all 0.3s;
+    margin-top: 10px;
+  }
+  .gh-btn-global:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: var(--cyan);
+    box-shadow: 0 0 20px rgba(47,212,255,0.2);
+    transform: translateY(-2px);
+  }
 
   /* ===== PORTAL GRID ===== */
   .section-heading {
@@ -226,10 +250,18 @@
     flex-grow: 1;
   }
 
+  /* Button Group inside card */
+  .card-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+  }
+
   .btn-enter {
     display: inline-flex;
     align-items: center;
     justify-content: space-between;
+    flex-grow: 1;
     padding: 14px 20px;
     border-radius: 12px;
     font-family: var(--mono);
@@ -240,10 +272,31 @@
     border: 1px solid rgba(255,255,255,0.08);
     color: #fff;
     transition: all 0.3s;
+    text-decoration: none;
   }
   .project-card:hover .btn-enter {
     background: rgba(255,255,255,0.1);
     border-color: rgba(255,255,255,0.2);
+  }
+
+  .btn-github {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: var(--ink-dim);
+    transition: all 0.3s;
+    text-decoration: none;
+  }
+  .btn-github:hover {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    border-color: rgba(255,255,255,0.3);
+  }
+  .btn-github svg {
+    width: 20px; height: 20px; fill: currentColor;
   }
 
   /* Scanline overlay for cyberpunk feel */
@@ -257,6 +310,13 @@
     z-index: 10;
   }
 
+  /* Mobile Responsive */
+  @media(max-width: 600px) {
+    .hero-title { letter-spacing: 4px; }
+    .hero-subtitle { font-size: 0.7rem; letter-spacing: 2px; }
+    .project-card { padding: 20px; }
+    .card-number { font-size: 2rem; }
+  }
 </style>
 </head>
 <body>
@@ -274,6 +334,12 @@
     
     <h1 class="hero-title">PROJECT X</h1>
     <div class="hero-subtitle"><span id="typing-text"></span><span class="cursor"></span></div>
+
+    <!-- Global GitHub Button -->
+    <a href="https://github.com/luciferofx/projectxweb" target="_blank" class="gh-btn-global">
+      <svg viewBox="0 0 16 16" width="20" height="20" fill="currentColor"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+      View Source on GitHub
+    </a>
   </div>
 
   <div class="section-heading">
@@ -286,7 +352,7 @@
   <div class="portal-grid">
 
     <!-- 01 · ROBOT -->
-    <a href="projects/projectx-robot/index.html" class="project-card card-robot" onmousemove="tilt(event, this)" onmouseleave="resetTilt(this)">
+    <div class="project-card card-robot" onmousemove="tilt(event, this)" onmouseleave="resetTilt(this)">
       <div class="card-content">
         <div class="card-header">
           <div class="icon-box" style="color: var(--violet); box-shadow: inset 0 0 20px rgba(176,106,255,0.1);">🤖</div>
@@ -295,12 +361,18 @@
         <div class="project-title">AI ROBOT</div>
         <div class="project-tags">ESP8266 · OPENCV · PYTHON</div>
         <div class="project-desc">Flagship autonomous robot featuring OpenCV facial recognition, Wi-Fi movement control, and I2C LCD telemetry.</div>
-        <div class="btn-enter">ENTER MODULE <span>→</span></div>
+        
+        <div class="card-actions">
+          <a href="projects/projectx-robot/index.html" class="btn-enter">ENTER MODULE <span>→</span></a>
+          <a href="https://github.com/luciferofx/projectxweb/tree/main/projects/projectx-robot" target="_blank" class="btn-github" title="Source Code">
+            <svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+          </a>
+        </div>
       </div>
-    </a>
+    </div>
 
     <!-- 02 · REMOTE CAR -->
-    <a href="projects/projectx-remotecar/index.html" class="project-card card-remotecar" onmousemove="tilt(event, this)" onmouseleave="resetTilt(this)">
+    <div class="project-card card-remotecar" onmousemove="tilt(event, this)" onmouseleave="resetTilt(this)">
       <div class="card-content">
         <div class="card-header">
           <div class="icon-box" style="color: var(--cyan); box-shadow: inset 0 0 20px rgba(47,212,255,0.1);">🚗</div>
@@ -309,12 +381,18 @@
         <div class="project-title">REMOTE CAR</div>
         <div class="project-tags">NANO · HC-05 · DUAL L298N</div>
         <div class="project-desc">4WD Bluetooth-controlled rover controlled via the SriTu Hobby app, utilizing differential steering.</div>
-        <div class="btn-enter">ENTER MODULE <span>→</span></div>
+        
+        <div class="card-actions">
+          <a href="projects/projectx-remotecar/index.html" class="btn-enter">ENTER MODULE <span>→</span></a>
+          <a href="https://github.com/luciferofx/projectxweb/tree/main/projects/projectx-remotecar" target="_blank" class="btn-github" title="Source Code">
+            <svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+          </a>
+        </div>
       </div>
-    </a>
+    </div>
 
     <!-- 03 · ARMY GATE -->
-    <a href="projects/projectx-army-gate/index.html" class="project-card card-armygate" onmousemove="tilt(event, this)" onmouseleave="resetTilt(this)">
+    <div class="project-card card-armygate" onmousemove="tilt(event, this)" onmouseleave="resetTilt(this)">
       <div class="card-content">
         <div class="card-header">
           <div class="icon-box" style="color: var(--amber); box-shadow: inset 0 0 20px rgba(255,183,0,0.1);">🚧</div>
@@ -323,12 +401,18 @@
         <div class="project-title">ARMY GATE</div>
         <div class="project-tags">MEGA · RFID · SERVO</div>
         <div class="project-desc">Automated boom barrier security system using MFRC522 RFID authentication and servo mechanics.</div>
-        <div class="btn-enter">ENTER MODULE <span>→</span></div>
+        
+        <div class="card-actions">
+          <a href="projects/projectx-army-gate/index.html" class="btn-enter">ENTER MODULE <span>→</span></a>
+          <a href="https://github.com/luciferofx/projectxweb/tree/main/projects/projectx-army-gate" target="_blank" class="btn-github" title="Source Code">
+            <svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+          </a>
+        </div>
       </div>
-    </a>
+    </div>
 
     <!-- 04 · BABY CRADLE -->
-    <a href="projects/projectx-baby-cradle/index.html" class="project-card card-cradle" onmousemove="tilt(event, this)" onmouseleave="resetTilt(this)">
+    <div class="project-card card-cradle" onmousemove="tilt(event, this)" onmouseleave="resetTilt(this)">
       <div class="card-content">
         <div class="card-header">
           <div class="icon-box" style="color: var(--rose); box-shadow: inset 0 0 20px rgba(255,93,115,0.1);">🍼</div>
@@ -337,12 +421,18 @@
         <div class="project-title">BABY CRADLE</div>
         <div class="project-tags">ESP8266 · PWM · WEB SERVER</div>
         <div class="project-desc">IoT automatic swing system controlled via a local ESP8266 web server with animated PWM speed adjustments.</div>
-        <div class="btn-enter">ENTER MODULE <span>→</span></div>
+        
+        <div class="card-actions">
+          <a href="projects/projectx-baby-cradle/index.html" class="btn-enter">ENTER MODULE <span>→</span></a>
+          <a href="https://github.com/luciferofx/projectxweb/tree/main/projects/projectx-baby-cradle" target="_blank" class="btn-github" title="Source Code">
+            <svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+          </a>
+        </div>
       </div>
-    </a>
+    </div>
 
     <!-- 05 · ID SCANNER -->
-    <a href="projects/projectx-id-scanner/index.html" class="project-card card-idscanner" onmousemove="tilt(event, this)" onmouseleave="resetTilt(this)">
+    <div class="project-card card-idscanner" onmousemove="tilt(event, this)" onmouseleave="resetTilt(this)">
       <div class="card-content">
         <div class="card-header">
           <div class="icon-box" style="color: var(--mint); box-shadow: inset 0 0 20px rgba(111,240,194,0.1);">🪪</div>
@@ -351,9 +441,15 @@
         <div class="project-title">ID SCANNER</div>
         <div class="project-tags">WEBSERIAL · I2C · AVR FLASHER</div>
         <div class="project-desc">Browser-based I2C diagnostic terminal with a 128-cell address map, WebSerial, and AVR firmware flasher.</div>
-        <div class="btn-enter">ENTER MODULE <span>→</span></div>
+        
+        <div class="card-actions">
+          <a href="projects/projectx-id-scanner/index.html" class="btn-enter">ENTER MODULE <span>→</span></a>
+          <a href="https://github.com/luciferofx/projectxweb/tree/main/projects/projectx-id-scanner" target="_blank" class="btn-github" title="Source Code">
+            <svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+          </a>
+        </div>
       </div>
-    </a>
+    </div>
 
   </div>
 
@@ -395,7 +491,6 @@
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     
-    // Calculate rotation based on cursor position
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
     
