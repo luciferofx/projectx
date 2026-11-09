@@ -9,16 +9,10 @@
 
 **SMART INFANT MONITORING · ESP8266 · IoT AUTOMATION**
 
-<br/>
-
-<a href="https://github.com/luciferofx/projectxweb">
-  <img src="https://img.shields.io/badge/PROJECT%20X-ECOSYSTEM-8B5CF6?style=for-the-badge&logo=github&logoColor=white"/>
-</a>
+<img src="https://img.shields.io/badge/PROJECT%20X-ECOSYSTEM-8B5CF6?style=for-the-badge&logo=github&logoColor=white"/>
 <img src="https://img.shields.io/badge/ESP8266-NODEMCU-00C9A7?style=for-the-badge&logo=espressif&logoColor=white"/>
 <img src="https://img.shields.io/badge/CONNECTIVITY-WiFi-38BDF8?style=for-the-badge"/>
 <img src="https://img.shields.io/badge/STATUS-PROTOTYPE-F59E0B?style=for-the-badge"/>
-
-<br/><br/>
 
 **Designed & Developed by Raja Sharma**
 
@@ -52,25 +46,17 @@ The project combines embedded hardware, PWM motor control and a responsive web i
 
 *Watch the actual prototype in operation.*
 
-</div>
+### 01 / Motor Working — Hardware Demo
 
-### 01 / Final Output — Dashboard + Cradle Swing
+<video src="https://savedly.net/api/stream/bw4sxyg8?t=0.y8RGzX371NvzWLAh2ga24FkZ2Wf4xHIXM25d0xfj8ks" width="100%" autoplay muted loop playsinline controls>
+</video>
 
-<div align="center">
+[Direct Video Stream](https://savedly.net/api/stream/bw4sxyg8?t=0.y8RGzX371NvzWLAh2ga24FkZ2Wf4xHIXM25d0xfj8ks)
 
-<a href="https://github.com/luciferofx/projectxweb/blob/main/projects/projectx-baby-cradle/assets/images/final-output-of-babycradle.mp4">
-<img src="https://img.shields.io/badge/▶%20WATCH%20FINAL%20OUTPUT-00C9A7?style=for-the-badge&logo=github&logoColor=white" alt="Watch Final Output"/>
-</a>
+### 02 / Final Output — Dashboard + Cradle Swing
 
-</div>
-
-### 02 / Motor Working — Hardware Demonstration
-
-<div align="center">
-
-<a href="https://github.com/luciferofx/projectxweb/blob/main/projects/projectx-baby-cradle/assets/images/baby%20cradle%20motor%20work.mp4">
-<img src="https://img.shields.io/badge/▶%20WATCH%20MOTOR%20DEMO-8B5CF6?style=for-the-badge&logo=github&logoColor=white" alt="Watch Motor Demo"/>
-</a>
+<video src="https://raw.githubusercontent.com/luciferofx/projectxweb/main/projects/projectx-baby-cradle/assets/images/final-output-of-babycradle.mp4" width="100%" autoplay muted loop playsinline controls>
+</video>
 
 </div>
 
@@ -84,13 +70,13 @@ The project combines embedded hardware, PWM motor control and a responsive web i
 
 | FEATURE | DESCRIPTION |
 |:---|:---|
-| 📡 **Standalone Wi-Fi** | ESP8266 creates its own wireless network |
-| 🎛️ **PWM Motor Control** | Adjustable motor speed from 0–255 |
-| 🎨 **Animated Dashboard** | Interactive SVG cradle visualizer |
-| ⚡ **Motor Controls** | Web-based Start / Stop functionality |
-| 📱 **Responsive UI** | Mobile-first dashboard experience |
-| 💾 **State Memory** | Last selected speed stored in localStorage |
-| 🌐 **Offline Operation** | Local Wi-Fi control without internet |
+| 📡 Standalone Wi-Fi | ESP8266 creates its own wireless network |
+| 🎛️ PWM Motor Control | Adjustable motor speed from 0–255 |
+| 🎨 Animated Dashboard | Interactive SVG cradle visualizer |
+| ⚡ Motor Controls | Web-based Start / Stop functionality |
+| 📱 Responsive UI | Mobile-first dashboard experience |
+| 💾 State Memory | Last selected speed stored in localStorage |
+| 🌐 Offline Operation | Local Wi-Fi control without internet |
 
 ---
 
@@ -123,8 +109,6 @@ The project combines embedded hardware, PWM motor control and a responsive web i
 <details>
 <summary><b>⚡ Power Configuration & Hardware Notes</b></summary>
 
-The ESP8266 and motor driver require an appropriate power arrangement.
-
 - Follow the voltage specifications of the NodeMCU and motor driver.
 - Use a suitable external motor power supply.
 - Ensure a common ground where required.
@@ -156,13 +140,7 @@ cd projectxweb/projects/projectx-baby-cradle
 
 ### 03 — Flash ESP8266 Firmware
 
-Open the following firmware file in Arduino IDE:
-
-```text
-firmware/
-└── babycradle/
-    └── babycradle.ino
-```
+Open `firmware/babycradle/babycradle.ino` in Arduino IDE.
 
 **Board Configuration**
 
@@ -176,23 +154,13 @@ Install the ESP8266 board package if required, connect your NodeMCU and upload t
 
 ### 04 — Connect to the Device
 
-Once the firmware starts, the ESP8266 creates its own Wi-Fi network.
-
-<div align="center">
-
 | NETWORK CONFIGURATION | VALUE |
 |:---|:---|
 | SSID | `Baby Cradle` |
 | Password | Open Network |
 | Gateway | `192.168.4.1` |
 
-</div>
-
-Connect your smartphone or laptop to the network.
-
 ### 05 — Launch Dashboard
-
-Open your browser and visit:
 
 <div align="center">
 
@@ -214,41 +182,27 @@ Open your browser and visit:
 
 ## ◈ SYSTEM ARCHITECTURE
 
-*How the hardware and software communicate*
-
 </div>
 
 ```text
-       ┌──────────────────────────┐
-       │    SMARTPHONE / LAPTOP   │
-       └────────────┬─────────────┘
-                    │
-               Wi-Fi Network
-                    │
-       ┌────────────▼─────────────┐
-       │    ESP8266 ACCESS POINT  │
-       │      192.168.4.1         │
-       └────────────┬─────────────┘
-                    │
-       ┌────────────▼─────────────┐
-       │      WEB DASHBOARD       │
-       │   HTML / CSS / JavaScript│
-       └────────────┬─────────────┘
-                    │
-                HTTP API
-                    │
-       ┌────────────▼─────────────┐
-       │      ESP8266 GPIO        │
-       │       PWM OUTPUT         │
-       └────────────┬─────────────┘
-                    │
-       ┌────────────▼─────────────┐
-       │      L298N DRIVER        │
-       └────────────┬─────────────┘
-                    │
-       ┌────────────▼─────────────┐
-       │         DC MOTOR         │
-       └──────────────────────────┘
+       SMARTPHONE / LAPTOP
+                |
+           Wi-Fi Network
+                |
+       ESP8266 ACCESS POINT
+          192.168.4.1
+                |
+          WEB DASHBOARD
+       HTML / CSS / JavaScript
+                |
+             HTTP API
+                |
+           ESP8266 GPIO
+            PWM OUTPUT
+                |
+          L298N DRIVER
+                |
+             DC MOTOR
 ```
 
 ### API Endpoints
@@ -323,7 +277,7 @@ Check the ENA connection and PWM configuration.
 <details>
 <summary><b>🔌 ESP8266 keeps restarting</b></summary>
 
-Verify power stability, connections and the firmware.
+Verify power stability, connections and firmware.
 
 </details>
 
