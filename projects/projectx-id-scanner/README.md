@@ -6,26 +6,28 @@
   <img src="assets/images/ProjectXIDScanner.png" width="700" alt="Project X I2C Scanner Prototype">
 </p>
 
-<h2 align="center">I2C Diagnostic & Device Identification System</h2>
+<h2 align="center">I2C Diagnostic &amp; Device Identification System</h2>
 
-
----
 ### Digital ID &amp; Access Terminal · I2C Diagnostic Node
 
-**Part of the [Project X Ecosystem](https://github.com/your-username/projectxweb)**
+**Part of the [Project X Ecosystem](https://github.com/luciferofx/projectxweb)**
 
 [![Arduino](https://img.shields.io/badge/Arduino-Uno%20%7C%20Nano-00979D?style=flat-square&logo=arduino&logoColor=white)](https://www.arduino.cc/)
 [![I2C](https://img.shields.io/badge/Bus-I2C%20100kHz-2fd4ff?style=flat-square)](https://en.wikipedia.org/wiki/I%C2%B2C)
-[![License](https://img.shields.io/badge/License-MIT-6ff0c2?style=flat-square)](../../LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-6ff0c2?style=flat-square)](https://github.com/luciferofx/projectxweb/blob/main/LICENSE)
 [![Status](https://img.shields.io/badge/Status-Operational-6ff0c2?style=flat-square)]()
 
 </div>
 
 ---
 
-## 📖 Overview
+## 📌 Overview
+
+Jab hum complex robotics systems build karte hain jisme multiple I2C devices ek saath 2 wires (SDA & SCL) par judti hain, to hardware addresses clash ho sakte hain ya wrong pin configuration ki wajah se display blank rehta hai.
 
 **Project X · ID Scanner** is a browser-based **I2C diagnostic terminal** paired with a lightweight **Arduino firmware** that continuously probes the I²C bus and reports every device it finds over serial. The web UI (WebSerial API) reads that serial stream live, plots the address map, logs telemetry, and can flash a compiled `.hex` back onto the ATmega328P — all without the Arduino IDE.
+
+Yeh module microcontroller ke hardware I2C peripheral (`Wire.h`) ko initialize karke pure **7-bit hexadecimal address range (`0x01` se `0x7E`)** par handshake packets bhejta hai. Jab koi display ya sensor ACK (Acknowledge) signal return karta hai, tab serial console par exact address confirm ho jata hai.
 
 It is the **4th node** in the Project X ecosystem and the "front door" — every other project (robot, army gate, cradle) plugs an I²C peripheral into this same bus scan, so this terminal doubles as your **bench-side sanity check**.
 
@@ -47,6 +49,31 @@ It is the **4th node** in the Project X ecosystem and the "front door" — every
 
 ---
 
+## 📸 Prototype Schematic & Circuit Diagram
+
+```
+   [ ARDUINO UNO / NANO ]                             [ 0.96" I2C OLED DISPLAY ]
+  +----------------------+                           +--------------------------+
+  |                 5V   |-------------------------->| VCC                      |
+  |                 GND  |-------------------------->| GND                      |
+  |           A5 / SCL   |-------------------------->| SCL                      |
+  |           A4 / SDA   |-------------------------->| SDA                      |
+  |                 USB  |====> Serial Monitor       +--------------------------+
+  +----------------------+      (@ 9600 Baud)
+```
+
+<div align="center">
+
+<img src="assets/images/scanner-display.svg" width="700" alt="Project X ID Scanner Prototype">
+
+*Arduino Nano + SSD1306 OLED + MPU6050 — three nodes ACKed on the bus*
+
+</div>
+
+**To regenerate the schematic photo:** open [`assets/images/scanner-display.svg`](assets/images/scanner-display.svg) in any browser, screenshot at 2× zoom, save as `ProjectXIDScanner.png`.
+
+---
+
 ## 🧰 Hardware Requirements
 
 | Component | Qty | Notes |
@@ -59,16 +86,14 @@ It is the **4th node** in the Project X ecosystem and the "front door" — every
 
 ---
 
-## 🔌 Pin Mapping
+## 🔌 Hardware Pin Connections
 
-### I²C Wire (main bus)
-
-| Line | Uno / Nano | Mega 2560 | ESP8266 |
-|:---:|:---:|:---:|:---:|
-| **SDA** | `A4` | `Pin 20` | `D2 (GPIO4)` |
-| **SCL** | `A5` | `Pin 21` | `D1 (GPIO5)` |
-| **VCC** | `5V` or `3.3V` (module-rated) | `5V` | `3.3V` |
-| **GND** | `GND` | `GND` | `GND` |
+| Device Pin | Arduino Uno / Nano | Arduino Mega | ESP8266 (NodeMCU) | Function |
+| :--- | :--- | :--- | :--- | :--- |
+| **VCC** | 5V / 3.3V | 5V | 3.3V / Vin | Power Bus |
+| **GND** | GND | GND | GND | Common Ground |
+| **SCL** | Pin A5 | Pin 21 (SCL) | Pin D1 (GPIO 5) | Serial Clock Line |
+| **SDA** | Pin A4 | Pin 20 (SDA) | Pin D2 (GPIO 4) | Serial Data Line |
 
 > ⚠️ **Common ground is not optional.** If the sensor module and the Arduino do not share a ground, the bus will randomly report phantom devices or fail with error `4`.
 
@@ -80,6 +105,30 @@ It is the **4th node** in the Project X ecosystem and the "front door" — every
 | `SCL` | `A5` |
 | `VCC` | `5V` |
 | `GND` | `GND` |
+
+---
+
+## 🧠 Code Architecture (`displayidscanner.ino`)
+
+- **Author:** Raja
+- **Core Library:** `<Wire.h>`
+- **Baud Rate:** `9600 Baud`
+- **Address Range Scanned:** `1` to `126` (`0x01` to `0x7E`)
+
+### Handshake Logic
+
+```cpp
+Wire.beginTransmission(address);
+byte error = Wire.endTransmission();
+
+if (error == 0) {
+  // ACK received: Device actively responding!
+} else if (error == 4) {
+  // Line noise / Bus error detected
+}
+```
+
+The web UI reads the firmware's serial output and maps every line to a visual action — see the table below.
 
 ---
 
@@ -105,23 +154,36 @@ python3 -m http.server 8080
 
 > WebSerial requires a **secure context** — `localhost` counts, plain `http://` on a LAN IP does not. Use `https://` or `localhost`.
 
+**Live demo (GitHub Pages):** [https://luciferofx.github.io/projectxweb/projects/projectx-id-scanner/](https://luciferofx.github.io/projectxweb/projects/projectx-id-scanner/)
+
 ### 3 · Connect
 
 1. Click **`CONNECT HARDWARE`** → pick `/dev/ttyUSB0` (or `COM3`).
 2. Baud rate must match the sketch: **`9600`**.
 3. Press **`RUN BUS SCAN`** — or just wait 5 s, the sketch auto-scans.
 
+### 4 · Manual setup (Arduino IDE)
+
+1. Apne Arduino Uno / Nano ko USB cable ke through computer se connect karein.
+2. Arduino IDE me file open karein:
+   ```
+   projects/projectx-id-scanner/firmware/displayidscanner/displayidscanner.ino
+   ```
+3. **Tools** menu se correct **Board** aur **COM Port** select karein.
+4. **Upload** (`Ctrl + U`) button par click karein.
+5. Upload complete hone ke baad **Serial Monitor** (`Ctrl + Shift + M`) open karein aur baud rate **9600** set karein.
+6. Browser me interactive visualizer dekhne ke liye is folder ki `index.html` open karein.
+
 ---
 
-## 🖥️ Expected Serial Output
+## 🖥️ Expected Serial Monitor Output
 
-The firmware prints exactly this format. The web UI parses it line-by-line:
+Jab aapka 0.96" OLED display correctly wired hota hai, to Serial Monitor par ye output show hota hai:
 
 ```text
 I2C Scanner
 Scanning...
 I2C device found at address 0x3C  !
-I2C device found at address 0x68  !
 done
 ```
 
@@ -149,20 +211,6 @@ No I2C devices found
 
 ---
 
-## 📸 Prototype
-
-<div align="center">
-
-![ID Scanner Prototype](assets/images/scanner-display.png)
-
-*Arduino Nano + SSD1306 OLED + MPU6050 — three nodes ACKed on the bus*
-
-</div>
-
-**To regenerate the image:** see [`assets/images/scanner-display.svg`](assets/images/scanner-display.svg) — open it in any browser, screenshot at 2× zoom, save as `scanner-display.png`.
-
----
-
 ## 🧠 Known I²C Addresses
 
 The firmware does **not** know device names — it only reports addresses. The web UI resolves them from this table:
@@ -183,6 +231,14 @@ The firmware does **not** know device names — it only reports addresses. The w
 | `0x69` | MPU6050 | 6-Axis Gyro / Accelerometer |
 | `0x76` | BME280 | Temp / Pressure / Humidity |
 | `0x77` | BMP180 | Barometric Pressure |
+
+**Common device quick reference:**
+
+| Address | Device |
+|:---:|---|
+| `0x3C` / `0x3D` | 0.96" SSD1306 Monochrome OLED Display |
+| `0x27` / `0x3F` | 16×2 / 20×4 PCF8574 LCD |
+| `0x68` | MPU6050 Accelerometer / Gyroscope Module |
 
 > Full DB: 25 entries inside [`index.html`](index.html) under `KNOWN`.
 
@@ -205,6 +261,8 @@ The firmware does **not** know device names — it only reports addresses. The w
 
 Click **`SIMULATION DEMO`** — the UI runs a virtual I²C bus, picks 2–5 random devices, and streams the *exact same* serial lines through the parser. Everything (address map, device table, console) behaves identically. Use this to validate UI changes before flashing a board.
 
+**Live simulation:** [https://luciferofx.github.io/projectxweb/projects/projectx-id-scanner/](https://luciferofx.github.io/projectxweb/projects/projectx-id-scanner/)
+
 ---
 
 ## 🗂️ Folder Structure
@@ -213,10 +271,11 @@ Click **`SIMULATION DEMO`** — the UI runs a virtual I²C bus, picks 2–5 rand
 projectx-id-scanner/
 ├── README.md                              ← you are here
 ├── index.html                             ← standalone terminal UI
+├── LICENSE                                ← MIT
 ├── assets/
 │   └── images/
-│       ├── scanner-display.png            ← prototype photo
-│       └── scanner-display.svg            ← editable source (same file)
+│       ├── ProjectXIDScanner.png          ← prototype photo
+│       └── scanner-display.svg            ← editable source
 └── firmware/
     └── displayidscanner/
         └── displayidscanner.ino           ← Arduino sketch
@@ -228,15 +287,15 @@ projectx-id-scanner/
 
 | Project | Description | Link |
 |:---|:---|:---|
-| 🤖 **Robot** | Autonomous AI robot (RPi + OpenCV + Arduino) | [`../projectx-robot/`](../projectx-robot/) |
-| 🚧 **Army Gate** | Ultrasonic boom-barrier security gate | [`../projectx-army-gate/`](../projectx-army-gate/) |
-| 🍼 **Baby Cradle** | ESP8266 IoT cradle swing | [`../projectx-baby-cradle/`](../projectx-baby-cradle/) |
-| 🪪 **ID Scanner** | *This project* — I²C diagnostic &amp; flasher | — |
+| 🤖 **Robot** | Autonomous AI robot (RPi + OpenCV + Arduino) | [`../projectx-robot/`](https://github.com/luciferofx/projectxweb/tree/main/projects/projectx-robot) |
+| 🚧 **Army Gate** | Ultrasonic boom-barrier security gate | [`../projectx-army-gate/`](https://github.com/luciferofx/projectxweb/tree/main/projects/projectx-army-gate) |
+| 🍼 **Baby Cradle** | ESP8266 IoT cradle swing | [`../projectx-baby-cradle/`](https://github.com/luciferofx/projectxweb/tree/main/projects/projectx-baby-cradle) |
+| 🪪 **ID Scanner** | *This project* — I²C diagnostic &amp; flasher | [Project X · ID Scanner](https://github.com/luciferofx/projectxweb/tree/main/projects/projectx-id-scanner) |
 
 ---
 
 ## 📜 License
 
-MIT — see [`../../LICENSE`](../../LICENSE).
+MIT — see [`LICENSE`](https://github.com/luciferofx/projectxweb/blob/main/LICENSE).
 
-**Made with ⚡ by [raja](https://github.com/your-username)** · *Project X, 2024*
+**Made with ⚡ by [Raja](https://github.com/luciferofx)** · *Project X, 2024*
