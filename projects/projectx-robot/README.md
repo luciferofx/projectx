@@ -1,7 +1,7 @@
 
 <div align="center">
 
-<img src="assets/images/robot-prototype.png" width="800" alt="Project X Autonomous Robot Prototype"/>
+<img src="assets/images/prototype.jpeg" width="800" alt="Project X Autonomous Robot Prototype"/>
 
 # 🤖 PROJECT X
 ## AUTONOMOUS AI ROBOT
