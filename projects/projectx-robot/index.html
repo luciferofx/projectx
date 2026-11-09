@@ -5,7 +5,7 @@
   ============================================================
   PROJECT X · AUTONOMOUS AI ROBOT
   File: index.html
-  Version: 1.0.0 · Build 2024.12
+  Version: 2.0.0 · Build 2024.12
   Author: Raja Sharma (github.com/luciferofx)
   ============================================================
 -->
@@ -85,35 +85,6 @@
     <!-- ===== MAIN CONTENT ===== -->
     <div class="main-col">
       
-      <!-- SYSTEM ARCHITECTURE -->
-      <section class="card">
-        <h3>System Architecture <small>3 Core Modules</small></h3>
-        <div style="background: #03060c; border: 1px solid var(--line); border-radius: 12px; padding: 20px; margin-top: 16px;">
-          
-          <div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: center;">
-            <!-- Module 1 -->
-            <div style="flex: 1; min-width: 200px; background: rgba(176,106,255,0.05); border: 1px solid var(--violet); border-radius: 8px; padding: 16px; text-align: center;">
-              <div style="font-size: 1.5rem; margin-bottom: 8px;">📡</div>
-              <div style="font-family: var(--sans); font-weight: 800; color: var(--violet); font-size: 0.85rem; margin-bottom: 4px;">Wi-Fi Movement</div>
-              <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--ink-dim);">ESP8266 Web Server</div>
-            </div>
-            <!-- Module 2 -->
-            <div style="flex: 1; min-width: 200px; background: rgba(111,240,194,0.05); border: 1px solid var(--mint); border-radius: 8px; padding: 16px; text-align: center;">
-              <div style="font-size: 1.5rem; margin-bottom: 8px;">🧠</div>
-              <div style="font-family: var(--sans); font-weight: 800; color: var(--mint); font-size: 0.85rem; margin-bottom: 4px;">AI Vision</div>
-              <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--ink-dim);">Python + OpenCV Face ID</div>
-            </div>
-            <!-- Module 3 -->
-            <div style="flex: 1; min-width: 200px; background: rgba(255,183,0,0.05); border: 1px solid var(--amber); border-radius: 8px; padding: 16px; text-align: center;">
-              <div style="font-size: 1.5rem; margin-bottom: 8px;">📺</div>
-              <div style="font-family: var(--sans); font-weight: 800; color: var(--amber); font-size: 0.85rem; margin-bottom: 4px;">LCD Telemetry</div>
-              <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--ink-dim);">I2C Display Animations</div>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
       <!-- AI VISION DEMO (Simulation) -->
       <section class="card">
         <h3>AI Vision Simulator <small>Face Recognition</small></h3>
@@ -149,31 +120,100 @@
         </div>
       </section>
 
+      <!-- DISPLAY MODULE (Videos) -->
+      <section class="card">
+        <h3>LCD Display Telemetry <small>Videos</small></h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;">
+          
+          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 12px; overflow: hidden;">
+            <video src="assets/images/display/display%20prototype.mp4" controls preload="metadata" style="width: 100%; aspect-ratio: 16/9; object-fit: cover; background: #000; display: block;"></video>
+            <div style="padding: 12px; font-family: var(--sans); font-weight: 700; font-size: 0.85rem; color: var(--ink); text-align: center; border-top: 1px solid var(--line);">DISPLAY PROTOTYPE</div>
+          </div>
+
+          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 12px; overflow: hidden;">
+            <video src="assets/images/display/display%20result.mp4" controls preload="metadata" style="width: 100%; aspect-ratio: 16/9; object-fit: cover; background: #000; display: block;"></video>
+            <div style="padding: 12px; font-family: var(--sans); font-weight: 700; font-size: 0.85rem; color: var(--ink); text-align: center; border-top: 1px solid var(--line);">DISPLAY RESULT</div>
+          </div>
+
+        </div>
+      </section>
+
       <!-- HARDWARE BLUEPRINTS (Gallery) -->
       <section class="card">
-        <h3>Hardware Blueprints <small>Design Gallery</small></h3>
+        <h3>Hardware Blueprints <small>CAD Gallery</small></h3>
         
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-top: 16px;">
-          <!-- Item 1 -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin-top: 16px;">
+          <!-- Auto-generated blueprints 1 to 16 -->
           <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px; text-align: center;">
-            <img src="assets/images/blueprint/chassis-layout.png" alt="Chassis" style="width: 100%; border-radius: 4px; opacity: 0.8;">
-            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); margin-top: 6px;">Chassis Base</div>
+            <img src="assets/images/1.jfif" alt="Blueprint 1" style="width: 100%; border-radius: 4px; opacity: 0.8;">
+            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); margin-top: 6px;">Blueprint 1</div>
           </div>
-          <!-- Item 2 -->
+          
           <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px; text-align: center;">
-            <img src="assets/images/blueprint/wiring-diagram.png" alt="Wiring" style="width: 100%; border-radius: 4px; opacity: 0.8;">
-            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); margin-top: 6px;">Wiring Map</div>
+            <img src="assets/images/4.jpeg" alt="Blueprint 4" style="width: 100%; border-radius: 4px; opacity: 0.8;">
+            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); margin-top: 6px;">Blueprint 4</div>
           </div>
-          <!-- Item 3 -->
+
           <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px; text-align: center;">
-            <img src="assets/images/blueprint/lcd-mount.png" alt="LCD Mount" style="width: 100%; border-radius: 4px; opacity: 0.8;">
-            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); margin-top: 6px;">LCD Mount</div>
+            <img src="assets/images/5.jpeg" alt="Blueprint 5" style="width: 100%; border-radius: 4px; opacity: 0.8;">
+            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); margin-top: 6px;">Blueprint 5</div>
           </div>
-          <!-- Item 4 -->
+
           <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px; text-align: center;">
-            <img src="assets/images/blueprint/robot-prototype.png" alt="Prototype" style="width: 100%; border-radius: 4px; opacity: 0.8;">
-            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); margin-top: 6px;">Full Prototype</div>
+            <img src="assets/images/6.jpeg" alt="Blueprint 6" style="width: 100%; border-radius: 4px; opacity: 0.8;">
+            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); margin-top: 6px;">Blueprint 6</div>
           </div>
+
+          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px; text-align: center;">
+            <img src="assets/images/7.jpeg" alt="Blueprint 7" style="width: 100%; border-radius: 4px; opacity: 0.8;">
+            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); margin-top: 6px;">Blueprint 7</div>
+          </div>
+          
+           <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px; text-align: center;">
+            <img src="assets/images/8.jpeg" alt="Blueprint 8" style="width: 100%; border-radius: 4px; opacity: 0.8;">
+            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); margin-top: 6px;">Blueprint 8</div>
+          </div>
+          
+           <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px; text-align: center;">
+            <img src="assets/images/9.jpeg" alt="Blueprint 9" style="width: 100%; border-radius: 4px; opacity: 0.8;">
+            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); margin-top: 6px;">Blueprint 9</div>
+          </div>
+          
+           <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px; text-align: center;">
+            <img src="assets/images/10.jpeg" alt="Blueprint 10" style="width: 100%; border-radius: 4px; opacity: 0.8;">
+            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); margin-top: 6px;">Blueprint 10</div>
+          </div>
+          
+           <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px; text-align: center;">
+            <img src="assets/images/11.jpeg" alt="Blueprint 11" style="width: 100%; border-radius: 4px; opacity: 0.8;">
+            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); margin-top: 6px;">Blueprint 11</div>
+          </div>
+          
+           <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px; text-align: center;">
+            <img src="assets/images/12.jpeg" alt="Blueprint 12" style="width: 100%; border-radius: 4px; opacity: 0.8;">
+            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); margin-top: 6px;">Blueprint 12</div>
+          </div>
+          
+           <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px; text-align: center;">
+            <img src="assets/images/13.jpeg" alt="Blueprint 13" style="width: 100%; border-radius: 4px; opacity: 0.8;">
+            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); margin-top: 6px;">Blueprint 13</div>
+          </div>
+          
+           <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px; text-align: center;">
+            <img src="assets/images/14.jpeg" alt="Blueprint 14" style="width: 100%; border-radius: 4px; opacity: 0.8;">
+            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); margin-top: 6px;">Blueprint 14</div>
+          </div>
+          
+           <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px; text-align: center;">
+            <img src="assets/images/15.jpeg" alt="Blueprint 15" style="width: 100%; border-radius: 4px; opacity: 0.8;">
+            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); margin-top: 6px;">Blueprint 15</div>
+          </div>
+          
+           <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px; text-align: center;">
+            <img src="assets/images/16.jpeg" alt="Blueprint 16" style="width: 100%; border-radius: 4px; opacity: 0.8;">
+            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); margin-top: 6px;">Blueprint 16</div>
+          </div>
+
         </div>
       </section>
 
@@ -182,7 +222,7 @@
 
   <footer>
     <span>PROJECT X · AI ROBOT</span>
-    <span>BUILD 1.0.0 · GLOBAL CSS</span>
+    <span>BUILD 2.0.0 · GLOBAL CSS</span>
   </footer>
 </div>
 
@@ -201,7 +241,6 @@
   // AI Simulation Logic
   const faces = ['RAHUL', 'SNEHA', 'UNKNOWN', 'RAHUL'];
   const faceNames = ['Rahul', 'Sneha', 'Unknown', 'Rahul'];
-  const aiNames = ['RAHUL', 'SNEHA', 'UNKNOWN', 'RAHUL'];
   let aiRunning = false;
   let matchCount = 0;
 
@@ -255,15 +294,8 @@
 
   // Movement Simulation Logic
   function moveRobot(cmd) {
-    const labels = {
-      'F': 'Forward',
-      'B': 'Backward',
-      'L': 'Left',
-      'R': 'Right',
-      'S': 'Stop'
-    };
     // Just flash the button to show action
-    console.log(`Sending command: ${cmd} (${labels[cmd]})`);
+    console.log(`Sending command: ${cmd}`);
   }
 
   function updateSpeed(val) {
