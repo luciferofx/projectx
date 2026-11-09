@@ -3,10 +3,9 @@
 <head>
 <!--
   ============================================================
-  PROJECT X · AUTONOMOUS AI ROBOT (GRAND SHOWCASE)
+  PROJECT X · INTELLIGENT ROBOT (PREMIUM SHOWCASE)
   File: index.html
-  Version: 3.0.0 · Build 2024.12
-  Author: Raja Sharma & Team
+  Version: 4.0.0 · Build 2024.12
   ============================================================
 -->
 <meta charset="UTF-8">
@@ -19,6 +18,30 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Orbitron:wght@600;700;800&display=swap" rel="stylesheet">
 <!-- Global CSS -->
 <link rel="stylesheet" href="../../styles.css">
+<style>
+  /* Small Local Tweaks for Premium Look */
+  .premium-card {
+    background: linear-gradient(165deg, rgba(13, 21, 34, 0.7), rgba(17, 27, 44, 0.9));
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(47, 212, 255, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    border-radius: 16px;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+  .premium-card:hover {
+    border-color: rgba(176, 106, 255, 0.4);
+    transform: translateY(-2px);
+  }
+  .icon-box {
+    width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center;
+    font-size: 1.5rem; margin-bottom: 12px;
+    background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  .hero-gradient {
+    background: linear-gradient(to top, #05070d 0%, rgba(5,7,13,0.8) 50%, rgba(5,7,13,0) 100%);
+  }
+</style>
 </head>
 <body>
 <div class="shell">
@@ -26,77 +49,89 @@
   <!-- ===== TOPBAR ===== -->
   <div class="topbar">
     <div class="brand">
-      <div class="mark"><b>PX</b></div>
+      <div class="mark" style="border-color: var(--violet); box-shadow: 0 0 20px rgba(176,106,255,0.3);">
+        <b style="color: var(--violet); text-shadow: 0 0 10px var(--violet);">PX</b>
+      </div>
       <div>
         <h1>PROJECT X · AI ROBOT</h1>
-        <p>Intelligent Collaborative Effort</p>
+        <p style="color: var(--violet);">Intelligent Collaborative Effort</p>
       </div>
     </div>
-    <div class="status-pill live" id="connPill"><span class="led"></span><span id="connText">SYSTEM ONLINE</span></div>
+    <div class="status-pill live" style="border-color: var(--violet); color: var(--violet);">
+      <span class="led" style="background: var(--violet); box-shadow: 0 0 8px var(--violet);"></span>
+      <span>SYSTEM ONLINE</span>
+    </div>
   </div>
 
-  <!-- ===== HERO SECTION (Prototype Image) ===== -->
-  <section class="card" style="padding: 0; overflow: hidden; border-color: var(--violet);">
+  <!-- ===== HERO SECTION ===== -->
+  <section class="premium-card" style="padding: 0; overflow: hidden; margin-bottom: 24px; border-color: var(--violet);">
     <div style="position: relative;">
-      <img src="assets/images/prototype.jpeg" alt="Robot Prototype" style="width: 100%; max-height: 400px; object-fit: cover; display: block;">
-      <div style="position: absolute; bottom: 0; left: 0; width: 100%; padding: 30px 20px 20px 20px; background: linear-gradient(to top, rgba(13,21,34,0.95) 0%, rgba(13,21,34,0) 100%);">
-        <h2 style="font-family: var(--disp); font-size: clamp(1.5rem, 4vw, 2.5rem); color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.8); margin-bottom: 4px;">THE INTELLIGENT ROBOT</h2>
-        <p style="font-family: var(--mono); font-size: clamp(0.7rem, 2vw, 0.9rem); color: var(--cyan); letter-spacing: 1px;">NODEMCU · AI VISION · SERVO EXPRESSIONS · BLUETOOTH</p>
+      <!-- Fallback color if image is missing -->
+      <div style="background: #0a0f18; min-height: 350px; display: flex; justify-content: center; align-items: center;">
+        <img src="assets/images/prototype.jpeg" alt="Robot Prototype" style="width: 100%; max-height: 500px; object-fit: cover; display: block; opacity: 0.9;">
+      </div>
+      <div class="hero-gradient" style="position: absolute; bottom: 0; left: 0; width: 100%; padding: 40px 30px 30px 30px;">
+        <div style="display: inline-block; background: rgba(176,106,255,0.15); border: 1px solid var(--violet); color: var(--violet); font-family: var(--mono); font-size: 0.7rem; padding: 4px 10px; border-radius: 99px; margin-bottom: 12px; font-weight: bold; letter-spacing: 1px;">FLAGSHIP PROJECT</div>
+        <h2 style="font-family: var(--disp); font-size: clamp(1.8rem, 5vw, 3rem); color: #fff; text-shadow: 0 4px 15px rgba(0,0,0,0.9); margin-bottom: 8px; line-height: 1.1; letter-spacing: 1px;">THE INTELLIGENT<br>ROBOT</h2>
+        <p style="font-family: var(--mono); font-size: clamp(0.75rem, 2.5vw, 0.95rem); color: var(--cyan); letter-spacing: 2px;">ARDUINO MEGA · OPENCV AI · MG995 SERVOS · HC-05</p>
       </div>
     </div>
   </section>
 
-  <div class="cols" style="margin-top: 20px;">
+  <div class="cols">
     
     <!-- ===== MAIN COLUMN ===== -->
     <div class="main-col">
       
-      <!-- FEATURES (From PDF) -->
-      <section class="card">
-        <h3>Project Functions <small>Core Capabilities</small></h3>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 16px;">
+      <!-- FEATURES -->
+      <section class="premium-card" style="padding: 24px;">
+        <h3 style="color: #fff; font-size: 1.1rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+          <span style="width: 4px; height: 20px; background: var(--violet); border-radius: 2px;"></span> Project Functions
+        </h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
           
-          <div style="background: rgba(176,106,255,0.05); border: 1px solid var(--line); border-radius: 12px; padding: 16px;">
-            <div style="font-size: 1.8rem; margin-bottom: 8px;">📱</div>
-            <div style="font-family: var(--sans); font-weight: 800; color: var(--violet); font-size: 0.9rem; margin-bottom: 4px;">Mobile / IP Control</div>
-            <div style="font-family: var(--mono); font-size: 0.72rem; color: var(--ink-dim); line-height: 1.5;">The robot can be controlled remotely through a mobile app or IP interface.</div>
+          <div style="background: rgba(176,106,255,0.04); border: 1px solid rgba(176,106,255,0.15); border-radius: 12px; padding: 20px;">
+            <div class="icon-box" style="color: var(--violet);">📱</div>
+            <div style="font-family: var(--sans); font-weight: 800; color: #fff; font-size: 0.95rem; margin-bottom: 6px;">Mobile / IP Control</div>
+            <div style="font-family: var(--mono); font-size: 0.72rem; color: var(--ink-dim); line-height: 1.6;">The robot can be controlled remotely through a mobile app or IP interface.</div>
           </div>
 
-          <div style="background: rgba(111,240,194,0.05); border: 1px solid var(--line); border-radius: 12px; padding: 16px;">
-            <div style="font-size: 1.8rem; margin-bottom: 8px;">😊</div>
-            <div style="font-family: var(--sans); font-weight: 800; color: var(--mint); font-size: 0.9rem; margin-bottom: 4px;">Facial Expressions</div>
-            <div style="font-family: var(--mono); font-size: 0.72rem; color: var(--ink-dim); line-height: 1.5;">The robot can simulate various facial expressions using servo motors.</div>
+          <div style="background: rgba(111,240,194,0.04); border: 1px solid rgba(111,240,194,0.15); border-radius: 12px; padding: 20px;">
+            <div class="icon-box" style="color: var(--mint);">😊</div>
+            <div style="font-family: var(--sans); font-weight: 800; color: #fff; font-size: 0.95rem; margin-bottom: 6px;">Facial Expressions</div>
+            <div style="font-family: var(--mono); font-size: 0.72rem; color: var(--ink-dim); line-height: 1.6;">The robot can simulate various facial expressions using servo motors.</div>
           </div>
 
-          <div style="background: rgba(255,183,0,0.05); border: 1px solid var(--line); border-radius: 12px; padding: 16px;">
-            <div style="font-size: 1.8rem; margin-bottom: 8px;">🗣️</div>
-            <div style="font-family: var(--sans); font-weight: 800; color: var(--amber); font-size: 0.9rem; margin-bottom: 4px;">Bluetooth & Speech</div>
-            <div style="font-family: var(--mono); font-size: 0.72rem; color: var(--ink-dim); line-height: 1.5;">Connects via Bluetooth and is capable of speech using text-to-speech.</div>
+          <div style="background: rgba(255,183,0,0.04); border: 1px solid rgba(255,183,0,0.15); border-radius: 12px; padding: 20px;">
+            <div class="icon-box" style="color: var(--amber);">🗣️</div>
+            <div style="font-family: var(--sans); font-weight: 800; color: #fff; font-size: 0.95rem; margin-bottom: 6px;">Bluetooth & Speech</div>
+            <div style="font-family: var(--mono); font-size: 0.72rem; color: var(--ink-dim); line-height: 1.6;">Connects via Bluetooth and is capable of speech using text-to-speech.</div>
           </div>
 
-          <div style="background: rgba(255,93,115,0.05); border: 1px solid var(--line); border-radius: 12px; padding: 16px;">
-            <div style="font-size: 1.8rem; margin-bottom: 8px;">🤖</div>
-            <div style="font-family: var(--sans); font-weight: 800; color: var(--rose); font-size: 0.9rem; margin-bottom: 4px;">Autonomous Movement</div>
-            <div style="font-family: var(--mono); font-size: 0.72rem; color: var(--ink-dim); line-height: 1.5;">The robot is capable of moving from one location to another autonomously.</div>
+          <div style="background: rgba(255,93,115,0.04); border: 1px solid rgba(255,93,115,0.15); border-radius: 12px; padding: 20px;">
+            <div class="icon-box" style="color: var(--rose);">🤖</div>
+            <div style="font-family: var(--sans); font-weight: 800; color: #fff; font-size: 0.95rem; margin-bottom: 6px;">Autonomous Movement</div>
+            <div style="font-family: var(--mono); font-size: 0.72rem; color: var(--ink-dim); line-height: 1.6;">The robot is capable of moving from one location to another autonomously.</div>
           </div>
 
         </div>
       </section>
 
       <!-- AI VISION SIMULATOR -->
-      <section class="card">
-        <h3>AI Vision Simulator <small>Face Recognition</small></h3>
-        <div style="background: #03060c; border: 1px solid var(--line); border-radius: 12px; padding: 20px; margin-top: 16px;">
-          
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+      <section class="premium-card" style="padding: 24px; margin-top: 20px;">
+        <h3 style="color: #fff; font-size: 1.1rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+          <span style="width: 4px; height: 20px; background: var(--mint); border-radius: 2px;"></span> AI Vision Simulator
+        </h3>
+        
+        <div style="background: #03060c; border: 1px solid var(--line); border-radius: 12px; padding: 20px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            
             <!-- Camera Feed -->
             <div style="position: relative; background: #0a1018; border: 1px solid var(--line-hi); border-radius: 8px; aspect-ratio: 4/3; overflow: hidden; display: flex; justify-content: center; align-items: center;">
               <div id="cameraFeed" style="width: 100%; height: 100%; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px); position: relative;">
-                <!-- Scanline -->
                 <div id="scanline" style="position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--mint); box-shadow: 0 0 10px var(--mint); animation: scan 2s linear infinite;"></div>
-                <!-- Face Box -->
                 <div id="faceBox" style="position: absolute; top: 30%; left: 30%; width: 40%; height: 50%; border: 2px solid var(--mint); opacity: 0; transition: opacity 0.3s; box-shadow: 0 0 15px var(--mint);">
-                  <div id="faceName" style="position: absolute; bottom: -24px; left: 0; width: 100%; background: var(--mint); color: #000; font-family: var(--mono); font-size: 0.7rem; text-align: center; padding: 2px;">RAHUL</div>
+                  <div id="faceName" style="position: absolute; bottom: -24px; left: 0; width: 100%; background: var(--mint); color: #000; font-family: var(--mono); font-size: 0.75rem; font-weight: bold; text-align: center; padding: 3px;">RAJA</div>
                 </div>
               </div>
               <div style="position: absolute; top: 8px; left: 8px; font-family: var(--mono); font-size: 0.65rem; color: var(--rose); display: flex; align-items: center; gap: 6px;">
@@ -105,117 +140,82 @@
             </div>
 
             <!-- Detection Log -->
-            <div>
-              <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--ink-dim); margin-bottom: 8px; border-bottom: 1px solid var(--line); padding-bottom: 4px;">Detection Log</div>
-              <div id="aiLog" style="height: 180px; overflow-y: auto; font-family: var(--mono); font-size: 0.7rem; line-height: 1.6; color: var(--ink-faint);">
+            <div style="display: flex; flex-direction: column;">
+              <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--ink-dim); margin-bottom: 8px; border-bottom: 1px solid var(--line); padding-bottom: 6px;">DETECTION LOG</div>
+              <div id="aiLog" style="flex-grow: 1; height: 150px; overflow-y: auto; font-family: var(--mono); font-size: 0.72rem; line-height: 1.6; color: var(--ink-faint);">
                 <div>[System] AI Model Loaded.</div>
                 <div>[System] Scanning for faces...</div>
               </div>
-              <button class="primary" style="margin-top: 12px; width: 100%;" onclick="simulateAI()">▶ START RECOGNITION</button>
+              <button class="primary" style="margin-top: 16px; width: 100%;" onclick="simulateAI()">▶ START RECOGNITION</button>
             </div>
-          </div>
 
+          </div>
         </div>
       </section>
 
-      <!-- SYSTEM OVERVIEW (From PDF) -->
-      <section class="card">
-        <h3>System Overview <small>Hardware Architecture</small></h3>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 16px;">
-          
-          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 12px; text-align: center;">
-            <div style="font-family: var(--mono); font-size: 1.2rem; color: var(--cyan); font-weight: bold; margin-bottom: 4px;">01</div>
-            <div style="font-family: var(--sans); font-weight: 700; font-size: 0.8rem; color: var(--ink); margin-bottom: 4px;">Arduino Mega</div>
-            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim);">Central processing unit.</div>
+      <!-- HARDWARE BLUEPRINTS -->
+      <section class="premium-card" style="padding: 24px; margin-top: 20px;">
+        <h3 style="color: #fff; font-size: 1.1rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+          <span style="width: 4px; height: 20px; background: var(--cyan); border-radius: 2px;"></span> Hardware Blueprints
+        </h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px;">
+          <!-- Item 1 -->
+          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            <img src="assets/images/1.jfif" style="width: 100%; border-radius: 4px; aspect-ratio: 1/1; object-fit: cover;">
+            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); text-align: center; margin-top: 6px;">Chassis Base</div>
           </div>
-
-          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 12px; text-align: center;">
-            <div style="font-family: var(--mono); font-size: 1.2rem; color: var(--mint); font-weight: bold; margin-bottom: 4px;">02</div>
-            <div style="font-family: var(--sans); font-weight: 700; font-size: 0.8rem; color: var(--ink); margin-bottom: 4px;">MG995 Servos</div>
-            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim);">Movement and facial expressions.</div>
+          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            <img src="assets/images/4.jpeg" style="width: 100%; border-radius: 4px; aspect-ratio: 1/1; object-fit: cover;">
+            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); text-align: center; margin-top: 6px;">Servo Mount</div>
           </div>
-
-          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 12px; text-align: center;">
-            <div style="font-family: var(--mono); font-size: 1.2rem; color: var(--amber); font-weight: bold; margin-bottom: 4px;">03</div>
-            <div style="font-family: var(--sans); font-weight: 700; font-size: 0.8rem; color: var(--ink); margin-bottom: 4px;">Speaker</div>
-            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim);">Text-to-speech output.</div>
+          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            <img src="assets/images/5.jpeg" style="width: 100%; border-radius: 4px; aspect-ratio: 1/1; object-fit: cover;">
+            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); text-align: center; margin-top: 6px;">Arm Joint</div>
           </div>
-
-          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 12px; text-align: center;">
-            <div style="font-family: var(--mono); font-size: 1.2rem; color: var(--rose); font-weight: bold; margin-bottom: 4px;">04</div>
-            <div style="font-family: var(--sans); font-weight: 700; font-size: 0.8rem; color: var(--ink); margin-bottom: 4px;">HC-SR04</div>
-            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim);">Ultrasonic obstacle avoidance.</div>
+          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            <img src="assets/images/6.jpeg" style="width: 100%; border-radius: 4px; aspect-ratio: 1/1; object-fit: cover;">
+            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); text-align: center; margin-top: 6px;">Head Bracket</div>
           </div>
-
-          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 12px; text-align: center;">
-            <div style="font-family: var(--mono); font-size: 1.2rem; color: var(--violet); font-weight: bold; margin-bottom: 4px;">05</div>
-            <div style="font-family: var(--sans); font-weight: 700; font-size: 0.8rem; color: var(--ink); margin-bottom: 4px;">HC-05</div>
-            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim);">Bluetooth mobile app comms.</div>
+          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            <img src="assets/images/7.jpeg" style="width: 100%; border-radius: 4px; aspect-ratio: 1/1; object-fit: cover;">
+            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); text-align: center; margin-top: 6px;">Gear Assembly</div>
           </div>
-
-        </div>
-      </section>
-
-      <!-- HARDWARE BLUEPRINTS (Gallery) -->
-      <section class="card">
-        <h3>Hardware Blueprints <small>CAD Gallery</small></h3>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-top: 16px;">
-          <!-- Auto-generated Blueprints 1 to 16 -->
-          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px;">
-            <img src="assets/images/1.jfif" alt="Blueprint 1" style="width: 100%; border-radius: 4px;">
-            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); text-align: center; margin-top: 6px;">Structure 01</div>
+          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            <img src="assets/images/8.jpeg" style="width: 100%; border-radius: 4px; aspect-ratio: 1/1; object-fit: cover;">
+            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); text-align: center; margin-top: 6px;">Chest Panel</div>
           </div>
-          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px;">
-            <img src="assets/images/4.jpeg" alt="Blueprint 4" style="width: 100%; border-radius: 4px;">
-            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); text-align: center; margin-top: 6px;">Structure 04</div>
+          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            <img src="assets/images/9.jpeg" style="width: 100%; border-radius: 4px; aspect-ratio: 1/1; object-fit: cover;">
+            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); text-align: center; margin-top: 6px;">Wiring Layout</div>
           </div>
-          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px;">
-            <img src="assets/images/5.jpeg" alt="Blueprint 5" style="width: 100%; border-radius: 4px;">
-            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); text-align: center; margin-top: 6px;">Structure 05</div>
+          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            <img src="assets/images/10.jpeg" style="width: 100%; border-radius: 4px; aspect-ratio: 1/1; object-fit: cover;">
+            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); text-align: center; margin-top: 6px;">Motor Mounts</div>
           </div>
-          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px;">
-            <img src="assets/images/6.jpeg" alt="Blueprint 6" style="width: 100%; border-radius: 4px;">
-            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); text-align: center; margin-top: 6px;">Structure 06</div>
+          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            <img src="assets/images/11.jpeg" style="width: 100%; border-radius: 4px; aspect-ratio: 1/1; object-fit: cover;">
+            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); text-align: center; margin-top: 6px;">Full Frame</div>
           </div>
-          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px;">
-            <img src="assets/images/7.jpeg" alt="Blueprint 7" style="width: 100%; border-radius: 4px;">
-            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); text-align: center; margin-top: 6px;">Structure 07</div>
+          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            <img src="assets/images/12.jpeg" style="width: 100%; border-radius: 4px; aspect-ratio: 1/1; object-fit: cover;">
+            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); text-align: center; margin-top: 6px;">Sensor Mount</div>
           </div>
-          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px;">
-            <img src="assets/images/8.jpeg" alt="Blueprint 8" style="width: 100%; border-radius: 4px;">
-            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); text-align: center; margin-top: 6px;">Structure 08</div>
+          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            <img src="assets/images/13.jpeg" style="width: 100%; border-radius: 4px; aspect-ratio: 1/1; object-fit: cover;">
+            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); text-align: center; margin-top: 6px;">Back Plate</div>
           </div>
-          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px;">
-            <img src="assets/images/9.jpeg" alt="Blueprint 9" style="width: 100%; border-radius: 4px;">
-            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); text-align: center; margin-top: 6px;">Structure 09</div>
+          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            <img src="assets/images/14.jpeg" style="width: 100%; border-radius: 4px; aspect-ratio: 1/1; object-fit: cover;">
+            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); text-align: center; margin-top: 6px;">Battery Tray</div>
           </div>
-          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px;">
-            <img src="assets/images/10.jpeg" alt="Blueprint 10" style="width: 100%; border-radius: 4px;">
-            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); text-align: center; margin-top: 6px;">Structure 10</div>
+          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            <img src="assets/images/15.jpeg" style="width: 100%; border-radius: 4px; aspect-ratio: 1/1; object-fit: cover;">
+            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); text-align: center; margin-top: 6px;">Final Assembly</div>
           </div>
-          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px;">
-            <img src="assets/images/11.jpeg" alt="Blueprint 11" style="width: 100%; border-radius: 4px;">
-            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); text-align: center; margin-top: 6px;">Structure 11</div>
-          </div>
-          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px;">
-            <img src="assets/images/12.jpeg" alt="Blueprint 12" style="width: 100%; border-radius: 4px;">
-            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); text-align: center; margin-top: 6px;">Structure 12</div>
-          </div>
-          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px;">
-            <img src="assets/images/13.jpeg" alt="Blueprint 13" style="width: 100%; border-radius: 4px;">
-            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); text-align: center; margin-top: 6px;">Structure 13</div>
-          </div>
-          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px;">
-            <img src="assets/images/14.jpeg" alt="Blueprint 14" style="width: 100%; border-radius: 4px;">
-            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); text-align: center; margin-top: 6px;">Structure 14</div>
-          </div>
-          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px;">
-            <img src="assets/images/15.jpeg" alt="Blueprint 15" style="width: 100%; border-radius: 4px;">
-            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); text-align: center; margin-top: 6px;">Structure 15</div>
-          </div>
-          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px;">
-            <img src="assets/images/16.jpeg" alt="Blueprint 16" style="width: 100%; border-radius: 4px;">
-            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); text-align: center; margin-top: 6px;">Structure 16</div>
+          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; padding: 8px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            <img src="assets/images/16.jpeg" style="width: 100%; border-radius: 4px; aspect-ratio: 1/1; object-fit: cover;">
+            <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--ink-dim); text-align: center; margin-top: 6px;">CAD Render</div>
           </div>
         </div>
       </section>
@@ -225,46 +225,38 @@
     <!-- ===== SIDEBAR ===== -->
     <div>
       
-      <!-- TEAM MEMBERS (From PDF) -->
-      <section class="card">
-        <h3>Collaborative Effort</h3>
-        <p style="font-family: var(--mono); font-size: 0.75rem; color: var(--ink-dim); margin-bottom: 12px;">Project X: A Collaborative Effort</p>
+      <!-- TEAM MEMBERS -->
+      <section class="premium-card" style="padding: 20px;">
+        <h3 style="color: #fff; font-size: 1rem; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+          <span style="color: var(--violet);">👥</span> Team Effort
+        </h3>
         <div class="statuslist">
-          <div class="srow"><span class="k">Lead Developer</span><span class="v" style="color:var(--violet); font-weight:bold;">RAJA</span></div>
-          <div class="srow"><span class="k">Team Member</span><span class="v">Anshul Varsha</span></div>
-          <div class="srow"><span class="k">Team Member</span><span class="v">Purushan</span></div>
-          <div class="srow"><span class="k">Team Member</span><span class="v">Abhay</span></div>
-          <div class="srow"><span class="k">Team Member</span><span class="v">Hamdan</span></div>
-          <div class="srow"><span class="k">Team Member</span><span class="v">Shriyansh</span></div>
-        </div>
-      </section>
-
-      <!-- COMPONENTS USED (From PDF) -->
-      <section class="card">
-        <h3>Components Used <small>Hardware BOM</small></h3>
-        <div class="statuslist">
-          <div class="srow"><span class="k">Controller</span><span class="v">Arduino Mega</span></div>
-          <div class="srow"><span class="k">Bluetooth</span><span class="v">HC-05 Module</span></div>
-          <div class="srow"><span class="k">Actuators</span><span class="v">MG995 Servos</span></div>
-          <div class="srow"><span class="k">Sensor</span><span class="v">HC-SR04 Ultrasonic</span></div>
-          <div class="srow"><span class="k">Chassis</span><span class="v">Iron Sheet</span></div>
-          <div class="srow"><span class="k">Power</span><span class="v">12V Battery + 5V Adapter</span></div>
-          <div class="srow"><span class="k">Misc</span><span class="v">Screws, Jumper Wires, Tools</span></div>
+          <div class="srow" style="background: rgba(176,106,255,0.1); border-color: rgba(176,106,255,0.3);">
+            <span class="k" style="color: var(--violet); font-weight: bold;">Lead Dev</span>
+            <span class="v" style="color: var(--violet); font-weight: bold;">RAJA</span>
+          </div>
+          <div class="srow"><span class="k">Member</span><span class="v">Anshul Varsha</span></div>
+          <div class="srow"><span class="k">Member</span><span class="v">Purushan</span></div>
+          <div class="srow"><span class="k">Member</span><span class="v">Abhay</span></div>
+          <div class="srow"><span class="k">Member</span><span class="v">Hamdan</span></div>
+          <div class="srow"><span class="k">Member</span><span class="v">Shriyansh</span></div>
         </div>
       </section>
 
       <!-- DISPLAY VIDEOS -->
-      <section class="card">
-        <h3>Display Telemetry <small>Videos</small></h3>
-        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 12px;">
+      <section class="premium-card" style="padding: 20px; margin-top: 20px;">
+        <h3 style="color: #fff; font-size: 1rem; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+          <span style="color: var(--cyan);">📺</span> Display Telemetry
+        </h3>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
           
           <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; overflow: hidden;">
-            <video src="assets/images/display/display%20prototype.mp4" controls preload="metadata" style="width: 100%; display: block;"></video>
+            <video src="assets/images/display/display%20prototype.mp4" controls preload="metadata" style="width: 100%; display: block; aspect-ratio: 16/9; object-fit: cover;"></video>
             <div style="padding: 10px; font-family: var(--mono); font-size: 0.7rem; color: var(--ink-dim); text-align: center; border-top: 1px solid var(--line);">DISPLAY PROTOTYPE</div>
           </div>
 
           <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 8px; overflow: hidden;">
-            <video src="assets/images/display/display%20result.mp4" controls preload="metadata" style="width: 100%; display: block;"></video>
+            <video src="assets/images/display/display%20result.mp4" controls preload="metadata" style="width: 100%; display: block; aspect-ratio: 16/9; object-fit: cover;"></video>
             <div style="padding: 10px; font-family: var(--mono); font-size: 0.7rem; color: var(--ink-dim); text-align: center; border-top: 1px solid var(--line);">DISPLAY RESULT</div>
           </div>
 
@@ -272,19 +264,21 @@
       </section>
 
       <!-- CONTROL CONTROLS -->
-      <section class="card">
-        <h3>Quick Controls</h3>
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 12px;">
+      <section class="premium-card" style="padding: 20px; margin-top: 20px;">
+        <h3 style="color: #fff; font-size: 1rem; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+          <span style="color: var(--mint);">🎮</span> Quick Controls
+        </h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
           <div></div>
-          <button class="primary" onclick="moveRobot('F')">▲</button>
+          <button class="primary" onclick="moveRobot('F')" style="padding: 12px 0;">▲</button>
           <div></div>
           
-          <button class="primary" onclick="moveRobot('L')">◀</button>
-          <button class="danger" onclick="moveRobot('S')">STOP</button>
-          <button class="primary" onclick="moveRobot('R')">▶</button>
+          <button class="primary" onclick="moveRobot('L')" style="padding: 12px 0;">◀</button>
+          <button class="danger" onclick="moveRobot('S')" style="padding: 12px 0; font-size: 0.7rem;">STOP</button>
+          <button class="primary" onclick="moveRobot('R')" style="padding: 12px 0;">▶</button>
           
           <div></div>
-          <button class="primary" onclick="moveRobot('B')">▼</button>
+          <button class="primary" onclick="moveRobot('B')" style="padding: 12px 0;">▼</button>
           <div></div>
         </div>
       </section>
@@ -292,25 +286,18 @@
     </div>
   </div>
 
-  <footer>
-    <span>PROJECT X · INTELLIGENT ROBOT</span>
-    <span>BUILD 3.0.0 · GLOBAL CSS</span>
+  <footer style="margin-top: 40px; border-top: 1px solid var(--line); padding-top: 20px;">
+    <span style="color: var(--violet);">PROJECT X · INTELLIGENT ROBOT</span>
+    <span style="color: var(--ink-faint);">BUILD 4.0.0 · PREMIUM EDITION</span>
   </footer>
 </div>
 
 <style>
-  @keyframes scan {
-    0% { top: 0; }
-    100% { top: 100%; }
-  }
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-  }
+  @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 </style>
 
 <script>
-  // AI Simulation Logic
   const faces = ['RAJA', 'PURUSHAN', 'UNKNOWN', 'ABHAY'];
   const faceNames = ['Raja', 'Purushan', 'Unknown', 'Abhay'];
   let aiRunning = false;
@@ -322,26 +309,16 @@
     const logBox = document.getElementById('aiLog');
     const faceBox = document.getElementById('faceBox');
     const nameBox = document.getElementById('faceName');
-    const aiStatus = document.getElementById('aiStatus');
     
-    if(aiStatus) {
-        aiStatus.textContent = 'SCANNING...';
-        aiStatus.style.color = 'var(--amber)';
-    }
-    
-    logBox.innerHTML = '<div>[System] AI Model Loaded.</div><div>[System] Scanning for faces...</div>';
+    logBox.innerHTML = '<div style="color:var(--cyan)">[System] AI Model Loaded.</div><div>[System] Scanning for faces...</div>';
 
     let step = 0;
     const interval = setInterval(() => {
       if (step >= faces.length) {
         clearInterval(interval);
         aiRunning = false;
-        if(aiStatus) {
-            aiStatus.textContent = 'READY';
-            aiStatus.style.color = 'var(--violet)';
-        }
         faceBox.style.opacity = '0';
-        logBox.innerHTML += '<div style="color:var(--mint)">[System] Scan Complete.</div>';
+        logBox.innerHTML += '<div style="color:var(--mint); margin-top:4px;">[System] Scan Complete.</div>';
         return;
       }
 
@@ -354,14 +331,12 @@
       if (face !== 'UNKNOWN') {
         nameBox.style.background = 'var(--mint)';
         faceBox.style.borderColor = 'var(--mint)';
-        logBox.innerHTML += `<div>[Match] Found: <b style="color:var(--mint)">${name}</b> (99.2%)</div>`;
+        logBox.innerHTML += `<div style="margin-top:4px;">[Match] Found: <b style="color:var(--mint)">${name}</b> (99.2%)</div>`;
         matchCount++;
-        const mc = document.getElementById('matchCount');
-        if(mc) mc.textContent = matchCount;
       } else {
         nameBox.style.background = 'var(--rose)';
         faceBox.style.borderColor = 'var(--rose)';
-        logBox.innerHTML += `<div>[Scan] Unknown face detected.</div>`;
+        logBox.innerHTML += `<div style="margin-top:4px;">[Scan] Unknown face detected.</div>`;
       }
       
       logBox.scrollTop = logBox.scrollHeight;
@@ -369,7 +344,6 @@
     }, 2000);
   }
 
-  // Movement Simulation
   function moveRobot(cmd) {
     console.log(`Sending command: ${cmd}`);
   }
