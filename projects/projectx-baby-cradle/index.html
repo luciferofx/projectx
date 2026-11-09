@@ -5,10 +5,10 @@
   ============================================================
   PROJECT X · BABY CRADLE (IoT DASHBOARD)
   File: index.html
-  Version: 9.0.0 · Build 2024.12
+  Version: 10.0.0 · Build 2024.12
   Author: Raja Sharma (github.com/luciferofx)
 
-  Note: 100% Global CSS (styles.css). No local inline CSS.
+  Note: 100% Global CSS (styles.css). No local inline CSS block.
   ============================================================
 -->
 <meta charset="UTF-8">
@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Orbitron:wght@600;700;800&display=swap" rel="stylesheet">
-<!-- Global CSS (No local styles) -->
+<!-- Global CSS -->
 <link rel="stylesheet" href="../../styles.css">
 </head>
 <body>
@@ -55,7 +55,6 @@
       <section class="card">
         <h3>Motor Controls</h3>
         <div class="btnstack">
-          <!-- Using global primary/danger buttons -->
           <button class="primary" id="startBtn" onclick="simulateCmd('/forward', 'Moving Forward')">▶ START SWING</button>
           <button class="danger" id="stopBtn" onclick="simulateCmd('/stop', 'Stopped')">■ STOP MOTOR</button>
         </div>
@@ -85,18 +84,15 @@
       <!-- LIVE ANIMATION -->
       <section class="card">
         <h3>Live Working Model <small>Animated Prototype</small></h3>
-        <div class="demo-stage" style="height: 300px; display: grid; place-items: center;">
+        <div class="demo-stage" style="height: 320px; display: grid; place-items: center;">
           
-          <!-- Physical Cradle Drawing -->
           <div style="position:relative; width:240px; height:160px; border-top:10px solid var(--line-hi); border-radius:4px 4px 0 0;">
             <div style="position:absolute; top:0; left:0; width:10px; height:100%; background:var(--line-hi);"></div>
             <div style="position:absolute; top:0; right:0; width:10px; height:100%; background:var(--line-hi);"></div>
             
             <div id="swingArm" style="position:absolute; top:0; left:50%; width:4px; height:80px; background:var(--ink-dim); transform-origin:top center; transition:transform 0.05s linear; display:flex; justify-content:center;">
               
-              <!-- Basket -->
               <div style="position:absolute; bottom:-45px; left:-65px; width:130px; height:60px; background:var(--card); border:3px solid var(--cyan); border-radius:0 0 50px 50px; display:flex; justify-content:center; align-items:center; box-shadow:0 10px 20px rgba(0,0,0,0.6), inset 0 -10px 20px rgba(0,0,0,0.8), 0 0 15px var(--cyan);">
-                <!-- Baby -->
                 <div style="width:28px; height:28px; background:#fff; border-radius:50%; position:relative; top:10px; box-shadow:0 0 10px rgba(255,255,255,0.5);">
                   <div style="position:absolute; top:12px; left:6px; width:4px; height:4px; border-radius:50%; background:var(--bg);"></div>
                   <div style="position:absolute; top:12px; right:6px; width:4px; height:4px; border-radius:50%; background:var(--bg);"></div>
@@ -109,18 +105,16 @@
         </div>
       </section>
 
-      <!-- VIDEOS (DIRECTLY FROM GITHUB ASSETS) -->
+      <!-- VIDEOS -->
       <section class="card">
         <h3>Prototype Videos <small>Hardware Demo</small></h3>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;">
           
-          <!-- Video 1 -->
           <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 12px; overflow: hidden;">
             <video src="assets/images/baby cradle motor work.mp4" controls preload="metadata" style="width: 100%; aspect-ratio: 16/9; object-fit: cover; background: #000; display: block;"></video>
             <div style="padding: 12px; font-family: var(--sans); font-weight: 700; font-size: 0.85rem; color: var(--ink); text-align: center; border-top: 1px solid var(--line);">01 / MOTOR WORKING</div>
           </div>
 
-          <!-- Video 2 -->
           <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 12px; overflow: hidden;">
             <video src="assets/images/final-output-of-babycradle.mp4" controls preload="metadata" style="width: 100%; aspect-ratio: 16/9; object-fit: cover; background: #000; display: block;"></video>
             <div style="padding: 12px; font-family: var(--sans); font-weight: 700; font-size: 0.85rem; color: var(--ink); text-align: center; border-top: 1px solid var(--line);">02 / FINAL OUTPUT</div>
@@ -129,61 +123,106 @@
         </div>
       </section>
 
-      <!-- SYSTEM ARCHITECTURE -->
+      <!-- NEW: HARDWARE ARCHITECTURE (Visual Style) -->
       <section class="card">
-        <h3>System Architecture <small>Hardware & Flow</small></h3>
+        <h3>System Architecture <small>Hardware Flow</small></h3>
         
-        <div class="uth-box" style="white-space: pre; overflow-x: auto; font-family: var(--mono); font-size: 0.75rem; line-height: 1.8; color: var(--ink-dim); padding: 20px;">
-<span style="color:var(--cyan); font-weight:bold">SMARTPHONE / LAPTOP</span>
-       │
-  Wi-Fi Network
-       │
-<span style="color:var(--cyan); font-weight:bold">ESP8266 ACCESS POINT</span>
-  192.168.4.1
-       │
-  WEB DASHBOARD
-(HTML / CSS / JS)
-       │
-    HTTP API
-       │
- <span style="color:var(--cyan); font-weight:bold">ESP8266 GPIO</span> (PWM Output)
-       │
- <span style="color:var(--cyan); font-weight:bold">L298N DRIVER</span>
-       │
-   <span style="color:var(--cyan); font-weight:bold">DC MOTOR</span>
-        </div>
+        <div style="background: #03060c; border: 1px solid var(--line); border-radius: 12px; padding: 20px; margin-top: 16px;">
+          
+          <!-- Layer 1: Phone -->
+          <div style="text-align: center; margin-bottom: 10px;">
+            <div style="display: inline-block; background: var(--card-hi); border: 1px solid var(--cyan); border-radius: 8px; padding: 8px 20px; color: var(--cyan); font-family: var(--mono); font-size: 0.75rem; box-shadow: 0 0 15px rgba(47,212,255,0.2);">
+              📱 SMARTPHONE / LAPTOP
+            </div>
+            <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--ink-faint); margin: 6px 0;">↓ Wi-Fi Network ↓</div>
+          </div>
 
-        <h4 style="margin-top: 20px; font-family: var(--mono); font-size: 0.75rem; color: var(--ink-dim);">COMPONENT LIST</h4>
-        <div class="tscroll">
-          <table style="margin-top: 10px;">
-            <thead>
-              <tr><th>Component</th><th>Role</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>ESP8266 NodeMCU</td><td>Main Microcontroller</td></tr>
-              <tr><td>L298N Motor Driver</td><td>Motor Control Interface</td></tr>
-              <tr><td>DC Gear Motor</td><td>Swing Mechanism Prototype</td></tr>
-              <tr><td>External Power (12V)</td><td>Motor Power Supply</td></tr>
-              <tr><td>Jumper Wires</td><td>Electrical Connections</td></tr>
-              <tr><td>Cradle Frame</td><td>Mechanical Structure</td></tr>
-            </tbody>
-          </table>
-        </div>
+          <!-- Layer 2: ESP8266 -->
+          <div style="text-align: center; margin-bottom: 10px;">
+            <div style="display: inline-block; background: var(--card-hi); border: 1px solid var(--mint); border-radius: 8px; padding: 8px 20px; color: var(--mint); font-family: var(--mono); font-size: 0.75rem; box-shadow: 0 0 15px rgba(111,240,194,0.2);">
+              🧠 ESP8266 (Access Point)
+            </div>
+            <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--ink-faint); margin: 6px 0;">↓ HTTP Request (PWM) ↓</div>
+          </div>
 
-        <h4 style="margin-top: 20px; font-family: var(--mono); font-size: 0.75rem; color: var(--ink-dim);">GPIO PIN MAPPING</h4>
-        <div class="tscroll">
-          <table style="margin-top: 10px;">
-            <thead>
-              <tr><th>ESP8266</th><th>GPIO</th><th>L298N Pin</th><th>Function</th></tr>
-            </thead>
-            <tbody>
-              <tr><td style="color:var(--cyan)">D2</td><td>GPIO 4</td><td style="color:var(--mint)">ENA</td><td>PWM Speed Control</td></tr>
-              <tr><td style="color:var(--cyan)">D5</td><td>GPIO 14</td><td style="color:var(--mint)">IN1</td><td>Direction Control 1</td></tr>
-              <tr><td style="color:var(--cyan)">D6</td><td>GPIO 12</td><td style="color:var(--mint)">IN2</td><td>Direction Control 2</td></tr>
-              <tr><td style="color:var(--cyan)">GND</td><td>GND</td><td style="color:var(--mint)">GND</td><td>Common Ground</td></tr>
-              <tr><td style="color:var(--cyan)">VIN</td><td>5V</td><td style="color:var(--mint)">5V</td><td>Logic Power</td></tr>
-            </tbody>
-          </table>
+          <!-- Layer 3: Driver -->
+          <div style="text-align: center; margin-bottom: 10px;">
+            <div style="display: inline-block; background: var(--card-hi); border: 1px solid var(--amber); border-radius: 8px; padding: 8px 20px; color: var(--amber); font-family: var(--mono); font-size: 0.75rem; box-shadow: 0 0 15px rgba(255,179,71,0.2);">
+              ⚙️ L298N Motor Driver
+            </div>
+            <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--ink-faint); margin: 6px 0;">↓ Power Output ↓</div>
+          </div>
+
+          <!-- Layer 4: Motor -->
+          <div style="text-align: center;">
+            <div style="display: inline-block; background: var(--card-hi); border: 1px solid var(--rose); border-radius: 8px; padding: 8px 20px; color: var(--rose); font-family: var(--mono); font-size: 0.75rem; box-shadow: 0 0 15px rgba(255,93,115,0.2);">
+              🌀 DC Gear Motor
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- NEW: COMPONENTS & PINS (Visual Style) -->
+      <section class="card">
+        <h3>Components & Wiring <small>Hardware Map</small></h3>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;">
+          
+          <!-- Components List -->
+          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 12px; padding: 16px;">
+            <h4 style="font-family: var(--mono); font-size: 0.7rem; color: var(--ink-dim); text-transform: uppercase; margin-bottom: 12px; border-bottom: 1px solid var(--line); padding-bottom: 8px;">Component List</h4>
+            <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px;">
+              <li style="display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 0.72rem; color: var(--ink);">
+                <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--cyan);"></span> ESP8266 NodeMCU
+              </li>
+              <li style="display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 0.72rem; color: var(--ink);">
+                <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--mint);"></span> L298N Motor Driver
+              </li>
+              <li style="display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 0.72rem; color: var(--ink);">
+                <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--amber);"></span> DC Gear Motor
+              </li>
+              <li style="display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 0.72rem; color: var(--ink);">
+                <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--rose);"></span> 12V Battery / Supply
+              </li>
+              <li style="display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 0.72rem; color: var(--ink);">
+                <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--violet);"></span> Jumper Wires
+              </li>
+            </ul>
+          </div>
+
+          <!-- Wiring Map -->
+          <div style="background: #0a0610; border: 1px solid var(--line); border-radius: 12px; padding: 16px;">
+            <h4 style="font-family: var(--mono); font-size: 0.7rem; color: var(--ink-dim); text-transform: uppercase; margin-bottom: 12px; border-bottom: 1px solid var(--line); padding-bottom: 8px;">Wiring Map (ESP → L298N)</h4>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.72rem;">
+                <span style="color: var(--cyan);">D2 (PWM)</span>
+                <span style="color: var(--ink-faint);">→</span>
+                <span style="color: var(--mint);">ENA</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.72rem;">
+                <span style="color: var(--cyan);">D5 (Dir)</span>
+                <span style="color: var(--ink-faint);">→</span>
+                <span style="color: var(--mint);">IN1</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.72rem;">
+                <span style="color: var(--cyan);">D6 (Dir)</span>
+                <span style="color: var(--ink-faint);">→</span>
+                <span style="color: var(--mint);">IN2</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.72rem;">
+                <span style="color: var(--cyan);">GND</span>
+                <span style="color: var(--ink-faint);">→</span>
+                <span style="color: var(--mint);">GND</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.72rem;">
+                <span style="color: var(--cyan);">VIN (5V)</span>
+                <span style="color: var(--ink-faint);">→</span>
+                <span style="color: var(--mint);">5V</span>
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 
@@ -207,7 +246,7 @@
 
   <footer>
     <span>PROJECT X · BABY CRADLE</span>
-    <span>LINK: <span style="color:var(--mint)">SIMULATED</span> · BUILD 9.0.0</span>
+    <span>LINK: <span style="color:var(--mint)">SIMULATED</span> · BUILD 10.0.0</span>
   </footer>
 </div>
 
@@ -224,7 +263,6 @@
   const btnStart = document.getElementById('startBtn');
   const btnStop = document.getElementById('stopBtn');
 
-  // 1. Smooth Animation
   function animateCradle() {
     if(isSwinging) {
       const amplitude = 25 * (currentSpeed / 255); 
@@ -243,33 +281,24 @@
   }
   requestAnimationFrame(animateCradle);
 
-  // 2. Logging
   function log(msg, type='info') {
     const ph = con.querySelector('.ln.placeholder');
     if(ph) ph.remove();
-
     const ln = document.createElement('div');
     ln.className = 'ln ' + type;
-    
     const d = new Date();
     const time = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
-    
     const ts = document.createElement('span'); ts.className = 'ts'; ts.textContent = time;
     const body = document.createElement('span'); body.className = 'msg'; body.innerHTML = msg;
-    
     ln.appendChild(ts); ln.appendChild(body); con.appendChild(ln);
     con.scrollTop = con.scrollHeight;
-    
     if(con.querySelectorAll('.ln').length > 100) con.firstElementChild.remove();
   }
 
-  // 3. Simulate Command
   function simulateCmd(path, statusMsg) {
     log(`TX: http://192.168.4.1${path}`, 'sys');
-    
     setTimeout(() => {
       log(`HTTP 200 OK · ${statusMsg}`, 'ok');
-      
       if(path === '/forward') {
         isSwinging = true;
         btnStart.classList.add('active');
@@ -284,17 +313,14 @@
     }, 350);
   }
 
-  // 4. Slider Logic
   let speedTimeout = null;
   function updateSpeed(val) {
     currentSpeed = parseInt(val);
     document.getElementById('sliderVal').textContent = currentSpeed;
-
     if(!isSwinging) {
       log(`Speed adjusted to ${currentSpeed} (Motor off)`, 'info');
       return;
     }
-
     clearTimeout(speedTimeout);
     speedTimeout = setTimeout(() => {
       log(`TX: http://192.168.4.1/speed?value=${currentSpeed}`, 'sys');
@@ -304,7 +330,6 @@
     }, 300);
   }
 
-  // 5. Clear Logs
   document.getElementById('clearBtn').addEventListener('click', () => {
     con.innerHTML = '';
     const line = document.createElement('div');
@@ -313,7 +338,6 @@
     con.appendChild(line);
   });
 
-  // Init
   updateSpeed(128);
   btnStop.classList.add('active'); 
   log('Virtual environment ready. Press START to view animation.', 'ok');
