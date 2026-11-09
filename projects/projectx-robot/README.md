@@ -98,7 +98,7 @@ The NodeMCU creates its own Wi-Fi network, allowing users to control the robot w
 
 <div align="center">
 
-<img src="assets/images/face-detection.png" width="600" alt="AI Face Recognition Preview"/>
+<img src="assets/images/facedetection.jpeg" width="600" alt="AI Face Recognition Preview"/>
 
 </div>
 
