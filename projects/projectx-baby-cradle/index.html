@@ -1,1 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+  ============================================================
+  PROJECT X · BABY CRADLE (IoT DASHBOARD)
+  File: index.html
+  Version: 8.0.0 · Build 2024.12
+  Author: Raja Sharma (github.com/luciferofx)
 
+  Theme: Violet / IoT
+  Uses Global styles.css
+  ============================================================
+-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#05070d">
+<meta name="description" content="Project X · IoT Baby Cradle Swing Controller">
+<title>Project X — Baby Cradle Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Orbitron:wght@600;700;800&display=swap" rel="stylesheet">
+<!-- Global CSS -->
+<link rel="stylesheet" href="../../styles.css">
+
+<style>
+  /* ============================================================
+     LOCAL OVERRIDES (VIOLET THEME)
+     ============================================================ */
+  :root {
+    --primary: #a78bfa;
+    --primary-glow: rgba(167,139,250,0.4);
+  }
+  
+  body {
+    background:
+      radial-gradient(1000px 500px at 80% -8%, #1a102c 0%, transparent 60%),
+      radial-gradient(800px 480px at -10% 100%, #0a1c2a 0%, transparent 55%),
+      var(--bg);
+  }
+
+  /* Topbar Logo Override */
+  .mark {
+    background: linear-gradient(150deg, #2a1a40, #110b1a);
+    box-shadow: 0 0 18px rgba(167,139,250,.2), inset 0 0 10px rgba(167,139,250,.1);
+  }
+  .mark::before { border-color: var(--primary); box-shadow: 0 0 8px rgba(167,139,250,.6); }
+  .mark b { color: var(--primary); text-shadow: 0 0 10px rgba(167,139,250,.8); }
+  .brand h1 { background: linear-gradient(90deg, #f0eaff, #c4b5fd 50%, #8b5cf6); -webkit-background-clip: text; background-clip: text; }
+  
+  /* Card Headers */
+  .card > h3::before { background: var(--primary); box-shadow: 0 0 8px var(--primary); }
+
+  /* Buttons */
+  button.primary { background: linear-gradient(135deg, #2a1a40, #110b1a); border-color: #4c3575; color: #d8cfff; box-shadow: 0 0 16px -5px var(--primary-glow); }
+  button.primary:hover:not(:disabled) { border-color: var(--primary); color: #fff; box-shadow: 0 0 24px -2px rgba(167,139,250,.6); }
+  button.danger { color: var(--rose); border-color: #4a2330; background: #180e13; }
+  button.danger:hover:not(:disabled) { border-color: var(--rose); color: #ff8598; }
+
+  /* Status Pill Colors */
+  .status-pill.on { color: var(--primary); border-color: #4b3d78; background: rgba(30,24,54,.5); }
+  .status-pill.on .led { animation: blink 1.8s infinite; }
+
+  /* ===== WORKING MODEL ANIMATION ===== */
+  .model-stage {
+    position: relative;
+    background: radial-gradient(circle at 50% 40%, #1a1226, #05030a 80%);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    height: 340px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+  .model-stage::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(167,139,250,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(167,139,250,.04) 1px, transparent 1px);
+    background-size: 24px 24px;
+    pointer-events: none;
+  }
+  
+  .frame-3d {
+    position: relative;
+    width: 280px;
+    height: 200px;
+    border-top: 12px solid #332b40;
+    border-radius: 4px 4px 0 0;
+    margin-top: 20px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.8);
+  }
+  .frame-3d::before, .frame-3d::after {
+    content: '';
+    position: absolute; top: 0; width: 12px; height: 100%;
+    background: #2a2235;
+    box-shadow: inset -2px 0 5px rgba(0,0,0,0.5);
+  }
+  .frame-3d::before { left: 0; }
+  .frame-3d::after { right: 0; }
+  
+  .swing-arm {
+    position: absolute;
+    top: 0; left: 50%;
+    width: 4px; height: 100px;
+    background: #5a4a73;
+    transform-origin: top center;
+    transition: transform 0.05s linear;
+    display: flex;
+    justify-content: center;
+    z-index: 2;
+  }
+  .swing-arm::after {
+    content: '';
+    position: absolute;
+    top: -12px; left: -14px;
+    width: 32px; height: 24px;
+    border-radius: 50%;
+    background: #1a1226;
+    border: 2px solid #5a4a73;
+    border-bottom-color: transparent;
+  }
+  
+  .basket {
+    position: absolute;
+    bottom: -50px; left: -80px;
+    width: 160px; height: 80px;
+    background: linear-gradient(180deg, #2a1a40, #110b1a);
+    border: 3px solid var(--primary);
+    border-radius: 0 0 60px 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.6), inset 0 -15px 20px rgba(0,0,0,0.8), 0 0 15px rgba(167,139,250,0.2);
+  }
+  
+  .baby {
+    width: 34px; height: 34px;
+    background: #f0d5ff;
+    border-radius: 50%;
+    position: relative;
+    top: 12px;
+    box-shadow: 0 0 10px rgba(240,213,255,0.4);
+  }
+  .baby::before, .baby::after {
+    content: '';
+    position: absolute; top: 14px;
+    width: 4px; height: 4px; border-radius: 50%; background: #2a1a40;
+  }
+  .baby::before { left: 8px; }
+  .baby::after { right: 8px; }
+
+  .speed-hud {
+    position: absolute;
+    bottom: 16px; left: 16px;
+    background: rgba(0,0,0,0.6);
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--line-hi);
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--ink-dim);
+    display: flex; align-items: center; gap: 10px;
+    backdrop-filter: blur(4px);
+  }
+  .speed-bar-bg { width: 100px; height: 6px; background: #1a1226; border-radius: 99px; overflow: hidden; }
+  .speed-bar-fill { height: 100%; width: 0%; background: var(--primary); transition: width 0.3s, background 0.3s; box-shadow: 0 0 10px var(--primary); }
+
+  /* ===== VIDEO SHOWCASE ===== */
+  .video-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+  .video-card {
+    background: #0a0610;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    text-decoration: none;
+    display: block;
+    transition: all 0.2s;
+  }
+  .video-card:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(167,139,250,0.15); }
+  .video-thumb {
+    width: 100%; aspect-ratio: 16/9;
+    background: linear-gradient(135deg, #1a102c, #0a0610);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    border-bottom: 1px solid var(--line);
+    position: relative;
+  }
+  .video-thumb::before {
+    content: '▶'; font-size: 2rem; color: var(--primary);
+    text-shadow: 0 0 15px var(--primary-glow);
+    transition: transform 0.2s;
+  }
+  .video-card:hover .video-thumb::before { transform: scale(1.2); }
+  .video-title { padding: 12px 16px; font-family: var(--sans); font-weight: 700; font-size: 0.85rem; color: var(--ink); text-align: center; }
+  .video-sub { font-family: var(--mono); font-size: 0.65rem; color: var(--ink-faint); text-align: center; padding-bottom: 12px; }
+
+  /* ===== ARCHITECTURE DIAGRAM ===== */
+  .arch-diagram {
+    background: #03060c; border: 1px solid var(--line);
+    border-radius: 10px; padding: 20px;
+    font-family: var(--mono); font-size: 0.75rem;
+    color: var(--ink-dim); line-height: 1.8;
+    overflow-x: auto; white-space: pre;
+  }
+  .arch-hl { color: var(--primary); font-weight: bold; }
+
+  @media(max-width: 600px) {
+    .video-grid { grid-template-columns: 1fr; }
+    .frame-3d { transform: scale(0.85); margin-top: 10px; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="brand">
+      <div class="mark"><b>PX</b></div>
+      <div>
+        <h1>BABY CRADLE · IOT</h1>
+        <p>Project X · Infant Swing Controller</p>
+      </div>
+    </div>
+    <div class="status-pill on" id="connPill"><span class="led"></span><span id="connText">SIMULATION READY</span></div>
+  </div>
+
+  <div class="cols">
+    <!-- SIDEBAR -->
+    <div>
+      <section class="card">
+        <h3>Connection Info</h3>
+        <div class="statuslist">
+          <div class="srow"><span class="k">WiFi SSID</span><span class="v">Baby Cradle</span></div>
+          <div class="srow"><span class="k">IP Address</span><span class="v">192.168.4.1</span></div>
+          <div class="srow"><span class="k">Mode</span><span class="v pur">AP / SIMULATOR</span></div>
+        </div>
+        <div style="margin-top:16px; font-size:0.7rem; color:var(--ink-faint); line-height:1.5; padding: 0 4px;">
+          <b style="color:var(--amber)">Note:</b> Connect your phone to the <i>"Baby Cradle"</i> WiFi network to control real hardware.
+        </div>
+      </section>
+
+      <section class="card">
+        <h3>Motor Controls</h3>
+        <div class="btnstack">
+          <button class="primary" id="startBtn" onclick="simulateCmd('/forward', 'Moving Forward')">▶ START SWING</button>
+          <button class="danger" id="stopBtn" onclick="simulateCmd('/stop', 'Stopped')">■ STOP MOTOR</button>
+        </div>
+        
+        <div style="margin-top: 20px; background: #060a13; border: 1px solid var(--line); padding: 14px; border-radius: 8px;">
+          <div style="display:flex; justify-content:space-between; font-family:var(--mono); font-size:0.75rem; color:var(--ink-dim); margin-bottom:10px;">
+            <span>SPEED (PWM)</span>
+            <span id="sliderVal" style="color:var(--primary); font-weight:bold">128</span>
+          </div>
+          <input type="range" min="0" max="255" value="128" id="speedSlider" oninput="updateSpeed(this.value)" style="width:100%; accent-color:var(--primary);">
+        </div>
+      </section>
+
+      <section class="card">
+        <h3>Hardware Pins</h3>
+        <div class="statuslist">
+          <div class="srow"><span class="k">ENA (PWM)</span><span class="v">D2 / GPIO 4</span></div>
+          <div class="srow"><span class="k">IN1 (Dir)</span><span class="v">D5 / GPIO 14</span></div>
+          <div class="srow"><span class="k">IN2 (Dir)</span><span class="v">D6 / GPIO 12</span></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-col">
+      
+      <!-- ANIMATION -->
+      <section class="card">
+        <h3>Live Working Model <small>Animated Prototype</small></h3>
+        <div class="model-stage">
+          <div class="frame-3d">
+            <div class="swing-arm" id="swingArm">
+              <div class="basket">
+                <div class="baby"></div>
+              </div>
+            </div>
+          </div>
+          <div class="speed-hud">
+            <span>PWM</span>
+            <div class="speed-bar-bg"><div class="speed-bar-fill" id="speedFill"></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIDEOS -->
+      <section class="card">
+        <h3>Prototype Videos <small>Hardware Demo</small></h3>
+        <div class="video-grid">
+          <!-- Video 1: Motor Working -->
+          <a href="https://savedly.net/api/stream/bw4sxyg8?t=0.y8RGzX371NvzWLAh2ga24FkZ2Wf4xHIXM25d0xfj8ks" target="_blank" class="video-card">
+            <div class="video-thumb"></div>
+            <div class="video-title">01 / MOTOR WORKING</div>
+            <div class="video-sub">Hardware Demonstration</div>
+          </a>
+          <!-- Video 2: Final Output -->
+          <a href="https://savedly.net/api/stream/ayjpwqbd?t=0.ZNszYT7guEUTJSoVjjw1oebGcK6CwaWFI5miYeYeZHc" target="_blank" class="video-card">
+            <div class="video-thumb"></div>
+            <div class="video-title">02 / FINAL OUTPUT</div>
+            <div class="video-sub">Complete Cradle Prototype</div>
+          </a>
+        </div>
+      </section>
+
+      <!-- ARCHITECTURE -->
+      <section class="card">
+        <h3>System Architecture <small>Hardware & Flow</small></h3>
+        
+        <div class="arch-diagram">
+<span class="arch-hl">SMARTPHONE / LAPTOP</span>
+       │
+  Wi-Fi Network
+       │
+<span class="arch-hl">ESP8266 ACCESS POINT</span>
+  192.168.4.1
+       │
+  WEB DASHBOARD
+(HTML / CSS / JS)
+       │
+    HTTP API
+       │
+ <span class="arch-hl">ESP8266 GPIO</span> (PWM Output)
+       │
+ <span class="arch-hl">L298N DRIVER</span>
+       │
+   <span class="arch-hl">DC MOTOR</span>
+        </div>
+
+        <h4 style="margin-top: 20px; font-family: var(--mono); font-size: 0.75rem; color: var(--ink-dim);">COMPONENT LIST</h4>
+        <table style="margin-top: 10px;">
+          <thead>
+            <tr><th>Component</th><th>Role</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>ESP8266 NodeMCU</td><td>Main Microcontroller</td></tr>
+            <tr><td>L298N Motor Driver</td><td>Motor Control Interface</td></tr>
+            <tr><td>DC Gear Motor</td><td>Swing Mechanism Prototype</td></tr>
+            <tr><td>External Power (12V)</td><td>Motor Power Supply</td></tr>
+            <tr><td>Jumper Wires</td><td>Electrical Connections</td></tr>
+            <tr><td>Cradle Frame</td><td>Mechanical Structure</td></tr>
+          </tbody>
+        </table>
+
+        <h4 style="margin-top: 20px; font-family: var(--mono); font-size: 0.75rem; color: var(--ink-dim);">GPIO PIN MAPPING</h4>
+        <table style="margin-top: 10px;">
+          <thead>
+            <tr><th>ESP8266</th><th>GPIO</th><th>L298N Pin</th><th>Function</th></tr>
+          </thead>
+          <tbody>
+            <tr><td style="color:var(--primary)">D2</td><td>GPIO 4</td><td style="color:var(--mint)">ENA</td><td>PWM Speed Control</td></tr>
+            <tr><td style="color:var(--primary)">D5</td><td>GPIO 14</td><td style="color:var(--mint)">IN1</td><td>Direction Control 1</td></tr>
+            <tr><td style="color:var(--primary)">D6</td><td>GPIO 12</td><td style="color:var(--mint)">IN2</td><td>Direction Control 2</td></tr>
+            <tr><td style="color:var(--primary)">GND</td><td>GND</td><td style="color:var(--mint)">GND</td><td>Common Ground</td></tr>
+            <tr><td style="color:var(--primary)">VIN</td><td>5V</td><td style="color:var(--mint)">5V</td><td>Logic Power</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- CONSOLE -->
+      <section class="card">
+        <div class="chead">
+          <h3>System Logs</h3>
+          <div class="ctools">
+            <button id="clearBtn">CLEAR</button>
+          </div>
+        </div>
+        <div class="con" id="con">
+          <div class="ln sys"><span class="ts">--:--:--</span><span class="msg">[BOOT] Virtual ESP8266 Engine Online.</span></div>
+          <div class="ln info"><span class="ts">--:--:--</span><span class="msg">[INFO] WiFi AP 'Baby Cradle' initialized. Listening on port 80.</span></div>
+          <div class="ln placeholder"><span class="ts">--:--:--</span><span class="msg">Waiting for user commands...</span></div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <footer>
+    <span>PROJECT X · BABY CRADLE</span>
+    <span>BUILD 8.0.0 · THEME: VIOLET</span>
+  </footer>
+</div>
+
+<script>
+  /* ============================================================
+     SIMULATOR ENGINE (No Hardware Required)
+     ============================================================ */
+  let isSwinging = false;
+  let currentSpeed = 128;
+  let currentAngle = 0;
+
+  const swingArm = document.getElementById('swingArm');
+  const con = document.getElementById('con');
+  const speedFill = document.getElementById('speedFill');
+  const btnStart = document.getElementById('startBtn');
+  const btnStop = document.getElementById('stopBtn');
+
+  // 1. Smooth Animation Loop
+  function animateCradle() {
+    if(isSwinging) {
+      const amplitude = 28 * (currentSpeed / 255); // Max 28 degrees
+      currentAngle = amplitude * Math.sin(Date.now() / 400);
+      swingArm.style.transform = `rotate(${currentAngle}deg)`;
+    } else {
+      if(Math.abs(currentAngle) > 0.1) {
+        currentAngle *= 0.85;
+        swingArm.style.transform = `rotate(${currentAngle}deg)`;
+      } else {
+        currentAngle = 0;
+        swingArm.style.transform = `rotate(0deg)`;
+      }
+    }
+    requestAnimationFrame(animateCradle);
+  }
+  requestAnimationFrame(animateCradle);
+
+  // 2. Logging Mechanism
+  function log(msg, type='info') {
+    const ph = con.querySelector('.ln.placeholder');
+    if(ph) ph.remove();
+
+    const ln = document.createElement('div');
+    ln.className = 'ln ' + type;
+    
+    const d = new Date();
+    const time = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
+    
+    const ts = document.createElement('span'); ts.className = 'ts'; ts.textContent = time;
+    const body = document.createElement('span'); body.className = 'msg'; body.innerHTML = msg;
+    
+    ln.appendChild(ts); ln.appendChild(body); con.appendChild(ln);
+    con.scrollTop = con.scrollHeight;
+    
+    if(con.querySelectorAll('.ln').length > 100) con.firstElementChild.remove();
+  }
+
+  // 3. Fake Hardware Command
+  function simulateCmd(path, statusMsg) {
+    log(`TX: http://192.168.4.1${path}`, 'sys');
+    
+    setTimeout(() => {
+      log(`HTTP 200 OK · ${statusMsg}`, 'ok');
+      
+      if(path === '/forward') {
+        isSwinging = true;
+        btnStart.classList.add('active');
+        btnStop.classList.remove('active');
+        log(`Motor spinning at PWM ${currentSpeed}`, 'ok');
+      } else if(path === '/stop') {
+        isSwinging = false;
+        btnStart.classList.remove('active');
+        btnStop.classList.add('active');
+        log(`Motor halted cleanly.`, 'ok');
+      }
+    }, 350);
+  }
+
+  // 4. Slider Logic
+  let speedTimeout = null;
+  function updateSpeed(val) {
+    currentSpeed = parseInt(val);
+    document.getElementById('sliderVal').textContent = currentSpeed;
+    
+    speedFill.style.width = (currentSpeed / 255 * 100) + '%';
+    if(currentSpeed < 80) speedFill.style.background = 'var(--mint)';
+    else if(currentSpeed < 180) speedFill.style.background = 'var(--primary)';
+    else speedFill.style.background = 'var(--rose)';
+
+    if(!isSwinging) {
+      log(`Speed adjusted to ${currentSpeed} (Motor off)`, 'info');
+      return;
+    }
+
+    clearTimeout(speedTimeout);
+    speedTimeout = setTimeout(() => {
+      log(`TX: http://192.168.4.1/speed?value=${currentSpeed}`, 'sys');
+      setTimeout(() => {
+        log(`HTTP 200 OK · Speed Set to ${currentSpeed}`, 'ok');
+      }, 200);
+    }, 300);
+  }
+
+  // 5. Clear
+  document.getElementById('clearBtn').addEventListener('click', () => {
+    con.innerHTML = '';
+    const line = document.createElement('div');
+    line.className = 'ln placeholder';
+    line.innerHTML = '<span class="ts">--:--:--</span><span class="msg">Log cleared. Waiting for commands...</span>';
+    con.appendChild(line);
+  });
+
+  // Init
+  updateSpeed(128);
+  btnStop.classList.add('active'); 
+  log('Virtual environment ready. Press START to view animation.', 'ok');
+</script>
+</body>
+</html>
